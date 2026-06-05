@@ -2,7 +2,7 @@
 
 **Created:** 2026-06-04
 **Scope:** Concrete implementation sequence for the initial product build.
-**Current repository state:** Phase 1 privacy-first domain, public snapshot, schema, and mapper shapes exist.
+**Current repository state:** Phase 2 broker inspection ledger create/edit flow exists.
 
 ## Product Goal
 
@@ -116,7 +116,7 @@ Build a Spring Boot 3.x application that helps Korean commercial real estate bro
 
 ## Phase 5 - Hardening And Release
 
-1. Add broker authentication and authorization.
+1. Broker authentication and authorization. Completed early during Phase 2 review hardening.
 2. Add audit records for share snapshot creation and changes.
 3. Add integration tests for MyBatis and MySQL behavior.
 4. Add file access-control tests.
@@ -151,3 +151,7 @@ Implemented on 2026-06-05: Phase 0 created the Java 21 Spring Boot 3.x Gradle sk
 ## Second Worker Task
 
 Implemented on 2026-06-05: Phase 1 created internal property inspection records, separate public share snapshot records, the closed verification-status enum, Flyway/MyBatis persistence shapes, and regression tests proving denied fields and sample private values are absent from public projections.
+
+## Third Worker Task
+
+Implemented on 2026-06-05: Phase 2 created broker-authenticated inspection create/edit screens, validated form capture for property basics/pricing/area/condition/internal notes, internal-only contact log persistence, hardened `FileStorage` attachment metadata flow, MyBatis write mappings, and controller/service/persistence-shape tests.

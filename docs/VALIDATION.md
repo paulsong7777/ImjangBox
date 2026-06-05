@@ -42,3 +42,16 @@ For this planning-only initialization, the manual QA surface is the repository f
 - `./gradlew test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest`
 - JShell projection probe against `/tmp/imjangbox-build/classes/java/main` must print a `PublicShareSnapshot[...]` and `PASS` after checking sample private values.
 - Runtime smoke QA: `./gradlew bootRun --args='--server.port=18082'`, `curl -i http://localhost:18082/`, and `curl -i http://localhost:18082/not-a-route`.
+
+## Phase 2 Validation
+
+- `./gradlew test`
+- Focused broker flow tests: `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`
+- Runtime broker form QA: `./gradlew bootRun --args='--server.port=18083'`
+- Manual HTTP QA:
+  - unauthenticated `curl -i http://localhost:18083/broker/inspections/new` should return `401`
+  - authenticated `curl -i -u broker:broker-password http://localhost:18083/broker/inspections/new` should return `200`
+  - authenticated form GET should render one `_csrf` token
+  - authenticated multipart POST invalid input with `_csrf` to `/broker/inspections` should return the form with `입력값을 확인해 주세요`
+  - authenticated multipart POST valid create with `_csrf` to `/broker/inspections` should redirect to `/broker/inspections/{id}/edit`
+  - authenticated multipart POST valid update with `_csrf` to `/broker/inspections/{id}` should redirect and the edit page should show updated values

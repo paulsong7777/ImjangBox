@@ -16,6 +16,9 @@
             <arg column="deposit_amount" javaType="long"/>
             <arg column="monthly_rent_amount" javaType="long"/>
             <arg column="premium_amount" javaType="long"/>
+            <arg column="area_square_meters" javaType="String"/>
+            <arg column="business_fit_memo" javaType="String"/>
+            <arg column="condition_memo" javaType="String"/>
             <arg column="price_private_note" javaType="String"/>
             <arg column="private_memo" javaType="String"/>
             <arg column="internal_risk_memo" javaType="String"/>
@@ -34,10 +37,106 @@
                deposit_amount,
                monthly_rent_amount,
                premium_amount,
+               area_square_meters,
+               business_fit_memo,
+               condition_memo,
                price_private_note,
                private_memo,
                internal_risk_memo
           FROM property_inspections
          WHERE inspection_id = #{inspectionId}
     </select>
+
+    <insert id="insert" parameterType="com.imjangbox.inspection.persistence.PropertyInspectionWriteRow"
+            useGeneratedKeys="true" keyProperty="inspectionId" keyColumn="inspection_id">
+        INSERT INTO property_inspections (
+            title,
+            verification_status,
+            internal_road_address,
+            internal_detail_address,
+            internal_geocode_memo,
+            public_address_summary,
+            public_landmark_hint,
+            deposit_amount,
+            monthly_rent_amount,
+            premium_amount,
+            area_square_meters,
+            business_fit_memo,
+            condition_memo,
+            price_private_note,
+            private_memo,
+            internal_risk_memo
+        ) VALUES (
+            #{title},
+            #{verificationStatus},
+            #{internalRoadAddress},
+            #{internalDetailAddress},
+            #{internalGeocodeMemo},
+            #{publicAddressSummary},
+            #{publicLandmarkHint},
+            #{depositAmount},
+            #{monthlyRentAmount},
+            #{premiumAmount},
+            #{areaSquareMeters},
+            #{businessFitMemo},
+            #{conditionMemo},
+            #{pricePrivateNote},
+            #{privateMemo},
+            #{internalRiskMemo}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.imjangbox.inspection.persistence.PropertyInspectionWriteRow">
+        UPDATE property_inspections
+           SET title = #{title},
+               verification_status = #{verificationStatus},
+               internal_road_address = #{internalRoadAddress},
+               internal_detail_address = #{internalDetailAddress},
+               internal_geocode_memo = #{internalGeocodeMemo},
+               public_address_summary = #{publicAddressSummary},
+               public_landmark_hint = #{publicLandmarkHint},
+               deposit_amount = #{depositAmount},
+               monthly_rent_amount = #{monthlyRentAmount},
+               premium_amount = #{premiumAmount},
+               area_square_meters = #{areaSquareMeters},
+               business_fit_memo = #{businessFitMemo},
+               condition_memo = #{conditionMemo},
+               price_private_note = #{pricePrivateNote},
+               private_memo = #{privateMemo},
+               internal_risk_memo = #{internalRiskMemo}
+         WHERE inspection_id = #{inspectionId}
+    </update>
+
+    <delete id="deleteContactLogs">
+        DELETE FROM property_contact_logs
+         WHERE inspection_id = #{inspectionId}
+    </delete>
+
+    <insert id="insertContactLog" parameterType="com.imjangbox.inspection.persistence.ContactLogWriteRow">
+        INSERT INTO property_contact_logs (
+            inspection_id,
+            contacted_on,
+            content
+        ) VALUES (
+            #{inspectionId},
+            #{contactedOn},
+            #{content}
+        )
+    </insert>
+
+    <insert id="insertFileAttachment" parameterType="com.imjangbox.inspection.persistence.FileAttachmentWriteRow">
+        INSERT INTO property_file_attachments (
+            inspection_id,
+            original_filename,
+            storage_key,
+            content_type,
+            size_bytes
+        ) VALUES (
+            #{inspectionId},
+            #{originalFilename},
+            #{storageKey},
+            #{contentType},
+            #{sizeBytes}
+        )
+    </insert>
 </mapper>

@@ -3,7 +3,7 @@
 **Project:** imjangbox
 **Generated:** 2026-06-04
 **Branch:** main
-**Commit:** none yet
+**Commit:** d44b877
 
 ## OVERVIEW
 
@@ -11,7 +11,7 @@ imjangbox is a commercial-property field inspection and proposal ledger for Kore
 
 ## CURRENT STATE
 
-Phase 1 foundation exists: Java 21 Spring Boot 3.5.x Gradle project, wrapper, minimal MVC route, Thymeleaf templates, package boundary markers, local/test profiles, context and MVC smoke tests, privacy-first internal records, separate public share snapshots, verification enum, Flyway schema, MyBatis mapper shape, and privacy regression tests.
+Phase 2 broker inspection ledger exists: Java 21 Spring Boot 3.5.x Gradle project, Thymeleaf/Bootstrap internal create/edit forms, broker authentication for `/broker/**`, validation, service and MyBatis write shapes, `FileStorage` attachment metadata boundary, internal-only contact logs/risk notes, local/test profiles, privacy-first internal records, separate public share snapshots, verification enum, Flyway migrations, and regression tests.
 
 ## INTENDED STACK
 

@@ -89,3 +89,38 @@
 - Manual QA: JShell projection probe printed `PublicShareSnapshot[...]` and returned `PASS` after checking denied sample values.
 - Runtime QA: `./gradlew bootRun --args='--server.port=18082'` started successfully; `curl -i http://localhost:18082/` returned `HTTP/1.1 200`; `curl -i http://localhost:18082/not-a-route` returned `HTTP/1.1 404`.
 - Cleanup QA: stopped `bootRun`; follow-up curl to port `18082` failed to connect as expected.
+
+## 2026-06-05 - Phase 2 Broker Inspection Ledger
+
+**Scope:** Execute Phase 2 from `TASKS.md` and `plans/2026-06-04-imjangbox-implementation-plan.md`.
+
+**Actions completed:**
+
+- Added broker-facing create/edit routes at `/broker/inspections/new`, `/broker/inspections`, and `/broker/inspections/{inspectionId}/edit`.
+- Added a Bootstrap 5.3 Thymeleaf form for internal address, public address, area, pricing, verification status, business-fit notes, condition notes, private price notes, private memo, internal risk memo, contact log, and attachments.
+- Added validated `InspectionForm`, `InspectionService`, MyBatis write rows, and mapper methods for create/update, contact-log replacement, and attachment metadata insert.
+- Added a `FileStorage` boundary with `StoredFile` metadata and a local-profile storage implementation.
+- Added a local-profile in-memory mapper so `bootRun` works without MySQL while `local-db` remains the MyBatis/MySQL path.
+- Added Flyway V2 migration for area/business-fit/condition columns and internal file attachment metadata.
+- Added HTTP Basic broker authentication for `/broker/**`, leaving public home/share routes open.
+- Added CSRF protection for broker forms.
+- Added attachment count, size, content-type sniffing, and filename/storage-key hardening.
+- Added controller, service, and persistence-shape regression tests.
+
+**Constraints honored:**
+
+- Contact logs, private memos, private price notes, storage keys, and internal risk memos remain internal broker surfaces only.
+- Broker inspection routes require a broker-authenticated request.
+- Public share DTOs/templates were not changed to accept internal inspection records.
+- No JPA, React, Vue, Next.js, or prohibited product automation features were introduced.
+
+**Validation receipts:**
+
+- Baseline red test: focused Phase 2 tests failed because `InspectionService`, `InspectionForm`, `BrokerInspectionController`, `FileStorage`, and write-row types were missing.
+- Green verification: `IMJANGBOX_BUILD_DIR=/tmp/imjangbox-root-final4 ./gradlew clean test --rerun-tasks` passed.
+- LSP diagnostics: unavailable because `jdtls` is not installed; Gradle compile/test was used as the Java verification substitute.
+- Runtime QA: `IMJANGBOX_BUILD_DIR=/tmp/imjangbox-root-boot3 ./gradlew bootRun --args='--server.port=18086'` started successfully.
+- Auth QA: unauthenticated `curl -i http://localhost:18086/broker/inspections/new` returned `HTTP/1.1 401`; public `curl -i http://localhost:18086/` returned `HTTP/1.1 200`.
+- CSRF QA: authenticated GET of `/broker/inspections/new` rendered exactly one `_csrf` field.
+- Create QA: authenticated multipart POST with `_csrf` and a text attachment returned `HTTP/1.1 302`; follow-up GET of `/broker/inspections/41/edit` returned `HTTP/1.1 200` and showed the created title.
+- Cleanup QA: stopped `bootRun`; follow-up curl to port `18086` failed to connect as expected.

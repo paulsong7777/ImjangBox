@@ -8,4 +8,14 @@ import org.apache.ibatis.annotations.Mapper;
 public interface PropertyInspectionMapper {
 
 	Optional<PropertyInspectionRow> findById(long inspectionId);
+
+	void insert(PropertyInspectionWriteRow row);
+
+	int update(PropertyInspectionWriteRow row);
+
+	void deleteContactLogs(long inspectionId);
+
+	void insertContactLog(ContactLogWriteRow row);
+
+	void insertFileAttachment(FileAttachmentWriteRow row);
 }

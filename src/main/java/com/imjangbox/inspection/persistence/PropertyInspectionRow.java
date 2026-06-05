@@ -12,6 +12,9 @@ public record PropertyInspectionRow(
 		long depositAmount,
 		long monthlyRentAmount,
 		long premiumAmount,
+		String areaSquareMeters,
+		String businessFitMemo,
+		String conditionMemo,
 		String pricePrivateNote,
 		String privateMemo,
 		String internalRiskMemo) {

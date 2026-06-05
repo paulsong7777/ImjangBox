@@ -1,7 +1,7 @@
 # TASKS
 
 **Project:** imjangbox
-**Last updated:** 2026-06-04
+**Last updated:** 2026-06-05
 
 ## Phase 0 - Repository And Spring Boot Foundation
 
@@ -24,12 +24,12 @@
 
 ## Phase 2 - Field Inspection Capture
 
-- [ ] Build internal broker-facing forms with Thymeleaf and Bootstrap 5.3.
-- [ ] Capture commercial property basics, internal address, public address, premium/key-money, rent, area, condition, and broker notes.
-- [ ] Implement contact log capture as internal-only data.
-- [ ] Implement file attachment flow through `FileStorage`.
-- [ ] Add validation for required fields and safe defaults.
-- [ ] Add controller/service/mapper tests for inspection create and update flows.
+- [x] Build internal broker-facing forms with Thymeleaf and Bootstrap 5.3.
+- [x] Capture commercial property basics, internal address, public address, premium/key-money, rent, area, condition, and broker notes.
+- [x] Implement contact log capture as internal-only data.
+- [x] Implement file attachment flow through `FileStorage`.
+- [x] Add validation for required fields and safe defaults.
+- [x] Add controller/service/mapper tests for inspection create and update flows.
 
 ## Phase 3 - Facility Templates, Maps, And Search Index
 
@@ -51,7 +51,7 @@
 
 ## Phase 5 - Hardening, Operations, And Release Readiness
 
-- [ ] Add authentication/authorization for broker-only internal screens.
+- [x] Add authentication/authorization for broker-only internal screens.
 - [ ] Add audit logging for share-card creation and updates.
 - [ ] Add integration tests for MyBatis/MySQL behavior using the chosen test database approach.
 - [ ] Add file-storage validation for size, type, and access control.

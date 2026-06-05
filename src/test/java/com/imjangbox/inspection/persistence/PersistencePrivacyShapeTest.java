@@ -56,7 +56,26 @@ class PersistencePrivacyShapeTest {
 				.contains("internal_road_address")
 				.contains("public_address_summary")
 				.contains("private_memo")
+				.contains("<insert id=\"insert\"")
+				.contains("<update id=\"update\"")
+				.contains("insertContactLog")
+				.contains("insertFileAttachment")
 				.doesNotContain("PublicShareSnapshot");
+	}
+
+	@Test
+	void phaseTwoMigrationAddsInspectionLedgerAndInternalAttachmentStorageShape() throws Exception {
+		String sql = Files.readString(
+				Path.of("src/main/resources/db/migration/V2__add_broker_inspection_ledger_fields.sql"),
+				StandardCharsets.UTF_8);
+
+		assertThat(sql)
+				.contains("area_square_meters")
+				.contains("business_fit_memo")
+				.contains("condition_memo")
+				.contains("property_file_attachments")
+				.contains("storage_key")
+				.contains("original_filename");
 	}
 
 	@Test
