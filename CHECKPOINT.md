@@ -2,28 +2,27 @@
 
 **Checkpoint date:** 2026-06-05
 **Project:** imjangbox
-**Current state:** Phase 0 Spring Boot foundation exists and passes tests.
+**Current state:** Phase 1 privacy-first domain, public snapshot, schema, and mapper shapes exist and pass tests.
 
 ## Resume Here Next Time
 
 1. Read `AGENTS.md`.
 2. Read `plans/2026-06-04-imjangbox-implementation-plan.md`.
 3. Read `TASKS.md`.
-4. Start at `TASKS.md` Phase 1 unless the user gives a newer instruction.
+4. Start at `TASKS.md` Phase 2 unless the user gives a newer instruction.
 
 ## Exact Next Implementation Step
 
-Begin Phase 1 privacy-first domain and persistence design:
+Begin Phase 2 broker inspection ledger work:
 
-- model internal records separately from public share snapshots
-- define verification status values
-- keep internal and public addresses distinct
-- draft MySQL/Flyway/MyBatis schema and mapper shapes
-- add public projection tests proving denied fields cannot appear
+- build broker-facing create/edit screens with Thymeleaf and Bootstrap 5.3
+- capture commercial property basics, pricing, area, condition, internal notes, and verification status
+- keep contact logs and internal risk memo internal-only
+- add controller/service/mapper tests around inspection create/update flows
 
 ## Do Not Start With
 
-- Domain entities before the privacy boundary is planned in code.
+- Public share-card routes backed directly by internal records.
 - JPA.
 - React, Vue, or Next.js.
 - Customer share cards backed directly by internal records.

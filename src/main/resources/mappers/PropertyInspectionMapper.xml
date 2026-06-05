@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imjangbox.inspection.persistence.PropertyInspectionMapper">
+    <resultMap id="propertyInspectionRow" type="com.imjangbox.inspection.persistence.PropertyInspectionRow">
+        <constructor>
+            <arg column="inspection_id" javaType="long"/>
+            <arg column="title" javaType="String"/>
+            <arg column="verification_status" javaType="String"/>
+            <arg column="internal_road_address" javaType="String"/>
+            <arg column="internal_detail_address" javaType="String"/>
+            <arg column="internal_geocode_memo" javaType="String"/>
+            <arg column="public_address_summary" javaType="String"/>
+            <arg column="public_landmark_hint" javaType="String"/>
+            <arg column="deposit_amount" javaType="long"/>
+            <arg column="monthly_rent_amount" javaType="long"/>
+            <arg column="premium_amount" javaType="long"/>
+            <arg column="price_private_note" javaType="String"/>
+            <arg column="private_memo" javaType="String"/>
+            <arg column="internal_risk_memo" javaType="String"/>
+        </constructor>
+    </resultMap>
+
+    <select id="findById" resultMap="propertyInspectionRow">
+        SELECT inspection_id,
+               title,
+               verification_status,
+               internal_road_address,
+               internal_detail_address,
+               internal_geocode_memo,
+               public_address_summary,
+               public_landmark_hint,
+               deposit_amount,
+               monthly_rent_amount,
+               premium_amount,
+               price_private_note,
+               private_memo,
+               internal_risk_memo
+          FROM property_inspections
+         WHERE inspection_id = #{inspectionId}
+    </select>
+</mapper>

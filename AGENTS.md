@@ -11,7 +11,7 @@ imjangbox is a commercial-property field inspection and proposal ledger for Kore
 
 ## CURRENT STATE
 
-Phase 0 foundation exists: Java 21 Spring Boot 3.5.x Gradle project, wrapper, minimal MVC route, Thymeleaf template, package boundary markers, local/test profiles, first context and MVC smoke tests, and README commands.
+Phase 1 foundation exists: Java 21 Spring Boot 3.5.x Gradle project, wrapper, minimal MVC route, Thymeleaf templates, package boundary markers, local/test profiles, context and MVC smoke tests, privacy-first internal records, separate public share snapshots, verification enum, Flyway schema, MyBatis mapper shape, and privacy regression tests.
 
 ## INTENDED STACK
 
@@ -60,6 +60,9 @@ Phase 0 foundation exists: Java 21 Spring Boot 3.5.x Gradle project, wrapper, mi
 | Application entry point | `src/main/java/com/imjangbox/ImjangboxApplication.java` | Minimal Spring Boot app. |
 | MVC smoke route | `src/main/java/com/imjangbox/web/HomeController.java` | Root route for Phase 0 QA only. |
 | Package boundaries | `src/main/java/com/imjangbox/` | `property`, `inspection`, `share`, `facility`, `map`, `file`, `common`, and `web`. |
+| Internal property records | `src/main/java/com/imjangbox/property/` | Internal address, public address, pricing, stakeholders, contact logs, verification, and inspection record shape. |
+| Public share snapshots | `src/main/java/com/imjangbox/share/` | Customer-safe snapshot records and allowlist factory. |
+| Persistence shape | `src/main/resources/db/migration/` and `src/main/resources/mappers/` | Flyway SQL and MyBatis XML for internal inspection records. |
 | Implementation plan | `plans/2026-06-04-imjangbox-implementation-plan.md` | Concrete product build sequence. |
 | Architecture plan | `plans/0001-product-architecture-plan.md` | Module boundaries and stack decisions. |
 | Domain constraints | `docs/DOMAIN_RULES.md` | Privacy, verification, address, facility, and map-search rules. |
@@ -112,4 +115,4 @@ When this repository is under a WSL Windows mount like `/mnt/c`, Gradle build ou
 
 - This file governs the entire repository until deeper `AGENTS.md` files are intentionally added.
 - Do not modify product code during planning-only tasks.
-- Phase 1 must not expose internal records directly through public share DTOs, templates, or responses.
+- Phase 2 must keep internal records out of public share DTOs, templates, and responses.

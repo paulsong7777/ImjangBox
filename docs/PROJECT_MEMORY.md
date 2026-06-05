@@ -32,9 +32,11 @@ The system is a broker workflow and proposal ledger. It is not a listing-platfor
 - `GeocodingGateway`
 - `FileStorage`
 
-## Repository Baseline
+## Repository State
 
-As of 2026-06-04, the repository had no product code, build files, or docs before initialization. Planning/memory documents were added first so future implementation can start from explicit constraints.
+As of 2026-06-04, the repository had no product code, build files, or docs before initialization. Planning/memory documents were added first so implementation can start from explicit constraints.
+
+As of 2026-06-05, Phase 1 privacy-first domain and persistence shapes exist. Internal records are modeled separately from public share snapshots; the first Flyway migration and MyBatis mapper XML define internal inspection persistence without exposing public snapshot DTOs.
 
 ## Key Assumptions
 

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title th:text="${snapshot.title}">Share card</title>
+</head>
+<body>
+<main>
+	<h1 th:text="${snapshot.title}">Property title</h1>
+	<dl>
+		<div>
+			<dt>Public address</dt>
+			<dd th:text="${snapshot.publicAddress.summary}">District</dd>
+		</div>
+		<div>
+			<dt>Landmark</dt>
+			<dd th:text="${snapshot.publicAddress.landmarkHint}">Landmark</dd>
+		</div>
+		<div>
+			<dt>Verification</dt>
+			<dd th:text="${snapshot.verificationDisplayText}">Verification status</dd>
+		</div>
+		<div>
+			<dt>Deposit</dt>
+			<dd th:text="${snapshot.pricing.depositAmount}">0</dd>
+		</div>
+		<div>
+			<dt>Monthly rent</dt>
+			<dd th:text="${snapshot.pricing.monthlyRentAmount}">0</dd>
+		</div>
+		<div>
+			<dt>Premium</dt>
+			<dd th:text="${snapshot.pricing.premiumAmount}">0</dd>
+		</div>
+	</dl>
+</main>
+</body>
+</html>

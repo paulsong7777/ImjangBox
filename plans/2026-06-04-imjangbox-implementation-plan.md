@@ -2,7 +2,7 @@
 
 **Created:** 2026-06-04
 **Scope:** Concrete implementation sequence for the initial product build.
-**Current repository state:** Phase 0 Spring Boot foundation exists; Phase 1 domain/privacy work has not started.
+**Current repository state:** Phase 1 privacy-first domain, public snapshot, schema, and mapper shapes exist.
 
 ## Product Goal
 
@@ -147,3 +147,7 @@ Build a Spring Boot 3.x application that helps Korean commercial real estate bro
 ## First Worker Task
 
 Implemented on 2026-06-05: Phase 0 created the Java 21 Spring Boot 3.x Gradle skeleton and context/MVC smoke tests without domain entities or share-card behavior.
+
+## Second Worker Task
+
+Implemented on 2026-06-05: Phase 1 created internal property inspection records, separate public share snapshot records, the closed verification-status enum, Flyway/MyBatis persistence shapes, and regression tests proving denied fields and sample private values are absent from public projections.

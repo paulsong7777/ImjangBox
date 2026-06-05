@@ -2,7 +2,7 @@
 
 ## Initialization Validation
 
-This repository initialization is documentation-only. No Java product code exists yet, so no Gradle, JUnit, LSP, or runtime application validation is currently possible.
+The initial repository setup was documentation-only. Product code now exists, so use Gradle/JUnit and runtime smoke checks for implementation validation.
 
 ## Automated File/Content Check
 
@@ -34,3 +34,11 @@ For this planning-only initialization, the manual QA surface is the repository f
 - Run MVC tests for internal broker flows and public share-card routes.
 - Run template rendering tests proving denied fields are absent.
 - Run browser QA for broker inspection capture and customer share-card pages.
+
+## Phase 1 Validation
+
+- `./gradlew test`
+- `./gradlew clean test --rerun-tasks`
+- `./gradlew test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest`
+- JShell projection probe against `/tmp/imjangbox-build/classes/java/main` must print a `PublicShareSnapshot[...]` and `PASS` after checking sample private values.
+- Runtime smoke QA: `./gradlew bootRun --args='--server.port=18082'`, `curl -i http://localhost:18082/`, and `curl -i http://localhost:18082/not-a-route`.

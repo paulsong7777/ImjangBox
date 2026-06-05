@@ -15,12 +15,12 @@
 
 ## Phase 1 - Domain Model, Privacy Boundary, And Persistence Plan
 
-- [ ] Design internal property, stakeholder, contact log, pricing, facility, verification, and address structures.
-- [ ] Define public share snapshot structures separately from internal records.
-- [ ] Encode denied public fields: `private_memo`, `price_private_note`, `stakeholder.phone`, `contact_log.content`, `internal_risk_memo`.
-- [ ] Define verification status enum values: `UNVERIFIED`, `OWNER_CLAIM`, `TENANT_CLAIM`, `CO_BROKER_CLAIM`, `AGENT_CHECKED`, `DOCUMENT_CHECKED`.
-- [ ] Create MySQL schema and MyBatis mapper plan for internal records.
-- [ ] Add tests proving public projections cannot expose private fields.
+- [x] Design internal property, stakeholder, contact log, pricing, facility, verification, and address structures.
+- [x] Define public share snapshot structures separately from internal records.
+- [x] Encode denied public fields: `private_memo`, `price_private_note`, `stakeholder.phone`, `contact_log.content`, `internal_risk_memo`.
+- [x] Define verification status enum values: `UNVERIFIED`, `OWNER_CLAIM`, `TENANT_CLAIM`, `CO_BROKER_CLAIM`, `AGENT_CHECKED`, `DOCUMENT_CHECKED`.
+- [x] Create MySQL schema and MyBatis mapper plan for internal records.
+- [x] Add tests proving public projections cannot expose private fields.
 
 ## Phase 2 - Field Inspection Capture
 

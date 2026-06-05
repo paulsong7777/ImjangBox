@@ -58,3 +58,34 @@
 - Manual QA: `curl -i http://localhost:18080/` returned `HTTP/1.1 200` with the `imjangbox` page.
 - Malformed route QA: `curl -i http://localhost:18080/not-a-route` returned `HTTP/1.1 404`.
 - Cleanup QA: stopped `bootRun`; follow-up curl to port `18080` failed to connect as expected.
+
+## 2026-06-05 - Phase 1 Privacy-First Domain And Persistence
+
+**Scope:** Execute Phase 1 from `TASKS.md` and `plans/2026-06-04-imjangbox-implementation-plan.md`.
+
+**Actions completed:**
+
+- Added internal inspection records for property data, pricing, stakeholder phone, contact-log content, private memo, internal risk memo, internal address, and public address.
+- Added `VerificationStatus` with exactly `UNVERIFIED`, `OWNER_CLAIM`, `TENANT_CLAIM`, `CO_BROKER_CLAIM`, `AGENT_CHECKED`, and `DOCUMENT_CHECKED`.
+- Added public share snapshot records and a factory that copies only allowlisted fields from internal records.
+- Added Flyway schema migration for internal inspection tables, stakeholder/contact-log private tables, and separate `public_share_snapshots`.
+- Added dynamic facility-check answer shape and matching internal persistence table.
+- Added MyBatis mapper XML, mapper row shape, and mapper registration marker for internal inspection persistence.
+- Added a minimal public share-card template for privacy-contract rendering tests.
+- Added regression tests for enum coverage, public snapshot type shape, serialized public projection privacy, template-rendered public projection privacy, and migration/mapper privacy shape.
+
+**Constraints honored:**
+
+- Public snapshot records do not embed internal inspection, internal address, stakeholder, contact log, or internal pricing records.
+- Public projection and template tests prove denied names and sample private values are absent.
+- No JPA, React, Vue, Next.js, or prohibited product automation features were introduced.
+
+**Validation receipts:**
+
+- Baseline red test: `./gradlew test` failed because Phase 1 domain/share types were missing.
+- Review-found failures fixed: MyBatis mapper registration, missing facility structure, stale memory docs, and Thymeleaf template test setup.
+- Green verification: `./gradlew clean test --rerun-tasks` passed.
+- Focused privacy verification: `./gradlew test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest` passed.
+- Manual QA: JShell projection probe printed `PublicShareSnapshot[...]` and returned `PASS` after checking denied sample values.
+- Runtime QA: `./gradlew bootRun --args='--server.port=18082'` started successfully; `curl -i http://localhost:18082/` returned `HTTP/1.1 200`; `curl -i http://localhost:18082/not-a-route` returned `HTTP/1.1 404`.
+- Cleanup QA: stopped `bootRun`; follow-up curl to port `18082` failed to connect as expected.

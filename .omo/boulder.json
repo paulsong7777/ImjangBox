@@ -2,6 +2,16 @@
   "schema_version": 2,
   "active_work_id": null,
   "works": {
+    "2026-06-04-imjangbox-implementation-plan-phase-1": {
+      "work_id": "2026-06-04-imjangbox-implementation-plan-phase-1",
+      "active_plan": "TASKS.md",
+      "plan_name": "Phase 1 - Domain Model, Privacy Boundary, And Persistence Plan",
+      "session_ids": [
+        "codex:20260605154953-root"
+      ],
+      "status": "completed",
+      "worktree_path": null
+    },
     "2026-06-04-imjangbox-implementation-plan": {
       "work_id": "2026-06-04-imjangbox-implementation-plan",
       "active_plan": "plans/2026-06-04-imjangbox-implementation-plan.md",

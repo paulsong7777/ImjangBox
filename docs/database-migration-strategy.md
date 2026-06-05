@@ -9,6 +9,8 @@ Schema work will use versioned SQL migrations and MyBatis mapper XML, not JPA-ge
 - Keep MyBatis mapper XML under `src/main/resources/mappers`.
 - Do not add JPA or automatic schema generation.
 
-## Phase 0 Status
+## Phase 1 Status
 
-No migration dependency or schema file is added yet because the repository has no domain tables. The local database profile is defined with environment-variable placeholders so secrets stay outside source control.
+Flyway dependencies and the first migration now exist. `src/main/resources/db/migration/V1__create_property_inspection_privacy_tables.sql` defines internal inspection tables separately from `public_share_snapshots`, and `src/main/resources/mappers/PropertyInspectionMapper.xml` defines the initial MyBatis mapper shape.
+
+The local database profile still uses environment-variable placeholders so secrets stay outside source control.
