@@ -1,26 +1,25 @@
 # CHECKPOINT
 
-**Checkpoint date:** 2026-06-04
+**Checkpoint date:** 2026-06-05
 **Project:** imjangbox
-**Current state:** Planning and memory initialization complete; product code has not been created.
+**Current state:** Phase 0 Spring Boot foundation exists and passes tests.
 
 ## Resume Here Next Time
 
 1. Read `AGENTS.md`.
 2. Read `plans/2026-06-04-imjangbox-implementation-plan.md`.
 3. Read `TASKS.md`.
-4. Start at `TASKS.md` Phase 0 unless the user gives a newer instruction.
+4. Start at `TASKS.md` Phase 1 unless the user gives a newer instruction.
 
 ## Exact Next Implementation Step
 
-Create the Spring Boot 3.x Gradle skeleton for Java 21 without adding domain behavior yet:
+Begin Phase 1 privacy-first domain and persistence design:
 
-- `settings.gradle` or `settings.gradle.kts`
-- root Gradle build file
-- application entry point
-- test configuration
-- first context-load test
-- README run/test commands
+- model internal records separately from public share snapshots
+- define verification status values
+- keep internal and public addresses distinct
+- draft MySQL/Flyway/MyBatis schema and mapper shapes
+- add public projection tests proving denied fields cannot appear
 
 ## Do Not Start With
 
@@ -33,10 +32,10 @@ Create the Spring Boot 3.x Gradle skeleton for Java 21 without adding domain beh
 - Automatic commercial district scoring.
 - External listing platform auto-upload.
 
-## Verification To Run After Phase 0 Skeleton
+## Verification To Run
 
 ```bash
 ./gradlew test
 ```
 
-If the Gradle wrapper is not present after Phase 0, add it or document the local Gradle version required.
+The repository includes a Gradle wrapper. In this `/mnt/c` workspace, Gradle writes generated output to `/tmp/imjangbox-build` by default to avoid Windows-mount chmod failures.

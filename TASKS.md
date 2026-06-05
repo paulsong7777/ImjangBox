@@ -5,13 +5,13 @@
 
 ## Phase 0 - Repository And Spring Boot Foundation
 
-- [ ] Create a Java 21 Gradle project for Spring Boot 3.x.
-- [ ] Add Spring MVC, Thymeleaf, validation, MyBatis, MySQL driver, and JUnit 5 dependencies.
-- [ ] Define package structure for property ledger, inspections, sharing, maps, files, and common support.
-- [ ] Add application configuration profiles for local development and tests.
-- [ ] Add database migration strategy decision before schema work starts.
-- [ ] Add first smoke tests for application context and MVC routing.
-- [ ] Document local run and test commands after the skeleton exists.
+- [x] Create a Java 21 Gradle project for Spring Boot 3.x.
+- [x] Add Spring MVC, Thymeleaf, validation, MyBatis, MySQL driver, and JUnit 5 dependencies.
+- [x] Define package structure for property ledger, inspections, sharing, maps, files, and common support.
+- [x] Add application configuration profiles for local development and tests.
+- [x] Add database migration strategy decision before schema work starts.
+- [x] Add first smoke tests for application context and MVC routing.
+- [x] Document local run and test commands after the skeleton exists.
 
 ## Phase 1 - Domain Model, Privacy Boundary, And Persistence Plan
 

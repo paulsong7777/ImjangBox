@@ -11,7 +11,7 @@ imjangbox is a commercial-property field inspection and proposal ledger for Kore
 
 ## CURRENT STATE
 
-This repository is initialized but has no product code, build files, or documentation beyond the planning and memory files created during repository initialization.
+Phase 0 foundation exists: Java 21 Spring Boot 3.5.x Gradle project, wrapper, minimal MVC route, Thymeleaf template, package boundary markers, local/test profiles, first context and MVC smoke tests, and README commands.
 
 ## INTENDED STACK
 
@@ -56,6 +56,10 @@ This repository is initialized but has no product code, build files, or document
 | --- | --- | --- |
 | Resume work | `CHECKPOINT.md` | Read first in a new session. |
 | Phase backlog | `TASKS.md` | Phase 0 through Phase 5 task ledger. |
+| Build file | `build.gradle` | Spring Boot 3.5.x, Java 21, MVC, Thymeleaf, validation, MyBatis, MySQL, tests. |
+| Application entry point | `src/main/java/com/imjangbox/ImjangboxApplication.java` | Minimal Spring Boot app. |
+| MVC smoke route | `src/main/java/com/imjangbox/web/HomeController.java` | Root route for Phase 0 QA only. |
+| Package boundaries | `src/main/java/com/imjangbox/` | `property`, `inspection`, `share`, `facility`, `map`, `file`, `common`, and `web`. |
 | Implementation plan | `plans/2026-06-04-imjangbox-implementation-plan.md` | Concrete product build sequence. |
 | Architecture plan | `plans/0001-product-architecture-plan.md` | Module boundaries and stack decisions. |
 | Domain constraints | `docs/DOMAIN_RULES.md` | Privacy, verification, address, facility, and map-search rules. |
@@ -97,15 +101,15 @@ This repository is initialized but has no product code, build files, or document
 
 ## COMMANDS
 
-No Gradle project exists yet. Once Phase 0 creates the Java project skeleton, expected commands are:
-
 ```bash
 ./gradlew test
 ./gradlew bootRun
 ```
 
+When this repository is under a WSL Windows mount like `/mnt/c`, Gradle build output defaults to `/tmp/imjangbox-build` to avoid mount-level chmod failures. Override with `IMJANGBOX_BUILD_DIR` if needed.
+
 ## NOTES
 
 - This file governs the entire repository until deeper `AGENTS.md` files are intentionally added.
 - Do not modify product code during planning-only tasks.
-- If product code is added later, update this file with real build, test, and module locations.
+- Phase 1 must not expose internal records directly through public share DTOs, templates, or responses.
