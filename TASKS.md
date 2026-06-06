@@ -36,7 +36,7 @@
 - [x] Design dynamic facility-check templates by business type.
 - [x] Store facility answers independently from template definitions.
 - [ ] Integrate Kakao Maps through explicit UI and backend boundaries.
-- [ ] Implement `GeocodingGateway` for address-to-coordinate lookup.
+- [x] Implement `GeocodingGateway` for address-to-coordinate lookup.
 - [ ] Create separate `search_index` structure for map and keyword search.
 - [ ] Add tests for template rendering, geocoding failure handling, and search-index updates.
 

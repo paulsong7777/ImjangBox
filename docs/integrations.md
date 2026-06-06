@@ -15,6 +15,13 @@ Expected behavior:
 - Avoid corrupting existing inspection records when geocoding fails.
 - Support test doubles for controller/service tests.
 
+Current implementation:
+
+- `GeocodingGateway` returns explicit success or failure results.
+- `DisabledGeocodingGateway` is the default because `imjangbox.geocoding.kakao.enabled=false`.
+- `KakaoGeocodingGateway` is enabled only when configuration opts in and `KAKAO_REST_API_KEY` is present.
+- Kakao Local API `x` is stored as longitude and `y` as latitude.
+
 ## FileStorage
 
 `FileStorage` should be the backend abstraction for file persistence.

@@ -209,3 +209,26 @@
 - Manual QA: `./gradlew bootRun --args='--server.port=18093'` started on the default `local` profile.
 - Broker create/edit QA: authenticated GET `/broker/inspections/new?businessType=CAFE` returned `HTTP/1.1 200`; authenticated multipart POST with CSRF and `facilityAnswers[0].answer=OK` returned `HTTP/1.1 302`; follow-up GET of the edit URL returned `HTTP/1.1 200` and rendered `급배수 확인` with `OK` selected.
 - Cleanup QA: stopped `bootRun`; follow-up curl to port `18093` failed to connect as expected.
+
+## 2026-06-06 - Phase 3 GeocodingGateway Boundary
+
+**Scope:** Complete the Phase 3 `GeocodingGateway` task before Kakao Maps UI/search-index work.
+
+**Actions completed:**
+
+- Added `GeocodingGateway` with explicit success/failure result types and failure reasons for invalid, ambiguous, unavailable, and provider-failed geocoding.
+- Added a disabled local/default gateway that keeps startup green without a Kakao secret and returns explicit internal failure results.
+- Added a Kakao Local REST adapter for address search, mapping Kakao `x`/`y` response fields to longitude/latitude coordinates.
+- Added configuration properties for enabling Kakao geocoding with `KAKAO_REST_API_KEY` while keeping geocoding disabled by default.
+- Added focused regression tests for disabled-mode failures, blank input, successful Kakao mapping, no-result invalid address, ambiguous multi-result responses, provider failures, and malformed provider documents.
+
+**Validation receipts:**
+
+- Red test: `./gradlew test --tests 'com.imjangbox.map.*'` failed before implementation because the gateway/result/provider types were missing.
+- Focused green verification: `./gradlew test --tests 'com.imjangbox.map.*'` passed.
+- Full verification: `./gradlew test` passed.
+- Clean verification: `./gradlew clean test --rerun-tasks` passed.
+- LSP diagnostics: unavailable because `jdtls` is not installed; Gradle clean compile/test was used as the Java verification substitute.
+- Manual QA: `./gradlew bootRun --args='--server.port=18094'` started on the default `local` profile; `curl -i --max-time 5 http://localhost:18094/` returned `HTTP/1.1 200`.
+- Gateway API QA: JShell against `/tmp/imjangbox-build/classes/java/main` returned `Failure[reason=UNAVAILABLE, ...]` for a normal address and `Failure[reason=INVALID_ADDRESS, ...]` for blank input through `DisabledGeocodingGateway`.
+- Cleanup QA: stopped `bootRun`; follow-up curl to port `18094` failed to connect as expected and `/tmp/imjangbox-port-18094-check.txt` was removed.

@@ -66,3 +66,13 @@ For this planning-only initialization, the manual QA surface is the repository f
   - authenticated `curl -i -u broker:broker-password 'http://localhost:18092/broker/inspections/new?businessType=RESTAURANT'` should return `200` and render RESTAURANT facility template labels
   - authenticated malformed business type should return `200` with the no-template empty state
   - authenticated create with `_csrf` and `facilityAnswers[0].answer=OK` should redirect to edit, and the edit page should render the answer as selected
+
+## Phase 3 GeocodingGateway Validation
+
+- `./gradlew test --tests 'com.imjangbox.map.*'`
+- `./gradlew test`
+- `./gradlew clean test --rerun-tasks`
+- LSP diagnostics should be run when `jdtls` is installed; otherwise record `jdtls` as unavailable and rely on Gradle clean compile/test.
+- Runtime smoke QA: `./gradlew bootRun --args='--server.port=18094'` and `curl -i --max-time 5 http://localhost:18094/` should return `HTTP/1.1 200`.
+- Gateway API QA: JShell with `/tmp/imjangbox-build/classes/java/main` should show `DisabledGeocodingGateway` returning `UNAVAILABLE` for a normal address and `INVALID_ADDRESS` for blank input.
+- Cleanup QA: stop `bootRun`, then a bounded curl to port `18094` should fail to connect.

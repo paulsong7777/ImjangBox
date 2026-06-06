@@ -155,3 +155,7 @@ Implemented on 2026-06-05: Phase 1 created internal property inspection records,
 ## Third Worker Task
 
 Implemented on 2026-06-05: Phase 2 created broker-authenticated inspection create/edit screens, validated form capture for property basics/pricing/area/condition/internal notes, internal-only contact log persistence, hardened `FileStorage` attachment metadata flow, MyBatis write mappings, and controller/service/persistence-shape tests.
+
+## Fourth Worker Task
+
+Implemented on 2026-06-06: Phase 3 began with dynamic facility templates, independently persisted facility answers, and an explicit `GeocodingGateway` boundary. Geocoding now has disabled local defaults, Kakao Local REST adapter mapping, explicit failure reasons, configuration through `KAKAO_REST_API_KEY`, and focused regression tests.

@@ -2,7 +2,7 @@
 
 **Checkpoint date:** 2026-06-06
 **Project:** imjangbox
-**Current state:** Phase 3 has started. Dynamic facility-check template definitions now exist by business type, with MySQL/Flyway template tables, a MyBatis mapper/service boundary, local-profile configuration-backed seed templates, broker-form rendering for selected business types, and independently persisted facility answers.
+**Current state:** Phase 3 has started. Dynamic facility-check template definitions now exist by business type, with MySQL/Flyway template tables, a MyBatis mapper/service boundary, local-profile configuration-backed seed templates, broker-form rendering for selected business types, independently persisted facility answers, and an explicit `GeocodingGateway` boundary with a disabled local default and Kakao REST adapter.
 
 ## Resume Here Next Time
 
@@ -15,7 +15,7 @@
 
 Continue Phase 3 facility templates, maps, geocoding, and search-index work:
 
-- implement `GeocodingGateway` boundaries before map/geocoding logic
+- integrate Kakao Maps through explicit UI and backend boundaries
 - keep search based on a separate `search_index` structure, not internal notes
 
 Phase 2 notes to preserve:
@@ -32,6 +32,7 @@ Phase 2 notes to preserve:
 - React, Vue, or Next.js.
 - Hard-coded facility template items in Java or Thymeleaf.
 - Facility answers stored inside template-definition rows.
+- Geocoding logic embedded directly into inspection controllers or Thymeleaf templates.
 - Search scans over private internal notes.
 - Customer share cards backed directly by internal records.
 - Automatic ad-copy generation.

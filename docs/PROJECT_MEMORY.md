@@ -38,7 +38,7 @@ As of 2026-06-04, the repository had no product code, build files, or docs befor
 
 As of 2026-06-05, Phase 2 broker inspection ledger create/edit flow exists. Internal records are modeled separately from public share snapshots; broker inspection routes require authentication; Flyway migrations and MyBatis mapper XML define internal inspection persistence, contact logs, and attachment metadata without exposing public snapshot DTOs.
 
-As of 2026-06-06, Phase 3 has begun with dynamic facility-check template definitions by business type. Template definitions are stored separately from inspection-specific answers, are exposed through a facility mapper/service boundary, and render on the broker inspection form from MySQL data or local-profile configuration. Facility answers are persisted independently from template definitions and reload on broker edit screens.
+As of 2026-06-06, Phase 3 has begun with dynamic facility-check template definitions by business type. Template definitions are stored separately from inspection-specific answers, are exposed through a facility mapper/service boundary, and render on the broker inspection form from MySQL data or local-profile configuration. Facility answers are persisted independently from template definitions and reload on broker edit screens. `GeocodingGateway` now exists as an explicit backend boundary with disabled local defaults and a Kakao REST adapter.
 
 ## Key Assumptions
 
@@ -46,4 +46,5 @@ As of 2026-06-06, Phase 3 has begun with dynamic facility-check template definit
 - Internal broker records may contain sensitive notes, contact details, risk memos, and operational context.
 - Public proposal content should be curated and factual, not automatically generated promotional copy.
 - Facility-check templates should be data-driven by business type.
+- Geocoding failures should be represented as explicit internal result states, not as partial inspection writes.
 - Search and maps should use a dedicated search/index structure rather than private internal notes.

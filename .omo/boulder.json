@@ -37,7 +37,8 @@
       "active_plan": "TASKS.md",
       "plan_name": "Phase 3 - Facility Templates, Maps, And Search Index",
       "session_ids": [
-        "codex:20260606162939-root"
+        "codex:20260606162939-root",
+        "codex:20260606212252-root"
       ],
       "status": "active",
       "worktree_path": null
