@@ -2,14 +2,18 @@ package com.imjangbox.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
 class LocalFileStorageTest {
 
 	@Test
-	void storeSanitizesClientFilenameBeforeBuildingStorageKey() throws Exception {
-		LocalFileStorage storage = new LocalFileStorage();
+	void storeSanitizesClientFilenameBeforeBuildingStorageKey(@TempDir Path localRoot) throws Exception {
+		LocalFileStorage storage = new LocalFileStorage(localRoot);
 
 		StoredFile storedFile = storage.store(41L, new MockMultipartFile(
 				"attachments", "../위험\nfloor plan.png", "image/png", "file".getBytes()));
@@ -21,5 +25,6 @@ class LocalFileStorageTest {
 				.doesNotContain("..")
 				.doesNotContain("floor_plan")
 				.doesNotContain("\n");
+		assertThat(Files.readString(localRoot.resolve(storedFile.storageKey()))).isEqualTo("file");
 	}
 }

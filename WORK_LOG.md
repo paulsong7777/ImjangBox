@@ -98,7 +98,7 @@
 
 - Added broker-facing create/edit routes at `/broker/inspections/new`, `/broker/inspections`, and `/broker/inspections/{inspectionId}/edit`.
 - Added a Bootstrap 5.3 Thymeleaf form for internal address, public address, area, pricing, verification status, business-fit notes, condition notes, private price notes, private memo, internal risk memo, contact log, and attachments.
-- Added validated `InspectionForm`, `InspectionService`, MyBatis write rows, and mapper methods for create/update, contact-log replacement, and attachment metadata insert.
+- Added validated `InspectionForm`, `InspectionService`, MyBatis write rows, and mapper methods for create/update, append-only contact-log writes, and attachment metadata insert.
 - Added a `FileStorage` boundary with `StoredFile` metadata and a local-profile storage implementation.
 - Added a local-profile in-memory mapper so `bootRun` works without MySQL while `local-db` remains the MyBatis/MySQL path.
 - Added Flyway V2 migration for area/business-fit/condition columns and internal file attachment metadata.
@@ -124,3 +124,34 @@
 - CSRF QA: authenticated GET of `/broker/inspections/new` rendered exactly one `_csrf` field.
 - Create QA: authenticated multipart POST with `_csrf` and a text attachment returned `HTTP/1.1 302`; follow-up GET of `/broker/inspections/41/edit` returned `HTTP/1.1 200` and showed the created title.
 - Cleanup QA: stopped `bootRun`; follow-up curl to port `18086` failed to connect as expected.
+
+## 2026-06-06 - Phase 2 Hardening Pass
+
+**Scope:** Harden the existing Phase 2 broker inspection ledger before starting Phase 3.
+
+**Actions completed:**
+
+- Kept contact-log update behavior append-only and exposed contact logs as a list on the internal persistence read row.
+- Updated the default local-profile mapper so it retains contact logs and file attachment metadata instead of silently dropping child writes.
+- Added local mapper regression tests for contact-log retention, append-only update behavior, explicit contact-log deletion, and attachment metadata reads.
+- Made `LocalFileStorage` use `imjangbox.file-storage.local-root` from application properties instead of hardcoding `java.io.tmpdir` in Java code.
+- Updated local file-storage tests to prove files are written under the configured root.
+- Updated `README.md` with Phase 2 broker credentials, `/broker/inspections/new`, `local` vs `local-db`, attachment storage, and test commands.
+
+**Constraints honored:**
+
+- No Phase 3 facility, map, geocoding, or search-index features were started.
+- Public share DTOs and templates remain separate from internal inspection records.
+- Contact logs, attachment storage keys, private memos, private price notes, and internal risk memos remain internal-only surfaces.
+
+**Validation receipts:**
+
+- Focused local mapper verification: `./gradlew test --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest` passed.
+- Focused file-storage verification: `./gradlew test --tests com.imjangbox.file.LocalFileStorageTest` passed.
+- Focused persistence privacy-shape verification: `./gradlew test --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest` passed.
+- Focused public share privacy verification: `./gradlew test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest` passed.
+- Full acceptance verification: `./gradlew test` passed.
+- Manual QA: `./gradlew bootRun --args='--server.port=18091 --imjangbox.file-storage.local-root=/tmp/imjangbox-phase2-hardening-files'` started on the default `local` profile.
+- Broker create QA: authenticated GET of `/broker/inspections/new` returned a CSRF token; authenticated multipart POST with a text attachment returned `HTTP/1.1 302` to `/broker/inspections/41/edit`; follow-up GET returned `HTTP/1.1 200` and rendered `Phase 2 hardening QA`.
+- Attachment root QA: uploaded text attachment was written under `/tmp/imjangbox-phase2-hardening-files/inspection-files/41/`.
+- Cleanup QA: stopped `bootRun`; follow-up curl to port `18091` failed to connect as expected.

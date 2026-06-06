@@ -8,6 +8,8 @@ import java.text.Normalizer;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,20 +19,27 @@ public class LocalFileStorage implements FileStorage {
 	private static final Pattern UNSAFE_FILENAME_CHARACTER = Pattern.compile("[^A-Za-z0-9._-]");
 	private static final int MAX_FILENAME_LENGTH = 120;
 
+	private final Path localRoot;
+
+	@Autowired
+	public LocalFileStorage(@Value("${imjangbox.file-storage.local-root}") String localRoot) {
+		this(Path.of(localRoot));
+	}
+
+	LocalFileStorage(Path localRoot) {
+		this.localRoot = localRoot.toAbsolutePath().normalize();
+	}
+
 	@Override
 	public StoredFile store(long inspectionId, MultipartFile file) throws IOException {
 		String originalFilename = safeFilename(file.getOriginalFilename());
 		String storageKey = "inspection-files/" + inspectionId + "/" + UUID.randomUUID() + extension(originalFilename);
-		Path target = localRoot().resolve(storageKey);
+		Path target = localRoot.resolve(storageKey).normalize();
 		Files.createDirectories(target.getParent());
 		try (InputStream input = file.getInputStream()) {
 			Files.copy(input, target);
 		}
 		return new StoredFile(storageKey, originalFilename, file.getContentType(), file.getSize());
-	}
-
-	private Path localRoot() {
-		return Path.of(System.getProperty("java.io.tmpdir"), "imjangbox-local-files");
 	}
 
 	private String safeFilename(String originalFilename) {

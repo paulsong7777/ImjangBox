@@ -1,6 +1,8 @@
 package com.imjangbox.inspection.persistence;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -14,6 +16,8 @@ class LocalInspectionLedgerMapper implements PropertyInspectionMapper {
 
 	private final AtomicLong sequence = new AtomicLong(40);
 	private final Map<Long, PropertyInspectionWriteRow> inspections = new LinkedHashMap<>();
+	private final Map<Long, List<ContactLogWriteRow>> contactLogs = new LinkedHashMap<>();
+	private final Map<Long, List<FileAttachmentWriteRow>> fileAttachments = new LinkedHashMap<>();
 
 	@Override
 	public Optional<PropertyInspectionRow> findById(long inspectionId) {
@@ -37,14 +41,17 @@ class LocalInspectionLedgerMapper implements PropertyInspectionMapper {
 
 	@Override
 	public void deleteContactLogs(long inspectionId) {
+		contactLogs.remove(inspectionId);
 	}
 
 	@Override
 	public void insertContactLog(ContactLogWriteRow row) {
+		contactLogs.computeIfAbsent(row.inspectionId(), ignored -> new ArrayList<>()).add(row);
 	}
 
 	@Override
 	public void insertFileAttachment(FileAttachmentWriteRow row) {
+		fileAttachments.computeIfAbsent(row.inspectionId(), ignored -> new ArrayList<>()).add(row);
 	}
 
 	private PropertyInspectionRow toReadRow(PropertyInspectionWriteRow row) {
@@ -65,6 +72,8 @@ class LocalInspectionLedgerMapper implements PropertyInspectionMapper {
 				row.conditionMemo(),
 				row.pricePrivateNote(),
 				row.privateMemo(),
-				row.internalRiskMemo());
+				row.internalRiskMemo(),
+				contactLogs.getOrDefault(row.inspectionId(), List.of()),
+				fileAttachments.getOrDefault(row.inspectionId(), List.of()));
 	}
 }
