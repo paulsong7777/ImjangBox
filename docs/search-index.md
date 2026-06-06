@@ -32,3 +32,11 @@ Internal records can contain private notes, risk memos, contact logs, and operat
 - Whether index refresh is synchronous on inspection save or asynchronous.
 - Whether search index stores broker-team scoped data.
 - How public address masking affects map clustering.
+
+## Current Implementation
+
+- `property_search_index` is created by Flyway V4 as a separate map/search structure.
+- `InspectionService` refreshes the index synchronously after broker create/update writes.
+- Indexed text is built from broker-safe fields only: title, public address summary, public landmark hint, business type, verification status, and area.
+- The index excludes private memo, private price note, contact-log content, internal risk memo, and raw internal address.
+- Latitude and longitude columns are nullable placeholders for later geocoding-backed map search.

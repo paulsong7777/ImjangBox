@@ -25,4 +25,8 @@ public interface PropertyInspectionMapper {
 	void insertFacilityAnswer(FacilityAnswerWriteRow row);
 
 	List<FacilityAnswerWriteRow> findFacilityAnswers(long inspectionId);
+
+	void upsertSearchIndex(SearchIndexWriteRow row);
+
+	Optional<SearchIndexWriteRow> findSearchIndexByInspectionId(long inspectionId);
 }

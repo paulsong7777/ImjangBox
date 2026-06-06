@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "active_work_id": "2026-06-04-imjangbox-implementation-plan-phase-3",
+  "active_work_id": null,
   "works": {
     "2026-06-04-imjangbox-implementation-plan-phase-2": {
       "work_id": "2026-06-04-imjangbox-implementation-plan-phase-2",
@@ -38,9 +38,10 @@
       "plan_name": "Phase 3 - Facility Templates, Maps, And Search Index",
       "session_ids": [
         "codex:20260606162939-root",
-        "codex:20260606212252-root"
+        "codex:20260606212252-root",
+        "codex:20260606213427-root"
       ],
-      "status": "active",
+      "status": "completed",
       "worktree_path": null
     }
   }

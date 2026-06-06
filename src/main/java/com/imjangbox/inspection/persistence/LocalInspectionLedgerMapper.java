@@ -19,6 +19,7 @@ class LocalInspectionLedgerMapper implements PropertyInspectionMapper {
 	private final Map<Long, List<ContactLogWriteRow>> contactLogs = new LinkedHashMap<>();
 	private final Map<Long, List<FileAttachmentWriteRow>> fileAttachments = new LinkedHashMap<>();
 	private final Map<Long, List<FacilityAnswerWriteRow>> facilityAnswers = new LinkedHashMap<>();
+	private final Map<Long, SearchIndexWriteRow> searchIndex = new LinkedHashMap<>();
 
 	@Override
 	public Optional<PropertyInspectionRow> findById(long inspectionId) {
@@ -68,6 +69,16 @@ class LocalInspectionLedgerMapper implements PropertyInspectionMapper {
 	@Override
 	public List<FacilityAnswerWriteRow> findFacilityAnswers(long inspectionId) {
 		return List.copyOf(facilityAnswers.getOrDefault(inspectionId, List.of()));
+	}
+
+	@Override
+	public void upsertSearchIndex(SearchIndexWriteRow row) {
+		searchIndex.put(row.inspectionId(), row);
+	}
+
+	@Override
+	public Optional<SearchIndexWriteRow> findSearchIndexByInspectionId(long inspectionId) {
+		return Optional.ofNullable(searchIndex.get(inspectionId));
 	}
 
 	private PropertyInspectionRow toReadRow(PropertyInspectionWriteRow row) {

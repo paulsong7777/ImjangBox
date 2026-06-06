@@ -232,3 +232,53 @@
 - Manual QA: `./gradlew bootRun --args='--server.port=18094'` started on the default `local` profile; `curl -i --max-time 5 http://localhost:18094/` returned `HTTP/1.1 200`.
 - Gateway API QA: JShell against `/tmp/imjangbox-build/classes/java/main` returned `Failure[reason=UNAVAILABLE, ...]` for a normal address and `Failure[reason=INVALID_ADDRESS, ...]` for blank input through `DisabledGeocodingGateway`.
 - Cleanup QA: stopped `bootRun`; follow-up curl to port `18094` failed to connect as expected and `/tmp/imjangbox-port-18094-check.txt` was removed.
+
+## 2026-06-06 - Phase 3 Kakao Maps UI Boundary
+
+**Scope:** Complete the Phase 3 task to integrate Kakao Maps through explicit UI and backend boundaries.
+
+**Actions completed:**
+
+- Added `KakaoMapProperties`, `KakaoMapView`, and `KakaoMapViewFactory` for browser map display configuration.
+- Kept Kakao Maps browser display disabled by default and configured through `KAKAO_MAP_JAVASCRIPT_KEY`.
+- Kept browser JavaScript-key configuration separate from backend `KAKAO_REST_API_KEY` geocoding configuration.
+- Added a broker inspection form map section that renders a disabled status by default or a Kakao Maps SDK-backed map container when enabled.
+- Added focused MVC and map factory regression tests for disabled rendering, enabled SDK data, URL encoding, default coordinates, and REST-key absence.
+
+**Validation receipts:**
+
+- Baseline characterization: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest` passed before production changes.
+- Red test: focused map/UI tests failed before implementation because `KakaoMapView`, `KakaoMapViewFactory`, and `KakaoMapProperties` were missing.
+- Focused green verification: `./gradlew test --tests com.imjangbox.map.KakaoMapViewFactoryTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest` passed.
+- Full verification: `./gradlew test` passed.
+- Final clean verification: `./gradlew clean test --rerun-tasks` passed.
+- LSP diagnostics: unavailable because `jdtls` is not installed; Gradle compile/test was used as the Java verification substitute.
+- Enabled runtime QA: `KAKAO_MAP_JAVASCRIPT_KEY='browser key+only' ./gradlew bootRun --args='--server.port=18095 --imjangbox.maps.kakao.enabled=true'` started successfully; authenticated GET `/broker/inspections/new?businessType=CAFE` returned `HTTP/1.1 200` and rendered `data-kakao-map`, an encoded SDK URL, default coordinates, and no REST API key text.
+- Auth QA: unauthenticated GET `/broker/inspections/new` on port `18095` returned `HTTP/1.1 401`.
+- Malformed business-type QA: authenticated GET with `businessType=%3Cscript%3Ealert(1)%3C%2Fscript%3E` returned `HTTP/1.1 200`, rendered the no-template empty state, and did not echo executable markup.
+- Disabled runtime QA: `./gradlew bootRun --args='--server.port=18096'` started successfully; authenticated GET `/broker/inspections/new` returned `HTTP/1.1 200`, rendered the disabled map status, and did not render a Kakao SDK URL.
+- Cleanup QA: stopped both `bootRun` sessions; follow-up curls to ports `18095` and `18096` failed to connect, and `/tmp/imjangbox-kakao-map-qa.*` artifacts were removed.
+
+## 2026-06-06 - Phase 3 Search Index Structure
+
+**Scope:** Complete the Phase 3 tasks to create a separate search-index structure and cover template, geocoding, and search-index regressions.
+
+**Actions completed:**
+
+- Added `SearchIndexWriteRow` and dedicated `PropertyInspectionMapper` methods for upserting and reading `property_search_index` rows.
+- Added local-profile search-index storage so the default broker flow refreshes index data without MySQL.
+- Added Flyway V4 migration for `property_search_index` with safe searchable fields, nullable coordinate placeholders, and index keys for text, business type, verification, and coordinates.
+- Refreshed the search index from `InspectionService` after create/update using broker-safe fields from `InspectionForm`.
+- Kept private memo, private price note, contact-log content, internal risk memo, and raw internal address out of index text and persistence shape.
+- Added regression tests for service refresh, local search-index storage, migration privacy shape, MyBatis statement shape, template rendering, geocoding failure handling, and search-index updates.
+
+**Validation receipts:**
+
+- Baseline characterization: `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest` passed before production changes.
+- Red test: focused search-index tests failed before implementation because `SearchIndexWriteRow`, mapper methods, V4 migration, and XML statements were missing.
+- Focused green verification: `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest` passed.
+- Full verification: `./gradlew test` passed.
+- Final clean verification: `./gradlew clean test --rerun-tasks` passed.
+- LSP diagnostics: unavailable because `jdtls` is not installed; Gradle compile/test was used as the Java verification substitute.
+- Runtime QA: `./gradlew bootRun --args='--server.port=18097'` started successfully; authenticated create with private leak markers returned `HTTP/1.1 302`, the edit page returned `HTTP/1.1 200`, and authenticated update returned `HTTP/1.1 302`.
+- Cleanup QA: stopped `bootRun`; follow-up curl to port `18097` failed to connect, and `/tmp/imjangbox-search-index-qa.*` artifacts were removed.

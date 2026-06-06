@@ -32,6 +32,8 @@ import com.imjangbox.inspection.InspectionService;
 import com.imjangbox.common.SecurityConfig;
 import com.imjangbox.facility.FacilityTemplateItem;
 import com.imjangbox.facility.FacilityTemplateService;
+import com.imjangbox.map.KakaoMapView;
+import com.imjangbox.map.KakaoMapViewFactory;
 import com.imjangbox.property.VerificationStatus;
 
 @WebMvcTest(BrokerInspectionController.class)
@@ -47,6 +49,9 @@ class BrokerInspectionControllerTest {
 	@MockitoBean
 	private FacilityTemplateService facilityTemplateService;
 
+	@MockitoBean
+	private KakaoMapViewFactory kakaoMapViewFactory;
+
 	@Autowired
 	BrokerInspectionControllerTest(MockMvc mockMvc) {
 		this.mockMvc = mockMvc;
@@ -60,6 +65,7 @@ class BrokerInspectionControllerTest {
 		when(facilityTemplateService.normalizeBusinessType(anyString())).thenAnswer(invocation ->
 				invocation.getArgument(0, String.class).trim().toUpperCase());
 		when(facilityTemplateService.findItemsForBusinessType(anyString())).thenReturn(List.of());
+		when(kakaoMapViewFactory.brokerInspectionMap()).thenReturn(KakaoMapView.disabled());
 	}
 
 	@Test
@@ -71,6 +77,35 @@ class BrokerInspectionControllerTest {
 				.andExpect(content().string(containsString("내부 리스크 메모")))
 				.andExpect(content().string(containsString("연락 기록")))
 				.andExpect(content().string(containsString("첨부 파일")));
+	}
+
+	@Test
+	void newFormRendersDisabledKakaoMapBoundaryWithoutSdkSecret() throws Exception {
+		mockMvc.perform(get("/broker/inspections/new"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("위치 지도")))
+				.andExpect(content().string(containsString("지도 연동은 비활성화되어 있습니다")))
+				.andExpect(content().string(org.hamcrest.Matchers.not(containsString("data-kakao-sdk-src"))))
+				.andExpect(content().string(org.hamcrest.Matchers.not(containsString("KAKAO_REST_API_KEY"))));
+	}
+
+	@Test
+	void newFormRendersConfiguredKakaoMapSdkThroughViewBoundary() throws Exception {
+		when(kakaoMapViewFactory.brokerInspectionMap()).thenReturn(KakaoMapView.enabled(
+				"https://dapi.kakao.com/v2/maps/sdk.js?appkey=browser-key&autoload=false",
+				"37.566500",
+				"126.978000",
+				4));
+
+		mockMvc.perform(get("/broker/inspections/new"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("data-kakao-map")))
+				.andExpect(content().string(containsString(
+						"data-kakao-sdk-src=\"https://dapi.kakao.com/v2/maps/sdk.js?appkey=browser-key&amp;autoload=false\"")))
+				.andExpect(content().string(containsString("data-latitude=\"37.566500\"")))
+				.andExpect(content().string(containsString("data-longitude=\"126.978000\"")))
+				.andExpect(content().string(containsString("data-level=\"4\"")))
+				.andExpect(content().string(org.hamcrest.Matchers.not(containsString("rest-api-key"))));
 	}
 
 	@Test

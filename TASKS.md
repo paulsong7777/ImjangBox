@@ -1,7 +1,7 @@
 # TASKS
 
 **Project:** imjangbox
-**Last updated:** 2026-06-05
+**Last updated:** 2026-06-06
 
 ## Phase 0 - Repository And Spring Boot Foundation
 
@@ -35,10 +35,10 @@
 
 - [x] Design dynamic facility-check templates by business type.
 - [x] Store facility answers independently from template definitions.
-- [ ] Integrate Kakao Maps through explicit UI and backend boundaries.
+- [x] Integrate Kakao Maps through explicit UI and backend boundaries.
 - [x] Implement `GeocodingGateway` for address-to-coordinate lookup.
-- [ ] Create separate `search_index` structure for map and keyword search.
-- [ ] Add tests for template rendering, geocoding failure handling, and search-index updates.
+- [x] Create separate `search_index` structure for map and keyword search.
+- [x] Add tests for template rendering, geocoding failure handling, and search-index updates.
 
 ## Phase 4 - Customer Share Cards
 

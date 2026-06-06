@@ -73,6 +73,29 @@ class LocalInspectionLedgerMapperTest {
 				.containsExactly(org.assertj.core.groups.Tuple.tuple("electric_capacity", "NEEDS_CHECK"));
 	}
 
+	@Test
+	void searchIndexIsStoredSeparatelyFromInternalInspectionNotes() {
+		LocalInspectionLedgerMapper mapper = new LocalInspectionLedgerMapper();
+		PropertyInspectionWriteRow row = writeRow(null, "성수역 1층 상가");
+		mapper.insert(row);
+
+		mapper.upsertSearchIndex(new SearchIndexWriteRow(
+				row.inspectionId(),
+				"성수역 1층 상가",
+				"성수역 인근",
+				"대로변",
+				"CAFE",
+				"AGENT_CHECKED",
+				"82.50",
+				"성수역 1층 상가 성수역 인근 대로변 CAFE AGENT_CHECKED 82.50"));
+
+		SearchIndexWriteRow index = mapper.findSearchIndexByInspectionId(row.inspectionId()).orElseThrow();
+		assertThat(index.searchText())
+				.contains("성수역 1층 상가", "성수역 인근")
+				.doesNotContain("공유 금지")
+				.doesNotContain("권리금 리스크");
+	}
+
 	private PropertyInspectionWriteRow writeRow(Long inspectionId, String title) {
 		return new PropertyInspectionWriteRow.Builder()
 				.inspectionId(inspectionId)

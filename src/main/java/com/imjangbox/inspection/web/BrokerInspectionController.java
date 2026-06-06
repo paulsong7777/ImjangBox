@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.imjangbox.facility.FacilityTemplateService;
 import com.imjangbox.inspection.AttachmentValidationException;
 import com.imjangbox.inspection.InspectionService;
+import com.imjangbox.map.KakaoMapView;
+import com.imjangbox.map.KakaoMapViewFactory;
 import com.imjangbox.property.VerificationStatus;
 
 @Controller
@@ -27,12 +29,15 @@ public class BrokerInspectionController {
 
 	private final InspectionService inspectionService;
 	private final FacilityTemplateService facilityTemplateService;
+	private final KakaoMapViewFactory kakaoMapViewFactory;
 
 	public BrokerInspectionController(
 			InspectionService inspectionService,
-			FacilityTemplateService facilityTemplateService) {
+			FacilityTemplateService facilityTemplateService,
+			KakaoMapViewFactory kakaoMapViewFactory) {
 		this.inspectionService = inspectionService;
 		this.facilityTemplateService = facilityTemplateService;
+		this.kakaoMapViewFactory = kakaoMapViewFactory;
 	}
 
 	@ModelAttribute("verificationStatuses")
@@ -43,6 +48,11 @@ public class BrokerInspectionController {
 	@ModelAttribute("businessTypes")
 	List<String> businessTypes() {
 		return facilityTemplateService.findBusinessTypes();
+	}
+
+	@ModelAttribute("kakaoMap")
+	KakaoMapView kakaoMap() {
+		return kakaoMapViewFactory.brokerInspectionMap();
 	}
 
 	@GetMapping("/new")

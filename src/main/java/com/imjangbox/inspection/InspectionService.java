@@ -165,5 +165,6 @@ public class InspectionService {
 		for (FacilityAnswerWriteRow facilityAnswer : form.toFacilityAnswerWriteRows(inspectionId)) {
 			mapper.insertFacilityAnswer(facilityAnswer);
 		}
+		mapper.upsertSearchIndex(form.toSearchIndexWriteRow(inspectionId));
 	}
 }

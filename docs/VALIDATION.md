@@ -21,14 +21,9 @@ grep -q "Do not modify product code" WORK_LOG.md'
 
 ## Manual QA Surface
 
-For this planning-only initialization, the manual QA surface is the repository filesystem. A valid manual check is a terminal or tmux transcript showing:
+Product code exists. Use the running Spring Boot application as the main manual QA surface for broker and public web flows. Documentation-only filesystem checks remain useful only for project-memory updates.
 
-- required files exist;
-- `TASKS.md` includes Phase 0 through Phase 5;
-- no Java product files were created;
-- privacy rules are present in the planning documents.
-
-## Future Validation Once Product Code Exists
+## General Product Validation
 
 - Run `./gradlew test`.
 - Run MVC tests for internal broker flows and public share-card routes.
@@ -76,3 +71,25 @@ For this planning-only initialization, the manual QA surface is the repository f
 - Runtime smoke QA: `./gradlew bootRun --args='--server.port=18094'` and `curl -i --max-time 5 http://localhost:18094/` should return `HTTP/1.1 200`.
 - Gateway API QA: JShell with `/tmp/imjangbox-build/classes/java/main` should show `DisabledGeocodingGateway` returning `UNAVAILABLE` for a normal address and `INVALID_ADDRESS` for blank input.
 - Cleanup QA: stop `bootRun`, then a bounded curl to port `18094` should fail to connect.
+
+## Phase 3 Kakao Maps UI Validation
+
+- Baseline MVC check: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`
+- Focused map/UI checks: `./gradlew test --tests com.imjangbox.map.KakaoMapViewFactoryTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`
+- Full verification: `./gradlew test`
+- Final clean verification: `./gradlew clean test --rerun-tasks`
+- LSP diagnostics should be run when `jdtls` is installed; otherwise record `jdtls` as unavailable and rely on Gradle compile/test.
+- Enabled runtime QA: start with `KAKAO_MAP_JAVASCRIPT_KEY='browser key+only' ./gradlew bootRun --args='--server.port=18095 --imjangbox.maps.kakao.enabled=true'`; authenticated GET `/broker/inspections/new?businessType=CAFE` should render `data-kakao-map`, an encoded `data-kakao-sdk-src`, default coordinates, and no REST API key text.
+- Malformed input QA: authenticated GET with `businessType=%3Cscript%3Ealert(1)%3C%2Fscript%3E` should return `HTTP/1.1 200`, render the no-template empty state, and not echo executable markup.
+- Disabled runtime QA: start with `./gradlew bootRun --args='--server.port=18096'`; authenticated GET `/broker/inspections/new` should render the disabled map status and no Kakao SDK URL.
+- Cleanup QA: stop both `bootRun` sessions, then bounded curls to ports `18095` and `18096` should fail to connect.
+
+## Phase 3 Search Index Validation
+
+- Baseline persistence check: `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest`
+- Focused search-index checks: same command should prove service refreshes `property_search_index`, local storage keeps it separate, and V4/MyBatis shapes exclude private fields.
+- Full verification: `./gradlew test`
+- Final clean verification: `./gradlew clean test --rerun-tasks`
+- LSP diagnostics should be run when `jdtls` is installed; otherwise record `jdtls` as unavailable and rely on Gradle compile/test.
+- Runtime broker QA: `./gradlew bootRun --args='--server.port=18097'`; authenticated create and update requests with private leak markers should return redirects and keep the broker edit flow working.
+- Cleanup QA: stop `bootRun`, then a bounded curl to port `18097` should fail to connect.

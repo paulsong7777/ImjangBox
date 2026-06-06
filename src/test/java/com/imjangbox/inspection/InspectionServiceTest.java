@@ -20,6 +20,7 @@ import com.imjangbox.inspection.persistence.FacilityAnswerWriteRow;
 import com.imjangbox.inspection.persistence.PropertyInspectionMapper;
 import com.imjangbox.inspection.persistence.PropertyInspectionRow;
 import com.imjangbox.inspection.persistence.PropertyInspectionWriteRow;
+import com.imjangbox.inspection.persistence.SearchIndexWriteRow;
 import com.imjangbox.inspection.web.FacilityAnswerForm;
 import com.imjangbox.inspection.web.InspectionForm;
 import com.imjangbox.property.VerificationStatus;
@@ -54,6 +55,12 @@ class InspectionServiceTest {
 		assertThat(mapper.facilityAnswers)
 				.extracting(FacilityAnswerWriteRow::templateItemKey, FacilityAnswerWriteRow::answer)
 				.containsExactly(org.assertj.core.groups.Tuple.tuple("water_supply", "OK"));
+		assertThat(mapper.searchIndex.inspectionId()).isEqualTo(41L);
+		assertThat(mapper.searchIndex.searchText())
+				.contains("성수역 1층 상가", "성수역 인근", "대로변", "CAFE", "AGENT_CHECKED")
+				.doesNotContain("임대인 통화 전까지 공유 금지")
+				.doesNotContain("권리금 조정 리스크")
+				.doesNotContain("임대인과 권리금 범위 통화");
 	}
 
 	@Test
@@ -78,6 +85,12 @@ class InspectionServiceTest {
 				.extracting(FacilityAnswerWriteRow::inspectionId, FacilityAnswerWriteRow::templateItemKey,
 						FacilityAnswerWriteRow::answer)
 				.containsExactly(org.assertj.core.groups.Tuple.tuple(77L, "water_supply", "OK"));
+		assertThat(mapper.searchIndex.inspectionId()).isEqualTo(77L);
+		assertThat(mapper.searchIndex.publicAddressSummary()).isEqualTo("성수역 인근");
+		assertThat(mapper.searchIndex.searchText())
+				.contains("성수역 1층 상가", "82.50")
+				.doesNotContain("권리금 협상 여지")
+				.doesNotContain("권리금 조정 리스크");
 	}
 
 	@Test
@@ -211,6 +224,7 @@ class InspectionServiceTest {
 		private final List<FacilityAnswerWriteRow> facilityAnswers = new ArrayList<>();
 		private final List<Long> deletedContactLogInspectionIds = new ArrayList<>();
 		private final List<Long> deletedFacilityAnswerInspectionIds = new ArrayList<>();
+		private SearchIndexWriteRow searchIndex;
 		private int updateResult = 1;
 
 		@Override
@@ -258,6 +272,16 @@ class InspectionServiceTest {
 		@Override
 		public List<FacilityAnswerWriteRow> findFacilityAnswers(long inspectionId) {
 			return List.copyOf(facilityAnswers);
+		}
+
+		@Override
+		public void upsertSearchIndex(SearchIndexWriteRow row) {
+			searchIndex = row;
+		}
+
+		@Override
+		public Optional<SearchIndexWriteRow> findSearchIndexByInspectionId(long inspectionId) {
+			return Optional.ofNullable(searchIndex);
 		}
 	}
 

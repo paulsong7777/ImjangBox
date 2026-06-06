@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-@EnableConfigurationProperties(KakaoGeocodingProperties.class)
+@EnableConfigurationProperties({ KakaoGeocodingProperties.class, KakaoMapProperties.class })
 class MapConfiguration {
 
 	@Bean

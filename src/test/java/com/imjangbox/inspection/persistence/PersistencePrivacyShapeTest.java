@@ -99,6 +99,44 @@ class PersistencePrivacyShapeTest {
 	}
 
 	@Test
+	void phaseThreeSearchIndexMigrationKeepsIndexSeparateFromInternalNotes() throws Exception {
+		String sql = Files.readString(
+				Path.of("src/main/resources/db/migration/V4__create_property_search_index.sql"),
+				StandardCharsets.UTF_8);
+
+		assertThat(sql)
+				.contains("CREATE TABLE property_search_index")
+				.contains("inspection_id")
+				.contains("public_address_summary")
+				.contains("business_type")
+				.contains("verification_status")
+				.contains("search_text")
+				.doesNotContain("private_memo")
+				.doesNotContain("price_private_note")
+				.doesNotContain("contact_log")
+				.doesNotContain("internal_risk_memo");
+	}
+
+	@Test
+	void mapperHasDedicatedSearchIndexStatementsWithoutPrivateFields() throws Exception {
+		String mapper = Files.readString(
+				Path.of("src/main/resources/mappers/PropertyInspectionMapper.xml"),
+				StandardCharsets.UTF_8);
+
+		assertThat(mapper)
+				.contains("upsertSearchIndex")
+				.contains("findSearchIndexByInspectionId")
+				.contains("property_search_index");
+
+		String searchIndexSection = mapper.substring(mapper.indexOf("upsertSearchIndex"));
+		assertThat(searchIndexSection)
+				.doesNotContain("private_memo")
+				.doesNotContain("price_private_note")
+				.doesNotContain("contact_log")
+				.doesNotContain("internal_risk_memo");
+	}
+
+	@Test
 	void mapperInterfaceIsRegisteredForMyBatisBootScanning() {
 		assertThat(PropertyInspectionMapper.class).hasAnnotation(Mapper.class);
 	}

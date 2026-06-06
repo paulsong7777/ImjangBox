@@ -37,6 +37,19 @@
         </constructor>
     </resultMap>
 
+    <resultMap id="searchIndexWriteRow" type="com.imjangbox.inspection.persistence.SearchIndexWriteRow">
+        <constructor>
+            <arg column="inspection_id" javaType="long"/>
+            <arg column="title" javaType="String"/>
+            <arg column="public_address_summary" javaType="String"/>
+            <arg column="public_landmark_hint" javaType="String"/>
+            <arg column="business_type" javaType="String"/>
+            <arg column="verification_status" javaType="String"/>
+            <arg column="area_square_meters" javaType="String"/>
+            <arg column="search_text" javaType="String"/>
+        </constructor>
+    </resultMap>
+
     <select id="findById" resultMap="propertyInspectionRow">
         SELECT inspection_id,
                title,
@@ -189,5 +202,49 @@
           FROM property_facility_check_answers
          WHERE inspection_id = #{inspectionId}
          ORDER BY facility_check_answer_id
+    </select>
+
+    <insert id="upsertSearchIndex" parameterType="com.imjangbox.inspection.persistence.SearchIndexWriteRow">
+        INSERT INTO property_search_index (
+            inspection_id,
+            title,
+            public_address_summary,
+            public_landmark_hint,
+            business_type,
+            verification_status,
+            area_square_meters,
+            search_text
+        ) VALUES (
+            #{inspectionId},
+            #{title},
+            #{publicAddressSummary},
+            #{publicLandmarkHint},
+            #{businessType},
+            #{verificationStatus},
+            #{areaSquareMeters},
+            #{searchText}
+        )
+        ON DUPLICATE KEY UPDATE
+            title = VALUES(title),
+            public_address_summary = VALUES(public_address_summary),
+            public_landmark_hint = VALUES(public_landmark_hint),
+            business_type = VALUES(business_type),
+            verification_status = VALUES(verification_status),
+            area_square_meters = VALUES(area_square_meters),
+            search_text = VALUES(search_text),
+            indexed_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <select id="findSearchIndexByInspectionId" resultMap="searchIndexWriteRow">
+        SELECT inspection_id,
+               title,
+               public_address_summary,
+               public_landmark_hint,
+               business_type,
+               verification_status,
+               area_square_meters,
+               search_text
+          FROM property_search_index
+         WHERE inspection_id = #{inspectionId}
     </select>
 </mapper>

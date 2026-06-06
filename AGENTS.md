@@ -11,7 +11,7 @@ imjangbox is a commercial-property field inspection and proposal ledger for Kore
 
 ## CURRENT STATE
 
-Phase 2 broker inspection ledger exists: Java 21 Spring Boot 3.5.x Gradle project, Thymeleaf/Bootstrap internal create/edit forms, broker authentication for `/broker/**`, validation, service and MyBatis write shapes, `FileStorage` attachment metadata boundary, internal-only contact logs/risk notes, local/test profiles, privacy-first internal records, separate public share snapshots, verification enum, Flyway migrations, and regression tests.
+Phase 3 is complete: Java 21 Spring Boot 3.5.x Gradle project, Thymeleaf/Bootstrap internal create/edit forms, broker authentication for `/broker/**`, validation, service and MyBatis write shapes, `FileStorage` attachment metadata boundary, internal-only contact logs/risk notes, local/test profiles, privacy-first internal records, separate public share snapshots, verification enum, Flyway migrations, dynamic facility templates, independently persisted facility answers, `GeocodingGateway`, Kakao Maps browser UI boundary, separate `property_search_index`, and regression tests.
 
 ## INTENDED STACK
 
@@ -63,6 +63,7 @@ Phase 2 broker inspection ledger exists: Java 21 Spring Boot 3.5.x Gradle projec
 | Internal property records | `src/main/java/com/imjangbox/property/` | Internal address, public address, pricing, stakeholders, contact logs, verification, and inspection record shape. |
 | Public share snapshots | `src/main/java/com/imjangbox/share/` | Customer-safe snapshot records and allowlist factory. |
 | Persistence shape | `src/main/resources/db/migration/` and `src/main/resources/mappers/` | Flyway SQL and MyBatis XML for internal inspection records. |
+| Map/geocoding/search | `src/main/java/com/imjangbox/map/` and `src/main/java/com/imjangbox/inspection/persistence/SearchIndexWriteRow.java` | Kakao Maps browser UI config, geocoding gateway/adapters, and separate search-index row shape. |
 | Implementation plan | `plans/2026-06-04-imjangbox-implementation-plan.md` | Concrete product build sequence. |
 | Architecture plan | `plans/0001-product-architecture-plan.md` | Module boundaries and stack decisions. |
 | Domain constraints | `docs/DOMAIN_RULES.md` | Privacy, verification, address, facility, and map-search rules. |
@@ -115,4 +116,4 @@ When this repository is under a WSL Windows mount like `/mnt/c`, Gradle build ou
 
 - This file governs the entire repository until deeper `AGENTS.md` files are intentionally added.
 - Do not modify product code during planning-only tasks.
-- Phase 2 must keep internal records out of public share DTOs, templates, and responses.
+- Phase 4 must keep internal records out of public share DTOs, templates, and responses.

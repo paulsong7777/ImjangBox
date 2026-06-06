@@ -14,6 +14,7 @@ import jakarta.validation.constraints.AssertTrue;
 import com.imjangbox.facility.FacilityTemplateItem;
 import com.imjangbox.inspection.persistence.FacilityAnswerWriteRow;
 import com.imjangbox.inspection.persistence.PropertyInspectionWriteRow;
+import com.imjangbox.inspection.persistence.SearchIndexWriteRow;
 import com.imjangbox.property.VerificationStatus;
 
 public class InspectionForm {
@@ -105,6 +106,39 @@ public class InspectionForm {
 				.filter(FacilityAnswerForm::hasAnswer)
 				.map(answer -> answer.toWriteRow(inspectionId))
 				.toList();
+	}
+
+	public SearchIndexWriteRow toSearchIndexWriteRow(long inspectionId) {
+		return new SearchIndexWriteRow(
+				inspectionId,
+				title,
+				publicAddressSummary,
+				publicLandmarkHint,
+				businessType,
+				verificationStatus.name(),
+				areaSquareMeters,
+				searchText());
+	}
+
+	private String searchText() {
+		StringBuilder builder = new StringBuilder();
+		appendSearchTerm(builder, title);
+		appendSearchTerm(builder, publicAddressSummary);
+		appendSearchTerm(builder, publicLandmarkHint);
+		appendSearchTerm(builder, businessType);
+		appendSearchTerm(builder, verificationStatus.name());
+		appendSearchTerm(builder, areaSquareMeters);
+		return builder.toString();
+	}
+
+	private void appendSearchTerm(StringBuilder builder, String value) {
+		if (!hasText(value)) {
+			return;
+		}
+		if (!builder.isEmpty()) {
+			builder.append(' ');
+		}
+		builder.append(value.strip());
 	}
 
 	private boolean hasText(String value) {

@@ -159,3 +159,11 @@ Implemented on 2026-06-05: Phase 2 created broker-authenticated inspection creat
 ## Fourth Worker Task
 
 Implemented on 2026-06-06: Phase 3 began with dynamic facility templates, independently persisted facility answers, and an explicit `GeocodingGateway` boundary. Geocoding now has disabled local defaults, Kakao Local REST adapter mapping, explicit failure reasons, configuration through `KAKAO_REST_API_KEY`, and focused regression tests.
+
+## Fifth Worker Task
+
+Implemented on 2026-06-06: Phase 3 integrated Kakao Maps through an explicit browser UI boundary on the broker inspection form. The map view is disabled by default, uses `KAKAO_MAP_JAVASCRIPT_KEY` when enabled, keeps the browser JavaScript key separate from `KAKAO_REST_API_KEY`, and has focused MVC/configuration tests plus live authenticated curl QA.
+
+## Sixth Worker Task
+
+Implemented on 2026-06-06: Phase 3 created the separate `property_search_index` structure for map and keyword search. Inspection create/update now refreshes the index from broker-safe fields only, V4/MyBatis/local mapper shapes keep it separate from internal notes, and regression tests cover template rendering, geocoding failures, and search-index updates.
