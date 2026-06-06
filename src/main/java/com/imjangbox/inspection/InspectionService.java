@@ -12,10 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.imjangbox.file.FileStorage;
 import com.imjangbox.file.StoredFile;
 import com.imjangbox.inspection.persistence.ContactLogWriteRow;
+import com.imjangbox.inspection.persistence.FacilityAnswerWriteRow;
 import com.imjangbox.inspection.persistence.FileAttachmentWriteRow;
 import com.imjangbox.inspection.persistence.PropertyInspectionMapper;
 import com.imjangbox.inspection.persistence.PropertyInspectionRow;
 import com.imjangbox.inspection.persistence.PropertyInspectionWriteRow;
+import com.imjangbox.inspection.web.FacilityAnswerForm;
 import com.imjangbox.inspection.web.InspectionForm;
 import com.imjangbox.property.VerificationStatus;
 
@@ -43,6 +45,7 @@ public class InspectionService {
 				.orElseThrow(() -> new InspectionNotFoundException(inspectionId));
 		InspectionForm form = new InspectionForm();
 		form.setTitle(row.title());
+		form.setBusinessType(row.businessType());
 		form.setInternalRoadAddress(row.internalRoadAddress());
 		form.setInternalDetailAddress(row.internalDetailAddress());
 		form.setInternalGeocodeMemo(row.internalGeocodeMemo());
@@ -58,6 +61,9 @@ public class InspectionService {
 		form.setPrivateMemo(row.privateMemo());
 		form.setInternalRiskMemo(row.internalRiskMemo());
 		form.setVerificationStatus(VerificationStatus.valueOf(row.verificationStatus()));
+		form.setFacilityAnswers(mapper.findFacilityAnswers(inspectionId).stream()
+				.map(FacilityAnswerForm::fromWriteRow)
+				.toList());
 		return form;
 	}
 
@@ -154,6 +160,10 @@ public class InspectionService {
 				StoredFile storedFile = fileStorage.store(inspectionId, attachment);
 				mapper.insertFileAttachment(FileAttachmentWriteRow.from(inspectionId, storedFile));
 			}
+		}
+		mapper.deleteFacilityAnswers(inspectionId);
+		for (FacilityAnswerWriteRow facilityAnswer : form.toFacilityAnswerWriteRows(inspectionId)) {
+			mapper.insertFacilityAnswer(facilityAnswer);
 		}
 	}
 }

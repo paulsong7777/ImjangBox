@@ -60,6 +60,8 @@ class PersistencePrivacyShapeTest {
 				.contains("<update id=\"update\"")
 				.contains("insertContactLog")
 				.contains("insertFileAttachment")
+				.contains("insertFacilityAnswer")
+				.contains("findFacilityAnswers")
 				.doesNotContain("PublicShareSnapshot");
 	}
 
@@ -76,6 +78,24 @@ class PersistencePrivacyShapeTest {
 				.contains("property_file_attachments")
 				.contains("storage_key")
 				.contains("original_filename");
+	}
+
+	@Test
+	void phaseThreeMigrationAddsFacilityTemplateDefinitionsSeparateFromAnswers() throws Exception {
+		String sql = Files.readString(
+				Path.of("src/main/resources/db/migration/V3__create_facility_check_templates.sql"),
+				StandardCharsets.UTF_8);
+
+		assertThat(sql)
+				.contains("CREATE TABLE facility_check_templates")
+				.contains("business_type")
+				.contains("item_key")
+				.contains("display_order")
+				.contains("customer_visible")
+				.contains("UNIQUE KEY uq_facility_check_templates_business_item");
+		assertThat(sql)
+				.doesNotContain("answer VARCHAR")
+				.doesNotContain("inspection_id BIGINT NOT NULL");
 	}
 
 	@Test

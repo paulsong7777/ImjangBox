@@ -7,6 +7,7 @@
         <constructor>
             <arg column="inspection_id" javaType="long"/>
             <arg column="title" javaType="String"/>
+            <arg column="business_type" javaType="String"/>
             <arg column="verification_status" javaType="String"/>
             <arg column="internal_road_address" javaType="String"/>
             <arg column="internal_detail_address" javaType="String"/>
@@ -25,9 +26,21 @@
         </constructor>
     </resultMap>
 
+    <resultMap id="facilityAnswerWriteRow" type="com.imjangbox.inspection.persistence.FacilityAnswerWriteRow">
+        <constructor>
+            <arg column="inspection_id" javaType="long"/>
+            <arg column="template_item_key" javaType="String"/>
+            <arg column="business_type" javaType="String"/>
+            <arg column="label" javaType="String"/>
+            <arg column="answer" javaType="String"/>
+            <arg column="customer_visible" javaType="boolean"/>
+        </constructor>
+    </resultMap>
+
     <select id="findById" resultMap="propertyInspectionRow">
         SELECT inspection_id,
                title,
+               business_type,
                verification_status,
                internal_road_address,
                internal_detail_address,
@@ -51,6 +64,7 @@
             useGeneratedKeys="true" keyProperty="inspectionId" keyColumn="inspection_id">
         INSERT INTO property_inspections (
             title,
+            business_type,
             verification_status,
             internal_road_address,
             internal_detail_address,
@@ -68,6 +82,7 @@
             internal_risk_memo
         ) VALUES (
             #{title},
+            #{businessType},
             #{verificationStatus},
             #{internalRoadAddress},
             #{internalDetailAddress},
@@ -89,6 +104,7 @@
     <update id="update" parameterType="com.imjangbox.inspection.persistence.PropertyInspectionWriteRow">
         UPDATE property_inspections
            SET title = #{title},
+               business_type = #{businessType},
                verification_status = #{verificationStatus},
                internal_road_address = #{internalRoadAddress},
                internal_detail_address = #{internalDetailAddress},
@@ -139,4 +155,39 @@
             #{sizeBytes}
         )
     </insert>
+
+    <delete id="deleteFacilityAnswers">
+        DELETE FROM property_facility_check_answers
+         WHERE inspection_id = #{inspectionId}
+    </delete>
+
+    <insert id="insertFacilityAnswer" parameterType="com.imjangbox.inspection.persistence.FacilityAnswerWriteRow">
+        INSERT INTO property_facility_check_answers (
+            inspection_id,
+            template_item_key,
+            business_type,
+            label,
+            answer,
+            customer_visible
+        ) VALUES (
+            #{inspectionId},
+            #{templateItemKey},
+            #{businessType},
+            #{label},
+            #{answer},
+            #{customerVisible}
+        )
+    </insert>
+
+    <select id="findFacilityAnswers" resultMap="facilityAnswerWriteRow">
+        SELECT inspection_id,
+               template_item_key,
+               business_type,
+               label,
+               answer,
+               customer_visible
+          FROM property_facility_check_answers
+         WHERE inspection_id = #{inspectionId}
+         ORDER BY facility_check_answer_id
+    </select>
 </mapper>

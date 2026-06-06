@@ -1,11 +1,18 @@
 package com.imjangbox.inspection.web;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.AssertTrue;
 
+import com.imjangbox.facility.FacilityTemplateItem;
+import com.imjangbox.inspection.persistence.FacilityAnswerWriteRow;
 import com.imjangbox.inspection.persistence.PropertyInspectionWriteRow;
 import com.imjangbox.property.VerificationStatus;
 
@@ -13,6 +20,8 @@ public class InspectionForm {
 
 	@NotBlank
 	private String title;
+	@NotBlank
+	private String businessType = "GENERAL";
 	@NotBlank
 	private String internalRoadAddress;
 	private String internalDetailAddress;
@@ -40,6 +49,7 @@ public class InspectionForm {
 	@Pattern(regexp = "^$|\\d{4}-\\d{2}-\\d{2}")
 	private String contactedOn;
 	private String contactLogContent;
+	private List<FacilityAnswerForm> facilityAnswers = new ArrayList<>();
 
 	public boolean hasContactLog() {
 		return hasText(contactedOn) && hasText(contactLogContent);
@@ -54,6 +64,7 @@ public class InspectionForm {
 		return new PropertyInspectionWriteRow.Builder()
 				.inspectionId(inspectionId)
 				.title(title)
+				.businessType(businessType)
 				.verificationStatus(verificationStatus.name())
 				.internalRoadAddress(internalRoadAddress)
 				.internalDetailAddress(internalDetailAddress)
@@ -72,12 +83,38 @@ public class InspectionForm {
 				.build();
 	}
 
+	public void applyFacilityTemplates(List<FacilityTemplateItem> templateItems) {
+		Map<String, FacilityAnswerForm> existingAnswers = new LinkedHashMap<>();
+		for (FacilityAnswerForm existingAnswer : facilityAnswers) {
+			existingAnswers.put(existingAnswer.getTemplateItemKey(), existingAnswer);
+		}
+		List<FacilityAnswerForm> mergedAnswers = new ArrayList<>();
+		for (FacilityTemplateItem templateItem : templateItems) {
+			FacilityAnswerForm answer = FacilityAnswerForm.fromTemplateItem(templateItem);
+			FacilityAnswerForm existingAnswer = existingAnswers.remove(templateItem.itemKey());
+			if (existingAnswer != null) {
+				answer.setAnswer(existingAnswer.getAnswer());
+			}
+			mergedAnswers.add(answer);
+		}
+		facilityAnswers = mergedAnswers;
+	}
+
+	public List<FacilityAnswerWriteRow> toFacilityAnswerWriteRows(long inspectionId) {
+		return facilityAnswers.stream()
+				.filter(FacilityAnswerForm::hasAnswer)
+				.map(answer -> answer.toWriteRow(inspectionId))
+				.toList();
+	}
+
 	private boolean hasText(String value) {
 		return value != null && !value.isBlank();
 	}
 
 	public String getTitle() { return title; }
 	public void setTitle(String title) { this.title = title; }
+	public String getBusinessType() { return businessType; }
+	public void setBusinessType(String businessType) { this.businessType = businessType; }
 	public String getInternalRoadAddress() { return internalRoadAddress; }
 	public void setInternalRoadAddress(String internalRoadAddress) { this.internalRoadAddress = internalRoadAddress; }
 	public String getInternalDetailAddress() { return internalDetailAddress; }
@@ -112,4 +149,8 @@ public class InspectionForm {
 	public void setContactedOn(String contactedOn) { this.contactedOn = contactedOn; }
 	public String getContactLogContent() { return contactLogContent; }
 	public void setContactLogContent(String contactLogContent) { this.contactLogContent = contactLogContent; }
+	public List<FacilityAnswerForm> getFacilityAnswers() { return facilityAnswers; }
+	public void setFacilityAnswers(List<FacilityAnswerForm> facilityAnswers) {
+		this.facilityAnswers = facilityAnswers == null ? new ArrayList<>() : facilityAnswers;
+	}
 }

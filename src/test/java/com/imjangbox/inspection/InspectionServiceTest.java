@@ -16,8 +16,11 @@ import com.imjangbox.file.FileStorage;
 import com.imjangbox.file.StoredFile;
 import com.imjangbox.inspection.persistence.ContactLogWriteRow;
 import com.imjangbox.inspection.persistence.FileAttachmentWriteRow;
+import com.imjangbox.inspection.persistence.FacilityAnswerWriteRow;
 import com.imjangbox.inspection.persistence.PropertyInspectionMapper;
+import com.imjangbox.inspection.persistence.PropertyInspectionRow;
 import com.imjangbox.inspection.persistence.PropertyInspectionWriteRow;
+import com.imjangbox.inspection.web.FacilityAnswerForm;
 import com.imjangbox.inspection.web.InspectionForm;
 import com.imjangbox.property.VerificationStatus;
 
@@ -34,6 +37,7 @@ class InspectionServiceTest {
 
 		assertThat(inspectionId).isEqualTo(41L);
 		assertThat(mapper.inserted.title()).isEqualTo("성수역 1층 상가");
+		assertThat(mapper.inserted.businessType()).isEqualTo("CAFE");
 		assertThat(mapper.inserted.internalRoadAddress()).isEqualTo("서울 성동구 내부로 1");
 		assertThat(mapper.inserted.publicAddressSummary()).isEqualTo("성수역 인근");
 		assertThat(mapper.inserted.businessFitMemo()).isEqualTo("카페 가능성 높음");
@@ -47,6 +51,9 @@ class InspectionServiceTest {
 		assertThat(mapper.attachments)
 				.extracting(FileAttachmentWriteRow::storageKey)
 				.containsExactly("inspection-files/41/floor-plan.txt");
+		assertThat(mapper.facilityAnswers)
+				.extracting(FacilityAnswerWriteRow::templateItemKey, FacilityAnswerWriteRow::answer)
+				.containsExactly(org.assertj.core.groups.Tuple.tuple("water_supply", "OK"));
 	}
 
 	@Test
@@ -66,6 +73,27 @@ class InspectionServiceTest {
 		assertThat(mapper.attachments)
 				.extracting(FileAttachmentWriteRow::inspectionId, FileAttachmentWriteRow::originalFilename)
 				.containsExactly(org.assertj.core.groups.Tuple.tuple(77L, "memo.txt"));
+		assertThat(mapper.deletedFacilityAnswerInspectionIds).containsExactly(77L);
+		assertThat(mapper.facilityAnswers)
+				.extracting(FacilityAnswerWriteRow::inspectionId, FacilityAnswerWriteRow::templateItemKey,
+						FacilityAnswerWriteRow::answer)
+				.containsExactly(org.assertj.core.groups.Tuple.tuple(77L, "water_supply", "OK"));
+	}
+
+	@Test
+	void findFormLoadsSavedFacilityAnswers() {
+		CapturingPropertyInspectionMapper mapper = new CapturingPropertyInspectionMapper();
+		mapper.foundRow = Optional.of(row(77L));
+		mapper.facilityAnswers.add(new FacilityAnswerWriteRow(
+				77L, "water_supply", "CAFE", "급배수 확인", "OK", true));
+		InspectionService service = new InspectionService(mapper, new CapturingFileStorage());
+
+		InspectionForm form = service.findForm(77L);
+
+		assertThat(form.getBusinessType()).isEqualTo("CAFE");
+		assertThat(form.getFacilityAnswers())
+				.extracting(FacilityAnswerForm::getTemplateItemKey, FacilityAnswerForm::getAnswer)
+				.containsExactly(org.assertj.core.groups.Tuple.tuple("water_supply", "OK"));
 	}
 
 	@Test
@@ -123,6 +151,7 @@ class InspectionServiceTest {
 	private InspectionForm form() {
 		InspectionForm form = new InspectionForm();
 		form.setTitle("성수역 1층 상가");
+		form.setBusinessType("CAFE");
 		form.setInternalRoadAddress("서울 성동구 내부로 1");
 		form.setInternalDetailAddress("101호");
 		form.setInternalGeocodeMemo("현장 좌표 재확인");
@@ -140,21 +169,53 @@ class InspectionServiceTest {
 		form.setVerificationStatus(VerificationStatus.AGENT_CHECKED);
 		form.setContactedOn("2026-06-05");
 		form.setContactLogContent("임대인과 권리금 범위 통화");
+		FacilityAnswerForm facilityAnswer = new FacilityAnswerForm();
+		facilityAnswer.setBusinessType("CAFE");
+		facilityAnswer.setTemplateItemKey("water_supply");
+		facilityAnswer.setLabel("급배수 확인");
+		facilityAnswer.setAnswer("OK");
+		facilityAnswer.setCustomerVisible(true);
+		form.setFacilityAnswers(List.of(facilityAnswer));
 		return form;
+	}
+
+	private PropertyInspectionRow row(long inspectionId) {
+		return new PropertyInspectionRow(
+				inspectionId,
+				"성수역 1층 상가",
+				"CAFE",
+				"AGENT_CHECKED",
+				"서울 성동구 내부로 1",
+				"101호",
+				"현장 좌표 재확인",
+				"성수역 인근",
+				"대로변",
+				10_000L,
+				550L,
+				3_000L,
+				"82.50",
+				"카페 가능성 높음",
+				"급배수 확인 필요",
+				"권리금 협상 여지",
+				"임대인 통화 전까지 공유 금지",
+				"권리금 조정 리스크");
 	}
 
 	private static final class CapturingPropertyInspectionMapper implements PropertyInspectionMapper {
 
 		private PropertyInspectionWriteRow inserted;
 		private PropertyInspectionWriteRow updated;
+		private Optional<PropertyInspectionRow> foundRow = Optional.empty();
 		private final List<ContactLogWriteRow> contactLogs = new ArrayList<>();
 		private final List<FileAttachmentWriteRow> attachments = new ArrayList<>();
+		private final List<FacilityAnswerWriteRow> facilityAnswers = new ArrayList<>();
 		private final List<Long> deletedContactLogInspectionIds = new ArrayList<>();
+		private final List<Long> deletedFacilityAnswerInspectionIds = new ArrayList<>();
 		private int updateResult = 1;
 
 		@Override
-		public Optional<com.imjangbox.inspection.persistence.PropertyInspectionRow> findById(long inspectionId) {
-			return Optional.empty();
+		public Optional<PropertyInspectionRow> findById(long inspectionId) {
+			return foundRow;
 		}
 
 		@Override
@@ -182,6 +243,21 @@ class InspectionServiceTest {
 		@Override
 		public void insertFileAttachment(FileAttachmentWriteRow row) {
 			attachments.add(row);
+		}
+
+		@Override
+		public void deleteFacilityAnswers(long inspectionId) {
+			deletedFacilityAnswerInspectionIds.add(inspectionId);
+		}
+
+		@Override
+		public void insertFacilityAnswer(FacilityAnswerWriteRow row) {
+			facilityAnswers.add(row);
+		}
+
+		@Override
+		public List<FacilityAnswerWriteRow> findFacilityAnswers(long inspectionId) {
+			return List.copyOf(facilityAnswers);
 		}
 	}
 

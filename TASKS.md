@@ -33,8 +33,8 @@
 
 ## Phase 3 - Facility Templates, Maps, And Search Index
 
-- [ ] Design dynamic facility-check templates by business type.
-- [ ] Store facility answers independently from template definitions.
+- [x] Design dynamic facility-check templates by business type.
+- [x] Store facility answers independently from template definitions.
 - [ ] Integrate Kakao Maps through explicit UI and backend boundaries.
 - [ ] Implement `GeocodingGateway` for address-to-coordinate lookup.
 - [ ] Create separate `search_index` structure for map and keyword search.

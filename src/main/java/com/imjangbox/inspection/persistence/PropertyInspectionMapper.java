@@ -1,5 +1,6 @@
 package com.imjangbox.inspection.persistence;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -18,4 +19,10 @@ public interface PropertyInspectionMapper {
 	void insertContactLog(ContactLogWriteRow row);
 
 	void insertFileAttachment(FileAttachmentWriteRow row);
+
+	void deleteFacilityAnswers(long inspectionId);
+
+	void insertFacilityAnswer(FacilityAnswerWriteRow row);
+
+	List<FacilityAnswerWriteRow> findFacilityAnswers(long inspectionId);
 }

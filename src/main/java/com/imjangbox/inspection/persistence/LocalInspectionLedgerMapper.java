@@ -18,6 +18,7 @@ class LocalInspectionLedgerMapper implements PropertyInspectionMapper {
 	private final Map<Long, PropertyInspectionWriteRow> inspections = new LinkedHashMap<>();
 	private final Map<Long, List<ContactLogWriteRow>> contactLogs = new LinkedHashMap<>();
 	private final Map<Long, List<FileAttachmentWriteRow>> fileAttachments = new LinkedHashMap<>();
+	private final Map<Long, List<FacilityAnswerWriteRow>> facilityAnswers = new LinkedHashMap<>();
 
 	@Override
 	public Optional<PropertyInspectionRow> findById(long inspectionId) {
@@ -54,10 +55,26 @@ class LocalInspectionLedgerMapper implements PropertyInspectionMapper {
 		fileAttachments.computeIfAbsent(row.inspectionId(), ignored -> new ArrayList<>()).add(row);
 	}
 
+	@Override
+	public void deleteFacilityAnswers(long inspectionId) {
+		facilityAnswers.remove(inspectionId);
+	}
+
+	@Override
+	public void insertFacilityAnswer(FacilityAnswerWriteRow row) {
+		facilityAnswers.computeIfAbsent(row.inspectionId(), ignored -> new ArrayList<>()).add(row);
+	}
+
+	@Override
+	public List<FacilityAnswerWriteRow> findFacilityAnswers(long inspectionId) {
+		return List.copyOf(facilityAnswers.getOrDefault(inspectionId, List.of()));
+	}
+
 	private PropertyInspectionRow toReadRow(PropertyInspectionWriteRow row) {
 		return new PropertyInspectionRow(
 				row.inspectionId(),
 				row.title(),
+				row.businessType(),
 				row.verificationStatus(),
 				row.internalRoadAddress(),
 				row.internalDetailAddress(),

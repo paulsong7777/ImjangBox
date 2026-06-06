@@ -2,7 +2,9 @@ package com.imjangbox.inspection.web;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,6 +17,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.imjangbox.inspection.InspectionService;
 import com.imjangbox.common.SecurityConfig;
+import com.imjangbox.facility.FacilityTemplateItem;
+import com.imjangbox.facility.FacilityTemplateService;
 import com.imjangbox.property.VerificationStatus;
 
 @WebMvcTest(BrokerInspectionController.class)
@@ -39,9 +44,22 @@ class BrokerInspectionControllerTest {
 	@MockitoBean
 	private InspectionService inspectionService;
 
+	@MockitoBean
+	private FacilityTemplateService facilityTemplateService;
+
 	@Autowired
 	BrokerInspectionControllerTest(MockMvc mockMvc) {
 		this.mockMvc = mockMvc;
+	}
+
+	@BeforeEach
+	void setUpFacilityTemplates() {
+		when(facilityTemplateService.findBusinessTypes()).thenReturn(List.of("CAFE", "RESTAURANT"));
+		when(facilityTemplateService.defaultBusinessType()).thenReturn("CAFE");
+		when(facilityTemplateService.normalizeBusinessType(isNull())).thenReturn("CAFE");
+		when(facilityTemplateService.normalizeBusinessType(anyString())).thenAnswer(invocation ->
+				invocation.getArgument(0, String.class).trim().toUpperCase());
+		when(facilityTemplateService.findItemsForBusinessType(anyString())).thenReturn(List.of());
 	}
 
 	@Test
@@ -56,6 +74,31 @@ class BrokerInspectionControllerTest {
 	}
 
 	@Test
+	void newFormKeepsFreeformConditionMemo() throws Exception {
+		mockMvc.perform(get("/broker/inspections/new"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("시설/상태 메모")))
+				.andExpect(content().string(containsString("conditionMemo")));
+	}
+
+	@Test
+	void newFormRendersFacilityTemplatesForSelectedBusinessType() throws Exception {
+		when(facilityTemplateService.findItemsForBusinessType("CAFE")).thenReturn(List.of(
+				new FacilityTemplateItem("CAFE", "water_supply", "급배수 확인", 10, true),
+				new FacilityTemplateItem("CAFE", "electric_capacity", "전기 용량 확인", 20, false)));
+
+		mockMvc.perform(get("/broker/inspections/new").param("businessType", "CAFE"))
+				.andExpect(status().isOk())
+				.andExpect(model().attribute("selectedBusinessType", "CAFE"))
+				.andExpect(content().string(containsString("시설 체크 템플릿")))
+				.andExpect(content().string(containsString("급배수 확인")))
+				.andExpect(content().string(containsString("전기 용량 확인")))
+				.andExpect(content().string(containsString("facilityAnswers[0].templateItemKey")))
+				.andExpect(content().string(containsString("facilityAnswers[1].templateItemKey")))
+				.andExpect(content().string(containsString("facilityAnswers[0].answer")));
+	}
+
+	@Test
 	@WithMockUser(roles = "CUSTOMER")
 	void newFormRejectsNonBrokerUsers() throws Exception {
 		mockMvc.perform(get("/broker/inspections/new"))
@@ -64,15 +107,26 @@ class BrokerInspectionControllerTest {
 
 	@Test
 	void createRejectsBlankRequiredFieldsWithSafeDefaults() throws Exception {
+		when(facilityTemplateService.findItemsForBusinessType("CAFE")).thenReturn(List.of(
+				new FacilityTemplateItem("CAFE", "water_supply", "급배수 확인", 10, true)));
+
 		mockMvc.perform(multipart("/broker/inspections").with(csrf())
 				.param("title", "")
+				.param("businessType", "CAFE")
 				.param("depositAmount", "-1")
 				.param("monthlyRentAmount", "0")
-				.param("premiumAmount", "0"))
+				.param("premiumAmount", "0")
+				.param("facilityAnswers[0].templateItemKey", "water_supply")
+				.param("facilityAnswers[0].businessType", "CAFE")
+				.param("facilityAnswers[0].label", "급배수 확인")
+				.param("facilityAnswers[0].answer", "OK")
+				.param("facilityAnswers[0].customerVisible", "true"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeHasFieldErrors(
 						"inspectionForm", "title", "internalRoadAddress", "publicAddressSummary", "depositAmount"))
-				.andExpect(content().string(containsString("입력값을 확인해 주세요")));
+				.andExpect(content().string(containsString("입력값을 확인해 주세요")))
+				.andExpect(content().string(containsString("facilityAnswers[0].templateItemKey")))
+				.andExpect(content().string(containsString("<option value=\"OK\" selected=\"selected\">양호</option>")));
 	}
 
 	@Test
@@ -94,9 +148,12 @@ class BrokerInspectionControllerTest {
 	@Test
 	void createSubmitsInspectionAndRedirectsToEditScreen() throws Exception {
 		when(inspectionService.create(any(InspectionForm.class), anyAttachmentList())).thenReturn(41L);
+		when(facilityTemplateService.findItemsForBusinessType("CAFE")).thenReturn(List.of(
+				new FacilityTemplateItem("CAFE", "water_supply", "급배수 확인", 10, true)));
 
 		mockMvc.perform(multipart("/broker/inspections").with(csrf())
 				.param("title", "성수역 1층 상가")
+				.param("businessType", "CAFE")
 				.param("internalRoadAddress", "서울 성동구 내부로 1")
 				.param("publicAddressSummary", "성수역 인근")
 				.param("depositAmount", "10000")
@@ -105,7 +162,12 @@ class BrokerInspectionControllerTest {
 				.param("verificationStatus", "AGENT_CHECKED")
 				.param("contactedOn", "2026-06-05")
 				.param("contactLogContent", "임대인 통화 내용")
-				.param("internalRiskMemo", "공유 금지 리스크"))
+				.param("internalRiskMemo", "공유 금지 리스크")
+				.param("facilityAnswers[0].templateItemKey", "water_supply")
+				.param("facilityAnswers[0].businessType", "CAFE")
+				.param("facilityAnswers[0].label", "조작된 시설 항목")
+				.param("facilityAnswers[0].answer", "OK")
+				.param("facilityAnswers[0].customerVisible", "false"))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("/broker/inspections/41/edit"));
 
@@ -113,6 +175,9 @@ class BrokerInspectionControllerTest {
 		verify(inspectionService).create(form.capture(), anyAttachmentList());
 		org.assertj.core.api.Assertions.assertThat(form.getValue().getInternalRiskMemo())
 				.isEqualTo("공유 금지 리스크");
+		org.assertj.core.api.Assertions.assertThat(form.getValue().getFacilityAnswers())
+				.extracting(FacilityAnswerForm::getLabel, FacilityAnswerForm::getAnswer, FacilityAnswerForm::isCustomerVisible)
+				.containsExactly(org.assertj.core.groups.Tuple.tuple("급배수 확인", "OK", true));
 	}
 
 	@Test

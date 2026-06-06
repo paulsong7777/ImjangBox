@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.imjangbox.facility.FacilityTemplateService;
 import com.imjangbox.inspection.AttachmentValidationException;
 import com.imjangbox.inspection.InspectionService;
 import com.imjangbox.property.VerificationStatus;
@@ -25,9 +26,13 @@ import com.imjangbox.property.VerificationStatus;
 public class BrokerInspectionController {
 
 	private final InspectionService inspectionService;
+	private final FacilityTemplateService facilityTemplateService;
 
-	public BrokerInspectionController(InspectionService inspectionService) {
+	public BrokerInspectionController(
+			InspectionService inspectionService,
+			FacilityTemplateService facilityTemplateService) {
 		this.inspectionService = inspectionService;
+		this.facilityTemplateService = facilityTemplateService;
 	}
 
 	@ModelAttribute("verificationStatuses")
@@ -35,11 +40,22 @@ public class BrokerInspectionController {
 		return VerificationStatus.values();
 	}
 
+	@ModelAttribute("businessTypes")
+	List<String> businessTypes() {
+		return facilityTemplateService.findBusinessTypes();
+	}
+
 	@GetMapping("/new")
-	String newForm(Model model) {
-		model.addAttribute("inspectionForm", new InspectionForm());
+	String newForm(
+			@RequestParam(name = "businessType", required = false) String businessType,
+			Model model) {
+		InspectionForm form = new InspectionForm();
+		form.setBusinessType(facilityTemplateService.normalizeBusinessType(businessType));
+		populateFacilityTemplates(form);
+		model.addAttribute("inspectionForm", form);
 		model.addAttribute("formAction", "/broker/inspections");
 		model.addAttribute("submitLabel", "저장");
+		model.addAttribute("selectedBusinessType", form.getBusinessType());
 		return "inspection/form";
 	}
 
@@ -49,8 +65,10 @@ public class BrokerInspectionController {
 			BindingResult bindingResult,
 			@RequestParam(name = "attachments", required = false) List<MultipartFile> attachments,
 			Model model) throws IOException {
+		populateFacilityTemplates(form);
 		if (bindingResult.hasErrors()) {
 			populateFormModel(model, null, "/broker/inspections", "저장");
+			model.addAttribute("selectedBusinessType", form.getBusinessType());
 			return "inspection/form";
 		}
 		try {
@@ -60,14 +78,18 @@ public class BrokerInspectionController {
 		catch (AttachmentValidationException ex) {
 			model.addAttribute("attachmentError", "첨부 파일을 확인해 주세요.");
 			populateFormModel(model, null, "/broker/inspections", "저장");
+			model.addAttribute("selectedBusinessType", form.getBusinessType());
 			return "inspection/form";
 		}
 	}
 
 	@GetMapping("/{inspectionId}/edit")
 	String edit(@PathVariable long inspectionId, Model model) {
-		model.addAttribute("inspectionForm", inspectionService.findForm(inspectionId));
+		InspectionForm form = inspectionService.findForm(inspectionId);
+		populateFacilityTemplates(form);
+		model.addAttribute("inspectionForm", form);
 		populateFormModel(model, inspectionId, "/broker/inspections/" + inspectionId, "수정");
+		model.addAttribute("selectedBusinessType", form.getBusinessType());
 		return "inspection/form";
 	}
 
@@ -78,8 +100,10 @@ public class BrokerInspectionController {
 			BindingResult bindingResult,
 			@RequestParam(name = "attachments", required = false) List<MultipartFile> attachments,
 			Model model) throws IOException {
+		populateFacilityTemplates(form);
 		if (bindingResult.hasErrors()) {
 			populateFormModel(model, inspectionId, "/broker/inspections/" + inspectionId, "수정");
+			model.addAttribute("selectedBusinessType", form.getBusinessType());
 			return "inspection/form";
 		}
 		try {
@@ -88,6 +112,7 @@ public class BrokerInspectionController {
 		catch (AttachmentValidationException ex) {
 			model.addAttribute("attachmentError", "첨부 파일을 확인해 주세요.");
 			populateFormModel(model, inspectionId, "/broker/inspections/" + inspectionId, "수정");
+			model.addAttribute("selectedBusinessType", form.getBusinessType());
 			return "inspection/form";
 		}
 		return "redirect:/broker/inspections/" + inspectionId + "/edit";
@@ -101,5 +126,10 @@ public class BrokerInspectionController {
 
 	private List<MultipartFile> safeAttachments(List<MultipartFile> attachments) {
 		return attachments == null ? List.of() : attachments;
+	}
+
+	private void populateFacilityTemplates(InspectionForm form) {
+		form.setBusinessType(facilityTemplateService.normalizeBusinessType(form.getBusinessType()));
+		form.applyFacilityTemplates(facilityTemplateService.findItemsForBusinessType(form.getBusinessType()));
 	}
 }

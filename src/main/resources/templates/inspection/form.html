@@ -16,6 +16,11 @@
 			<h2 class="h5">상가 기본 정보</h2>
 			<label class="form-label" for="title">제목</label>
 			<input class="form-control" id="title" th:field="*{title}">
+			<label class="form-label mt-3" for="businessType">업종</label>
+			<select class="form-select" id="businessType" th:field="*{businessType}">
+				<option th:if="${#lists.isEmpty(businessTypes)}" value="GENERAL">GENERAL</option>
+				<option th:each="type : ${businessTypes}" th:value="${type}" th:text="${type}"></option>
+			</select>
 			<label class="form-label mt-3" for="areaSquareMeters">전용 면적(㎡)</label>
 			<input class="form-control" id="areaSquareMeters" th:field="*{areaSquareMeters}">
 		</section>
@@ -48,6 +53,29 @@
 			<textarea class="form-control" id="businessFitMemo" th:field="*{businessFitMemo}"></textarea>
 			<label class="form-label mt-3" for="conditionMemo">시설/상태 메모</label>
 			<textarea class="form-control" id="conditionMemo" th:field="*{conditionMemo}"></textarea>
+		</section>
+		<section class="mb-4">
+			<h2 class="h5">시설 체크 템플릿</h2>
+			<p class="text-body-secondary mb-3" th:if="${#lists.isEmpty(inspectionForm.facilityAnswers)}">
+				선택한 업종에 등록된 시설 체크 항목이 없습니다.
+			</p>
+			<div class="mb-3" th:each="facilityAnswer, answerStat : *{facilityAnswers}">
+				<input type="hidden" th:field="*{facilityAnswers[__${answerStat.index}__].templateItemKey}">
+				<input type="hidden" th:field="*{facilityAnswers[__${answerStat.index}__].businessType}">
+				<input type="hidden" th:field="*{facilityAnswers[__${answerStat.index}__].label}">
+				<input type="hidden" th:field="*{facilityAnswers[__${answerStat.index}__].customerVisible}">
+				<label class="form-label"
+						th:for="${'facilityAnswers' + answerStat.index + '.answer'}"
+						th:text="${facilityAnswer.label}">시설 항목</label>
+				<select class="form-select"
+						th:id="${'facilityAnswers' + answerStat.index + '.answer'}"
+						th:field="*{facilityAnswers[__${answerStat.index}__].answer}">
+					<option value="">미확인</option>
+					<option value="OK">양호</option>
+					<option value="NEEDS_CHECK">추가 확인</option>
+					<option value="NOT_APPLICABLE">해당 없음</option>
+				</select>
+			</div>
 		</section>
 		<section class="mb-4">
 			<h2 class="h5">내부 전용 기록</h2>

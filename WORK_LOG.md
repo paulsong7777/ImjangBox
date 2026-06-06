@@ -155,3 +155,57 @@
 - Broker create QA: authenticated GET of `/broker/inspections/new` returned a CSRF token; authenticated multipart POST with a text attachment returned `HTTP/1.1 302` to `/broker/inspections/41/edit`; follow-up GET returned `HTTP/1.1 200` and rendered `Phase 2 hardening QA`.
 - Attachment root QA: uploaded text attachment was written under `/tmp/imjangbox-phase2-hardening-files/inspection-files/41/`.
 - Cleanup QA: stopped `bootRun`; follow-up curl to port `18091` failed to connect as expected.
+
+## 2026-06-06 - Phase 3 Facility Template Definitions
+
+**Scope:** Execute the first Phase 3 task from `TASKS.md`: design dynamic facility-check templates by business type.
+
+**Actions completed:**
+
+- Added `FacilityTemplateItem`, `FacilityTemplateMapper`, `FacilityTemplateService`, and a local-profile mapper backed by `imjangbox.facility-templates` configuration.
+- Added Flyway V3 schema for `facility_check_templates`, seeded initial CAFE and RESTAURANT template definitions, and kept inspection-specific answers separate from template definitions.
+- Added `business_type` to inspection write/read persistence so broker forms can select the relevant template family.
+- Rendered a Bootstrap/Thymeleaf facility-check template section on the broker inspection form, while preserving the existing free-form condition memo.
+- Added regression tests for template rendering and template/answer schema separation.
+
+**Constraints honored:**
+
+- Template items are data/configuration driven, not hard-coded in Java or Thymeleaf.
+- Facility answers remain separate from template definitions.
+- No public share DTOs or templates were changed to expose internal records.
+- No JPA, React, Vue, Next.js, or prohibited product automation features were introduced.
+
+**Validation receipts:**
+
+- Baseline characterization: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest` passed before production changes with the existing free-form condition memo pinned.
+- Red Phase 3 test: focused tests failed before implementation because `FacilityTemplateItem`, `FacilityTemplateService`, and V3 migration were missing.
+- Focused green verification: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest` passed.
+- Full verification: `./gradlew clean test --rerun-tasks` passed.
+- LSP diagnostics: unavailable because `jdtls` is not installed; Gradle compile/test was used as the Java verification substitute.
+- Manual QA: `./gradlew bootRun --args='--server.port=18092'` started on the default `local` profile.
+- Broker template QA: authenticated GET `/broker/inspections/new?businessType=CAFE` returned `HTTP/1.1 200` and rendered `급배수 확인`, `전기 용량 확인`, and `facilityAnswers[0].templateItemKey`.
+- Business-type variation QA: authenticated GET `/broker/inspections/new?businessType=RESTAURANT` returned `HTTP/1.1 200` and rendered `배기 덕트 확인` and `그리스트랩 확인`.
+- Malformed business-type QA: authenticated GET `/broker/inspections/new?businessType=%3Cscript%3E` returned `HTTP/1.1 200` and rendered the no-template empty state without crashing.
+- Cleanup QA: stopped `bootRun`; follow-up curl to port `18092` failed to connect as expected.
+
+## 2026-06-06 - Phase 3 Facility Answer Persistence
+
+**Scope:** Complete the second Phase 3 task from `TASKS.md`: store facility answers independently from template definitions.
+
+**Actions completed:**
+
+- Added `FacilityAnswerWriteRow` and MyBatis/local mapper methods for deleting, inserting, and reading inspection-specific facility answers.
+- Persisted non-empty facility answers from broker create/update flows without storing answers in template-definition rows.
+- Reloaded saved facility answers on edit and merged them with active templates, preserving historical saved rows if templates later change.
+- Preserved selected facility answers when unrelated validation or attachment errors redisplay the form.
+- Added service, controller, local mapper, and persistence-shape regression tests.
+
+**Validation receipts:**
+
+- Review red finding: post-implementation code review identified that editable facility answers were not persisted or preserved on validation errors.
+- Red test: focused service/controller tests failed before implementation because `FacilityAnswerWriteRow` and mapper methods were missing.
+- Focused green verification: `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest` passed.
+- Full verification: `./gradlew test` passed.
+- Manual QA: `./gradlew bootRun --args='--server.port=18093'` started on the default `local` profile.
+- Broker create/edit QA: authenticated GET `/broker/inspections/new?businessType=CAFE` returned `HTTP/1.1 200`; authenticated multipart POST with CSRF and `facilityAnswers[0].answer=OK` returned `HTTP/1.1 302`; follow-up GET of the edit URL returned `HTTP/1.1 200` and rendered `급배수 확인` with `OK` selected.
+- Cleanup QA: stopped `bootRun`; follow-up curl to port `18093` failed to connect as expected.

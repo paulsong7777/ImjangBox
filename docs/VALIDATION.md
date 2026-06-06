@@ -55,3 +55,14 @@ For this planning-only initialization, the manual QA surface is the repository f
   - authenticated multipart POST invalid input with `_csrf` to `/broker/inspections` should return the form with `입력값을 확인해 주세요`
   - authenticated multipart POST valid create with `_csrf` to `/broker/inspections` should redirect to `/broker/inspections/{id}/edit`
   - authenticated multipart POST valid update with `_csrf` to `/broker/inspections/{id}` should redirect and the edit page should show updated values
+
+## Phase 3 Facility Template Validation
+
+- `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest`
+- `./gradlew clean test --rerun-tasks`
+- Runtime broker form QA: `./gradlew bootRun --args='--server.port=18092'`
+- Manual HTTP QA:
+  - authenticated `curl -i -u broker:broker-password 'http://localhost:18092/broker/inspections/new?businessType=CAFE'` should return `200` and render CAFE facility template labels and `facilityAnswers[...]` fields
+  - authenticated `curl -i -u broker:broker-password 'http://localhost:18092/broker/inspections/new?businessType=RESTAURANT'` should return `200` and render RESTAURANT facility template labels
+  - authenticated malformed business type should return `200` with the no-template empty state
+  - authenticated create with `_csrf` and `facilityAnswers[0].answer=OK` should redirect to edit, and the edit page should render the answer as selected

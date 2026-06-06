@@ -6,6 +6,7 @@ import java.util.Objects;
 public record PropertyInspectionRow(
 		long inspectionId,
 		String title,
+		String businessType,
 		String verificationStatus,
 		String internalRoadAddress,
 		String internalDetailAddress,
@@ -27,6 +28,7 @@ public record PropertyInspectionRow(
 	public PropertyInspectionRow(
 			long inspectionId,
 			String title,
+			String businessType,
 			String verificationStatus,
 			String internalRoadAddress,
 			String internalDetailAddress,
@@ -45,6 +47,7 @@ public record PropertyInspectionRow(
 		this(
 				inspectionId,
 				title,
+				businessType,
 				verificationStatus,
 				internalRoadAddress,
 				internalDetailAddress,

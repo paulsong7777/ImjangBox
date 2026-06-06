@@ -17,6 +17,8 @@ class LocalInspectionLedgerMapperTest {
 		mapper.insertContactLog(new ContactLogWriteRow(row.inspectionId(), "2026-06-05", "임대인 통화"));
 		mapper.insertFileAttachment(new FileAttachmentWriteRow(
 				row.inspectionId(), "memo.txt", "inspection-files/41/memo.txt", "text/plain", 4L));
+		mapper.insertFacilityAnswer(new FacilityAnswerWriteRow(
+				row.inspectionId(), "water_supply", "CAFE", "급배수 확인", "OK", true));
 
 		Optional<PropertyInspectionRow> found = mapper.findById(row.inspectionId());
 
@@ -28,6 +30,9 @@ class LocalInspectionLedgerMapperTest {
 				.extracting(FileAttachmentWriteRow::originalFilename, FileAttachmentWriteRow::storageKey)
 				.containsExactly(org.assertj.core.groups.Tuple.tuple(
 						"memo.txt", "inspection-files/41/memo.txt"));
+		assertThat(mapper.findFacilityAnswers(row.inspectionId()))
+				.extracting(FacilityAnswerWriteRow::templateItemKey, FacilityAnswerWriteRow::answer)
+				.containsExactly(org.assertj.core.groups.Tuple.tuple("water_supply", "OK"));
 	}
 
 	@Test
@@ -51,10 +56,28 @@ class LocalInspectionLedgerMapperTest {
 		assertThat(mapper.findById(row.inspectionId()).orElseThrow().contactLogs()).isEmpty();
 	}
 
+	@Test
+	void facilityAnswerUpdateReplacesPreviousAnswersUntilExplicitlyChanged() {
+		LocalInspectionLedgerMapper mapper = new LocalInspectionLedgerMapper();
+		PropertyInspectionWriteRow row = writeRow(null, "성수역 1층 상가");
+		mapper.insert(row);
+		mapper.insertFacilityAnswer(new FacilityAnswerWriteRow(
+				row.inspectionId(), "water_supply", "CAFE", "급배수 확인", "OK", true));
+
+		mapper.deleteFacilityAnswers(row.inspectionId());
+		mapper.insertFacilityAnswer(new FacilityAnswerWriteRow(
+				row.inspectionId(), "electric_capacity", "CAFE", "전기 용량 확인", "NEEDS_CHECK", false));
+
+		assertThat(mapper.findFacilityAnswers(row.inspectionId()))
+				.extracting(FacilityAnswerWriteRow::templateItemKey, FacilityAnswerWriteRow::answer)
+				.containsExactly(org.assertj.core.groups.Tuple.tuple("electric_capacity", "NEEDS_CHECK"));
+	}
+
 	private PropertyInspectionWriteRow writeRow(Long inspectionId, String title) {
 		return new PropertyInspectionWriteRow.Builder()
 				.inspectionId(inspectionId)
 				.title(title)
+				.businessType("CAFE")
 				.verificationStatus("AGENT_CHECKED")
 				.internalRoadAddress("서울 성동구 내부로 1")
 				.internalDetailAddress("101호")

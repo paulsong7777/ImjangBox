@@ -4,6 +4,7 @@ public class PropertyInspectionWriteRow {
 
 	private Long inspectionId;
 	private final String title;
+	private final String businessType;
 	private final String verificationStatus;
 	private final String internalRoadAddress;
 	private final String internalDetailAddress;
@@ -23,6 +24,7 @@ public class PropertyInspectionWriteRow {
 	public PropertyInspectionWriteRow(Builder builder) {
 		inspectionId = builder.inspectionId;
 		title = builder.title;
+		businessType = builder.businessType;
 		verificationStatus = builder.verificationStatus;
 		internalRoadAddress = builder.internalRoadAddress;
 		internalDetailAddress = builder.internalDetailAddress;
@@ -50,6 +52,8 @@ public class PropertyInspectionWriteRow {
 
 	public String title() { return title; }
 	public String getTitle() { return title; }
+	public String businessType() { return businessType; }
+	public String getBusinessType() { return businessType; }
 	public String verificationStatus() { return verificationStatus; }
 	public String getVerificationStatus() { return verificationStatus; }
 	public String internalRoadAddress() { return internalRoadAddress; }
@@ -84,6 +88,7 @@ public class PropertyInspectionWriteRow {
 	public static class Builder {
 		private Long inspectionId;
 		private String title;
+		private String businessType;
 		private String verificationStatus;
 		private String internalRoadAddress;
 		private String internalDetailAddress;
@@ -102,6 +107,7 @@ public class PropertyInspectionWriteRow {
 
 		public Builder inspectionId(Long value) { inspectionId = value; return this; }
 		public Builder title(String value) { title = value; return this; }
+		public Builder businessType(String value) { businessType = value; return this; }
 		public Builder verificationStatus(String value) { verificationStatus = value; return this; }
 		public Builder internalRoadAddress(String value) { internalRoadAddress = value; return this; }
 		public Builder internalDetailAddress(String value) { internalDetailAddress = value; return this; }
