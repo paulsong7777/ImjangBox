@@ -1,5 +1,15 @@
 # imjangbox
 
+> **Status:** `v0.1.0-alpha`
+> **Project:** ImjangBox — commercial-property field inspection and proposal ledger
+> **Focus:** broker-side inspection records, facility checks, contact logs, attachment handling, and privacy-safe customer share cards
+> **Stack:** Java 21, Spring Boot 3.5.x, Thymeleaf, Bootstrap 5.3, MyBatis, MySQL
+> **CI:** GitHub Actions test workflow passing
+> **Development:** AI-assisted development workflow with Codex
+
+Latest pre-release: [`v0.1.0-alpha`](https://github.com/paulsong7777/ImjangBox/releases/tag/v0.1.0-alpha)
+
+
 Commercial-property field inspection and proposal ledger for Korean commercial real estate brokers.
 
 ## Stack
