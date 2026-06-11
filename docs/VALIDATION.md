@@ -119,3 +119,11 @@ Product code exists. Use the running Spring Boot application as the main manual 
   - authenticated POST `/broker/inspections/{inspectionId}/share` twice should redirect to two `/share/{shareId}` URLs
   - unauthenticated GET of both share URLs should return `200`, render public title/address/verification values, and exclude private marker values
   - focused service tests should prove the first snapshot audit action is `CREATED` and the second generated snapshot for the same inspection is `UPDATED`
+
+## Phase 5 MyBatis Integration Validation
+
+- Focused mapper integration check: `./gradlew test --tests com.imjangbox.inspection.persistence.MyBatisPersistenceIntegrationTest`.
+- Privacy/share regression check: `./gradlew test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest`.
+- Full verification: `./gradlew test`.
+- The mapper integration profile is `mybatis-integration`; it uses H2 in MySQL compatibility mode with test-only schema migration resources under `src/test/resources/db/mybatis-integration`.
+- Keep production MySQL migration shape coverage in `PersistencePrivacyShapeTest`, because the integration profile intentionally uses a local-friendly final schema rather than requiring Docker or an external MySQL server.

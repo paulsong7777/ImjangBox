@@ -137,7 +137,8 @@ Useful focused checks:
 ```bash
 ./gradlew test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest
 ./gradlew test --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest
+./gradlew test --tests com.imjangbox.inspection.persistence.MyBatisPersistenceIntegrationTest
 ./gradlew test --tests com.imjangbox.file.LocalFileStorageTest
 ```
 
-The full test suite covers broker authentication, create/edit form validation, append-only contact-log writes, attachment validation/storage metadata, MyBatis persistence shape, and public share privacy regressions.
+The full test suite covers broker authentication, create/edit form validation, append-only contact-log writes, attachment validation/storage metadata, MyBatis persistence shape, SQL-backed mapper integration behavior, and public share privacy regressions.

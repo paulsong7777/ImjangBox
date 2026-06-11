@@ -42,7 +42,7 @@ As of 2026-06-06, Phase 3 is complete. Dynamic facility-check template definitio
 
 As of 2026-06-11, Phase 4 is complete. Broker edit pages can create customer share links backed by persisted `public_share_snapshots` rows and child snapshot rows for customer-visible facility summaries and share-scoped image metadata. Public `/share/{shareId}` pages render from snapshots only, not live internal inspection rows, so existing cards remain stable after internal updates.
 
-As of later on 2026-06-11, Phase 5 hardening has started. Share-card generation writes internal audit records to `share_snapshot_audit_logs`; first snapshots are marked `CREATED`, and later broker-generated snapshot versions for the same inspection are marked `UPDATED`.
+As of later on 2026-06-11, Phase 5 hardening has started. Share-card generation writes internal audit records to `share_snapshot_audit_logs`; first snapshots are marked `CREATED`, and later broker-generated snapshot versions for the same inspection are marked `UPDATED`. SQL-backed MyBatis integration tests now run through a `mybatis-integration` test profile using H2 in MySQL compatibility mode with a test-only final schema, covering mapper XML behavior for inspection rows, facility answers, search-index upserts, share snapshots, share children, and share audit logs.
 
 ## Key Assumptions
 
@@ -55,3 +55,4 @@ As of later on 2026-06-11, Phase 5 hardening has started. Share-card generation 
 - Search and maps should use a dedicated search/index structure rather than private internal notes.
 - Share cards should be regenerated as new snapshots when customer-facing content needs to change.
 - Share-card snapshot generation should be auditable internally without expanding public share DTOs or templates.
+- Mapper integration tests should remain deterministic in local `./gradlew test` runs and should not require Docker or an external database service.

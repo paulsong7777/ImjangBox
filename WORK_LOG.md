@@ -343,3 +343,28 @@
 - Manual QA: `./gradlew bootRun --args='--server.port=18101'` started on the default `local` profile.
 - Broker/public share QA: authenticated create returned a broker edit redirect for inspection `43`; two authenticated share-generation POSTs returned `/share/d0278ab2-9708-4cad-88a8-a07560459760` and `/share/934822df-8ebd-418e-927b-4fffa62a9c8e`; unauthenticated GETs of both share pages returned public content and excluded `PRIVATE_MEMO_AUDIT_QA`, `PRIVATE_RISK_AUDIT_QA`, and `PRIVATE_INTERNAL_AUDIT_QA`.
 - Cleanup QA: stopped `bootRun`; follow-up process check found no running `bootRun`/`ImjangboxApplication` process.
+
+## 2026-06-11 - Phase 5 MyBatis Integration Tests
+
+**Scope:** Complete the next unchecked Phase 5 hardening task: integration tests for MyBatis/MySQL behavior using the chosen local-friendly test database approach.
+
+**Actions completed:**
+
+- Added a dedicated `mybatis-integration` test profile backed by H2 in MySQL compatibility mode.
+- Added a test-only final-schema Flyway migration under `src/test/resources/db/mybatis-integration` so mapper integration tests are deterministic without Docker or an external MySQL server.
+- Added `MyBatisPersistenceIntegrationTest` covering actual mapper XML execution for inspection insert/read, facility answers, attachment metadata reads, search-index upsert refresh, share snapshot rows, share facility/image child rows, share image lookup, and share audit logs.
+- Fixed MyBatis constructor result-map aliases for primitive `long`, `int`, and `boolean` row-record constructor parameters.
+- Kept production persistence on MySQL/Flyway/MyBatis; the H2 dependency is test-runtime only.
+
+**Constraints honored:**
+
+- No broker authentication work was duplicated.
+- No Phase 6 or unrelated product features were started.
+- Public share snapshots and templates remain separate from internal inspection records.
+- Private memo, private price note, contact-log content, internal risk memo, internal address, storage keys, and audit rows remain out of public share DTOs/templates.
+
+**Validation receipts:**
+
+- Focused integration verification: `./gradlew test --tests com.imjangbox.inspection.persistence.MyBatisPersistenceIntegrationTest` passed.
+- Focused privacy/share verification: `./gradlew test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest` passed.
+- Full verification: `./gradlew test` passed.

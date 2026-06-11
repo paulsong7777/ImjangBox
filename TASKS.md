@@ -53,7 +53,7 @@
 
 - [x] Add authentication/authorization for broker-only internal screens.
 - [x] Add audit logging for share-card creation and updates.
-- [ ] Add integration tests for MyBatis/MySQL behavior using the chosen test database approach.
+- [x] Add integration tests for MyBatis/MySQL behavior using the chosen test database approach.
 - [ ] Add file-storage validation for size, type, and access control.
 - [ ] Add operational docs for deployment, configuration, and backup.
 - [ ] Run full manual QA across inspection capture, map search, and share card views.
