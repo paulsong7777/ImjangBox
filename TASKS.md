@@ -57,4 +57,4 @@
 - [x] Add file-storage validation for size, type, and access control.
 - [x] Add operational docs for deployment, configuration, and backup.
 - [x] Run full manual QA across inspection capture, map search, and share card views.
-- [ ] Revisit AGENTS.md, TASKS.md, WORK_LOG.md, CHECKPOINT.md, plans/, and docs/ after first product code lands.
+- [x] Revisit AGENTS.md, TASKS.md, WORK_LOG.md, CHECKPOINT.md, plans/, and docs/ after product code landed.

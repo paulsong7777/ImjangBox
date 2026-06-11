@@ -36,4 +36,4 @@ The following areas require special attention:
 
 ## Current Status
 
-ImjangBox is currently in an early MVP stage. Security hardening is ongoing, and privacy-safe public sharing is one of the core project goals.
+ImjangBox is currently in an early MVP stage. Phase 5 hardening added broker-only internal routes, CSRF-protected broker forms, upload validation, share-scoped public image routes, internal share audit logs, SQL-backed mapper integration tests, and operational guidance. Security review should continue as the project moves toward release, and privacy-safe public sharing remains one of the core project goals.

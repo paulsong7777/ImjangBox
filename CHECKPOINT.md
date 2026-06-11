@@ -2,21 +2,18 @@
 
 **Checkpoint date:** 2026-06-11
 **Project:** imjangbox
-**Current state:** Phase 5 hardening is in progress. Broker authentication was already completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation now enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, operational deployment/configuration/backup docs exist in `docs/operations.md`, and full manual QA across inspection capture, map UI/search-index coverage, and share-card views passed on 2026-06-11. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output.
+**Current state:** Phase 0 through Phase 5 are complete. Broker authentication was completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, operational deployment/configuration/backup docs exist in `docs/operations.md`, and full manual QA across inspection capture, map UI/search-index coverage, and share-card views passed on 2026-06-11. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output. The Phase 5 documentation review is complete.
 
 ## Resume Here Next Time
 
 1. Read `AGENTS.md`.
 2. Read `plans/2026-06-04-imjangbox-implementation-plan.md`.
 3. Read `TASKS.md`.
-4. Start the next unchecked Phase 5 hardening task only when explicitly asked.
+4. Do not start Phase 6 unless explicitly requested.
 
 ## Exact Next Implementation Step
 
-Continue Phase 5 hardening work:
-
-- revisit `AGENTS.md`, `TASKS.md`, `WORK_LOG.md`, `CHECKPOINT.md`, `plans/`, and `docs/` after first product code lands
-- keep Phase 4 snapshot privacy guarantees, Phase 5 share audit logging, and SQL-backed mapper integration tests intact
+No Phase 0 through Phase 5 tasks remain open. The next checkpoint is to wait for an explicit release-preparation or Phase 6 request while keeping Phase 4 snapshot privacy guarantees, Phase 5 share audit logging, SQL-backed mapper integration tests, file validation, and operations docs intact.
 
 Phase 2 notes to preserve:
 
@@ -54,6 +51,7 @@ The repository includes a Gradle wrapper. In this `/mnt/c` workspace, Gradle wri
 
 Most recent verification:
 
+- `git diff --check` passed on 2026-06-11 after the Phase 5 documentation review. No Gradle test run was needed because only documentation files changed.
 - `./gradlew test` passed on 2026-06-11 after the operational documentation update.
 - `./gradlew test --tests com.imjangbox.inspection.persistence.MyBatisPersistenceIntegrationTest` passed on 2026-06-11.
 - `./gradlew test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest` passed on 2026-06-11.

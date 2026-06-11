@@ -18,6 +18,11 @@ ImjangBox is currently in an early MVP stage. The project is being developed in 
 * Contact log append flow
 * Attachment metadata and upload validation flow
 * Facility template definitions for commercial-property inspection
+* Customer-safe share card snapshot generation and public share pages
+* Share-scoped public image streaming without storage-key or filename exposure
+* Internal audit logging for share-card snapshot creation and regenerated versions
+* SQL-backed MyBatis mapper integration tests using the `mybatis-integration` profile
+* Operational deployment, configuration, backup, smoke-test, and rollback guide
 * Project planning documents
 * Task tracking documents
 * Work log and checkpoint documents
@@ -44,8 +49,7 @@ ImjangBox is currently in an early MVP stage. The project is being developed in 
 
 ### Current Focus
 
-* Customer-safe share card snapshot generation
-* Public share page privacy validation
+* v0.1.0-alpha release preparation
+* Public share page privacy regression coverage
 * Mobile-first broker workflow improvement
 * Screenshot and product documentation
-* v0.1.0-alpha release preparation

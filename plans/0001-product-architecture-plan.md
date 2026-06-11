@@ -2,7 +2,7 @@
 
 **Project:** imjangbox
 **Created:** 2026-06-04
-**Status:** Planning artifact; Phase 1 product foundation has been implemented.
+**Status:** Planning artifact; Phase 0 through Phase 5 have been implemented.
 
 ## Objective
 

@@ -458,3 +458,29 @@
 - Cleanup QA: stopped `bootRun`; bounded curl to port `18103` failed to connect.
 - Focused regression verification: `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest --tests com.imjangbox.map.KakaoMapViewFactoryTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.file.LocalFileStorageTest` passed.
 - Full verification: `./gradlew test` passed.
+
+## 2026-06-11 - Phase 5 Documentation Review
+
+**Scope:** Complete the remaining Phase 5 documentation review task after product code landed.
+
+**Actions completed:**
+
+- Revisited `AGENTS.md`, `TASKS.md`, `WORK_LOG.md`, `CHECKPOINT.md`, `plans/`, `docs/`, `README.md`, `CHANGELOG.md`, and `SECURITY.md`.
+- Updated current-state summaries to say Phase 0 through Phase 5 are complete.
+- Removed stale wording that described customer share cards as a future/pending feature.
+- Marked the final Phase 5 documentation review task complete in `TASKS.md`.
+- Updated the checkpoint so the next step is to wait for an explicit release-preparation or Phase 6 request.
+- Confirmed `docs/operations.md` and `docs/privacy-and-share-cards.md` already matched the completed share-card, file-storage, backup, and privacy boundaries.
+
+**Constraints honored:**
+
+- Documentation-only change; no product code was modified.
+- No Phase 6 work was started.
+- Public share snapshot, audit logging, mapper integration, file validation, and operations boundaries remain unchanged.
+
+**Validation receipts:**
+
+- `git diff --check` passed.
+- Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS`.
+- Stale-language scan found no remaining matches for Phase 4 pending/share-card planned/Phase 5 started wording.
+- `./gradlew test` was not rerun because this was a documentation-only change.

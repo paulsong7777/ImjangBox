@@ -2,7 +2,7 @@
 
 **Created:** 2026-06-04
 **Scope:** Concrete implementation sequence for the initial product build.
-**Current repository state:** Phase 2 broker inspection ledger create/edit flow exists.
+**Current repository state:** Phase 0 through Phase 5 are complete as of 2026-06-11.
 
 ## Product Goal
 
@@ -122,6 +122,7 @@ Build a Spring Boot 3.x application that helps Korean commercial real estate bro
 4. Add file access-control tests. Completed during Phase 5 hardening on 2026-06-11.
 5. Add deployment/configuration docs. Completed during Phase 5 hardening on 2026-06-11.
 6. Run manual QA for inspection capture, facility templates, map search, and customer share cards. Completed during Phase 5 hardening on 2026-06-11.
+7. Revisit project memory, checkpoint, backlog, plans, and docs after product code landed. Completed during Phase 5 documentation review on 2026-06-11.
 
 **Acceptance criteria:**
 
@@ -191,3 +192,7 @@ Implemented on 2026-06-11: Phase 5 hardening added practical operational documen
 ## Twelfth Worker Task
 
 Implemented on 2026-06-11: Phase 5 hardening completed full manual QA across inspection capture, map UI/search-index coverage, and public share-card views. The local app ran on port `18103` with Kakao map rendering enabled through a harmless browser-key marker and isolated local file storage. QA created and updated a broker inspection with facility answers, private markers, contact-log content, and a PNG attachment; generated a public share snapshot; confirmed public share HTML and image streaming exposed only public snapshot values; confirmed raw storage routes returned `404`; confirmed malformed business type input stayed safe; and confirmed the original share snapshot stayed stable after internal updates. Focused regressions and `./gradlew test` passed.
+
+## Thirteenth Worker Task
+
+Implemented on 2026-06-11: Phase 5 documentation review reconciled `AGENTS.md`, `TASKS.md`, `WORK_LOG.md`, `CHECKPOINT.md`, plans, README, CHANGELOG, security/privacy, operations, and project-memory docs with the completed Phase 0 through Phase 5 implementation. Stale statements that framed share cards as pending or Phase 5 as only started were replaced with factual current-state notes, and the next checkpoint now records that no Phase 0 through Phase 5 tasks remain open.

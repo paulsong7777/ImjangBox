@@ -11,7 +11,7 @@ imjangbox is a commercial-property field inspection and proposal ledger for Kore
 
 ## CURRENT STATE
 
-Phase 3 is complete: Java 21 Spring Boot 3.5.x Gradle project, Thymeleaf/Bootstrap internal create/edit forms, broker authentication for `/broker/**`, validation, service and MyBatis write shapes, `FileStorage` attachment metadata boundary, internal-only contact logs/risk notes, local/test profiles, privacy-first internal records, separate public share snapshots, verification enum, Flyway migrations, dynamic facility templates, independently persisted facility answers, `GeocodingGateway`, Kakao Maps browser UI boundary, separate `property_search_index`, and regression tests.
+Phase 0 through Phase 5 are complete: Java 21 Spring Boot 3.5.x Gradle project, Thymeleaf/Bootstrap broker create/edit forms, HTTP Basic broker authentication for `/broker/**`, CSRF protection, validation, service and MyBatis write shapes, `FileStorage` attachment metadata and validation boundary, internal-only contact logs/risk notes, local/test/local-db profiles, privacy-first internal records, separate public share snapshots, verification enum, Flyway migrations through share audit logs, dynamic facility templates, independently persisted facility answers, `GeocodingGateway`, Kakao Maps browser UI boundary, separate `property_search_index`, share-scoped public image streaming, operational docs, SQL-backed mapper integration tests, and full manual QA for inspection capture, map UI/search-index coverage, and share-card views.
 
 ## INTENDED STACK
 
@@ -37,10 +37,12 @@ Phase 3 is complete: Java 21 Spring Boot 3.5.x Gradle project, Thymeleaf/Bootstr
 |-- CHECKPOINT.md
 |-- docs/
 |   |-- architecture-constraints.md
+|   |-- database-migration-strategy.md
 |   |-- DOMAIN_RULES.md
 |   |-- domain-overview.md
 |   |-- integrations.md
 |   |-- INIT_NOTEPAD.md
+|   |-- operations.md
 |   |-- privacy-and-share-cards.md
 |   |-- PROJECT_MEMORY.md
 |   |-- search-index.md
@@ -61,7 +63,7 @@ Phase 3 is complete: Java 21 Spring Boot 3.5.x Gradle project, Thymeleaf/Bootstr
 | MVC smoke route | `src/main/java/com/imjangbox/web/HomeController.java` | Root route for Phase 0 QA only. |
 | Package boundaries | `src/main/java/com/imjangbox/` | `property`, `inspection`, `share`, `facility`, `map`, `file`, `common`, and `web`. |
 | Internal property records | `src/main/java/com/imjangbox/property/` | Internal address, public address, pricing, stakeholders, contact logs, verification, and inspection record shape. |
-| Public share snapshots | `src/main/java/com/imjangbox/share/` | Customer-safe snapshot records and allowlist factory. |
+| Public share snapshots | `src/main/java/com/imjangbox/share/` | Customer-safe snapshot records, snapshot service, public routes, share-scoped image streaming, and internal share audit rows. |
 | Persistence shape | `src/main/resources/db/migration/` and `src/main/resources/mappers/` | Flyway SQL and MyBatis XML for internal inspection records. |
 | Map/geocoding/search | `src/main/java/com/imjangbox/map/` and `src/main/java/com/imjangbox/inspection/persistence/SearchIndexWriteRow.java` | Kakao Maps browser UI config, geocoding gateway/adapters, and separate search-index row shape. |
 | Implementation plan | `plans/2026-06-04-imjangbox-implementation-plan.md` | Concrete product build sequence. |
@@ -71,6 +73,8 @@ Phase 3 is complete: Java 21 Spring Boot 3.5.x Gradle project, Thymeleaf/Bootstr
 | Architecture constraints | `docs/architecture-constraints.md` | Required stack, forbidden stack, and module boundaries. |
 | Integrations | `docs/integrations.md` | Kakao Maps, `GeocodingGateway`, and `FileStorage` boundaries. |
 | Search indexing | `docs/search-index.md` | Separate map/search index expectations. |
+| Operations | `docs/operations.md` | Profiles, secrets, Kakao keys, file/database backups, deployment, smoke tests, and rollback. |
+| Database migrations | `docs/database-migration-strategy.md` | Flyway/MyBatis migration strategy and mapper integration-test approach. |
 | Project memory | `docs/PROJECT_MEMORY.md` | Purpose, stack, exclusions, and initial assumptions. |
 | Initialization evidence | `docs/INIT_NOTEPAD.md` | Repository survey and validation receipts. |
 
@@ -102,6 +106,7 @@ Phase 3 is complete: Java 21 Spring Boot 3.5.x Gradle project, Thymeleaf/Bootstr
 - Treat privacy-sensitive fields as denied by default in public response design.
 - Prefer explicit gateway interfaces for Kakao Maps/geocoding and file storage boundaries.
 - Keep verification status as a closed enum with tests for every public projection.
+- Keep public share routes backed by persisted snapshots and share-scoped image references, not live internal records or raw file-storage paths.
 
 ## COMMANDS
 
@@ -117,3 +122,4 @@ When this repository is under a WSL Windows mount like `/mnt/c`, Gradle build ou
 - This file governs the entire repository until deeper `AGENTS.md` files are intentionally added.
 - Do not modify product code during planning-only tasks.
 - Phase 4 must keep internal records out of public share DTOs, templates, and responses.
+- Phase 5 is complete as of 2026-06-11; do not start any Phase 6 work unless explicitly requested.

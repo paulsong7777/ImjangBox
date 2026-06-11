@@ -10,7 +10,7 @@ Use this shell check after planning document edits:
 
 ```bash
 bash -lc 'set -euo pipefail
-required=(AGENTS.md TASKS.md WORK_LOG.md CHECKPOINT.md plans/2026-06-04-imjangbox-implementation-plan.md plans/0001-product-architecture-plan.md docs/PROJECT_MEMORY.md docs/DOMAIN_RULES.md docs/VALIDATION.md docs/INIT_NOTEPAD.md docs/domain-overview.md docs/privacy-and-share-cards.md docs/architecture-constraints.md docs/integrations.md docs/search-index.md)
+required=(AGENTS.md TASKS.md WORK_LOG.md CHECKPOINT.md README.md CHANGELOG.md SECURITY.md plans/2026-06-04-imjangbox-implementation-plan.md plans/0001-product-architecture-plan.md docs/PROJECT_MEMORY.md docs/DOMAIN_RULES.md docs/VALIDATION.md docs/INIT_NOTEPAD.md docs/domain-overview.md docs/privacy-and-share-cards.md docs/architecture-constraints.md docs/integrations.md docs/search-index.md docs/operations.md docs/database-migration-strategy.md)
 for f in "${required[@]}"; do test -f "$f" || { echo "MISSING:$f"; exit 1; }; done
 grep -q "Phase 0" TASKS.md
 grep -q "Phase 5" TASKS.md
