@@ -423,3 +423,38 @@
 **Validation receipts:**
 
 - Full verification: `./gradlew test` passed.
+
+## 2026-06-11 - Phase 5 Full Manual QA
+
+**Scope:** Complete the next unchecked Phase 5 MVP task: full manual QA across inspection capture, map search coverage, and customer share-card views.
+
+**Actions completed:**
+
+- Started the local app on port `18103` with Kakao map rendering enabled using a harmless browser-key marker and isolated local file storage at `/tmp/imjangbox-phase5-manual-qa-files`.
+- Verified authenticated broker form loading for CAFE inspections, CSRF rendering, facility template rendering, enabled Kakao map container output, and separation from the Kakao REST key.
+- Created inspection `41` through the broker multipart form with public values, private marker values, contact-log content, CAFE facility answers, and a PNG attachment.
+- Confirmed the broker edit page rendered saved internal values and selected facility answers.
+- Generated a public share snapshot and verified unauthenticated public share rendering, customer-safe verification text, public facility values, share-scoped public image URL, image streaming, and raw storage-route denial.
+- Updated the internal inspection after share creation and confirmed the original public share snapshot stayed stable and did not expose updated or private values.
+- Verified unauthenticated broker access returns `401`, malformed business-type input renders the safe no-template state, and executable markup is not echoed.
+
+**Constraints honored:**
+
+- No product code was changed for this QA task.
+- Public share cards continued to use snapshot rows rather than live internal records.
+- Private memo, private price note, contact-log content, internal risk memo, internal address markers, original filename, and raw storage path text stayed out of public share HTML.
+- No Phase 5 broker authentication, audit logging, mapper integration, file validation, or operations-doc work was duplicated.
+
+**Validation receipts:**
+
+- Manual QA: authenticated GET `/broker/inspections/new?businessType=CAFE` returned `HTTP/1.1 200`, rendered one `_csrf` token, CAFE facility labels, `data-kakao-map`, encoded browser-key marker text, and no REST-key marker.
+- Manual QA: authenticated multipart POST `/broker/inspections` returned `HTTP/1.1 302` to `http://localhost:18103/broker/inspections/41/edit`; the edit page returned `HTTP/1.1 200` and rendered the saved public title, private memo, and selected `OK`/`NEEDS_CHECK` facility answers.
+- Manual QA: authenticated POST `/broker/inspections/41/share` returned `HTTP/1.1 302` to `http://localhost:18103/share/9127e990-1c42-410e-a124-6c58f1671e15`.
+- Manual QA: unauthenticated GET of the share URL returned `HTTP/1.1 200`, rendered `Manual QA Share Title`, `PUBLIC_MANUAL_QA_DISTRICT`, `Agent checked`, `급배수 확인`, and `/images/1`, with zero `PRIVATE_`, original filename, or `inspection-files` leaks.
+- Manual QA: unauthenticated GET `/share/9127e990-1c42-410e-a124-6c58f1671e15/images/1` returned `HTTP/1.1 200`, `Content-Type: image/png`, and no `Content-Disposition` filename header.
+- Manual QA: unauthenticated GET `/inspection-files/41/manual-qa.png` returned `HTTP/1.1 404`.
+- Manual QA: after authenticated update of inspection `41`, the original share URL still rendered the original public title/address and had zero `UPDATED_` or `PRIVATE_` marker leaks.
+- Manual QA: unauthenticated GET `/broker/inspections/new` returned `HTTP/1.1 401`; malformed business type returned `HTTP/1.1 200` with the no-template empty state and no executable script echo.
+- Cleanup QA: stopped `bootRun`; bounded curl to port `18103` failed to connect.
+- Focused regression verification: `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest --tests com.imjangbox.map.KakaoMapViewFactoryTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.file.LocalFileStorageTest` passed.
+- Full verification: `./gradlew test` passed.

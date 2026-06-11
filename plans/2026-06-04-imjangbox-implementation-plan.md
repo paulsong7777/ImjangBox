@@ -121,7 +121,7 @@ Build a Spring Boot 3.x application that helps Korean commercial real estate bro
 3. Add integration tests for MyBatis and MySQL behavior. Completed during Phase 5 hardening on 2026-06-11.
 4. Add file access-control tests. Completed during Phase 5 hardening on 2026-06-11.
 5. Add deployment/configuration docs. Completed during Phase 5 hardening on 2026-06-11.
-6. Run manual QA for inspection capture, facility templates, map search, and customer share cards.
+6. Run manual QA for inspection capture, facility templates, map search, and customer share cards. Completed during Phase 5 hardening on 2026-06-11.
 
 **Acceptance criteria:**
 
@@ -187,3 +187,7 @@ Implemented on 2026-06-11: Phase 5 hardening strengthened file-storage validatio
 ## Eleventh Worker Task
 
 Implemented on 2026-06-11: Phase 5 hardening added practical operational documentation for local, test, `mybatis-integration`, and `local-db` profiles; required environment variables and secrets; separate Kakao REST and JavaScript key configuration; local file-storage root and backup expectations; MySQL/Flyway migration, backup, and restore expectations; small MVP server deployment; smoke tests; and rollback steps.
+
+## Twelfth Worker Task
+
+Implemented on 2026-06-11: Phase 5 hardening completed full manual QA across inspection capture, map UI/search-index coverage, and public share-card views. The local app ran on port `18103` with Kakao map rendering enabled through a harmless browser-key marker and isolated local file storage. QA created and updated a broker inspection with facility answers, private markers, contact-log content, and a PNG attachment; generated a public share snapshot; confirmed public share HTML and image streaming exposed only public snapshot values; confirmed raw storage routes returned `404`; confirmed malformed business type input stayed safe; and confirmed the original share snapshot stayed stable after internal updates. Focused regressions and `./gradlew test` passed.

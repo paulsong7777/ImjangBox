@@ -56,5 +56,5 @@
 - [x] Add integration tests for MyBatis/MySQL behavior using the chosen test database approach.
 - [x] Add file-storage validation for size, type, and access control.
 - [x] Add operational docs for deployment, configuration, and backup.
-- [ ] Run full manual QA across inspection capture, map search, and share card views.
+- [x] Run full manual QA across inspection capture, map search, and share card views.
 - [ ] Revisit AGENTS.md, TASKS.md, WORK_LOG.md, CHECKPOINT.md, plans/, and docs/ after first product code lands.

@@ -142,3 +142,21 @@ Product code exists. Use the running Spring Boot application as the main manual 
   - unauthenticated GET `/share/{shareId}/images/1` should return `200` with an image content type and no original-filename `Content-Disposition` header
   - unauthenticated GET of a raw storage-like route such as `/inspection-files/{id}/file.png` should return `404`
   - stop `bootRun`, then a bounded curl to port `18102` should fail to connect
+
+## Phase 5 Full Manual QA Validation
+
+- Runtime QA: start with `KAKAO_MAP_JAVASCRIPT_KEY='manual qa browser key' ./gradlew bootRun --args='--server.port=18103 --imjangbox.maps.kakao.enabled=true --imjangbox.file-storage.local-root=/tmp/imjangbox-phase5-manual-qa-files'`.
+- Authenticated GET `/broker/inspections/new?businessType=CAFE` should return `200`, render exactly one CSRF token, render CAFE facility labels, render the enabled Kakao map container and encoded browser-key marker, and not render a Kakao REST-key marker.
+- Authenticated multipart POST `/broker/inspections` with public values, private marker values, contact-log content, customer-visible CAFE facility answers, and a valid PNG should redirect to `/broker/inspections/{inspectionId}/edit`.
+- The broker edit page should render saved internal values and selected facility answers.
+- Authenticated POST `/broker/inspections/{inspectionId}/share` should redirect to `/share/{shareId}`.
+- Unauthenticated GET `/share/{shareId}` should return `200` and render only public title, public address, customer-safe verification text, public facility values, and share-scoped image URLs.
+- The public share page should not render private markers, original filenames, raw storage keys, `inspection-files`, internal address markers, contact-log content, private price notes, or internal risk values.
+- Unauthenticated GET `/share/{shareId}/images/1` should return `200`, an image content type, and no original-filename `Content-Disposition` header.
+- Unauthenticated GET of a raw storage-like route such as `/inspection-files/{inspectionId}/file.png` should return `404`.
+- After updating the internal inspection, the original `/share/{shareId}` should still render the original snapshot values and should not render updated/private markers.
+- Unauthenticated GET `/broker/inspections/new` should return `401`.
+- Authenticated GET with malformed `businessType` should return `200`, render the no-template empty state, and not echo executable markup.
+- Focused regression command: `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest --tests com.imjangbox.map.KakaoMapViewFactoryTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.file.LocalFileStorageTest`.
+- Full verification: `./gradlew test`.
+- Cleanup QA: stop `bootRun`, then a bounded curl to port `18103` should fail to connect.
