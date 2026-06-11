@@ -21,6 +21,7 @@ Required implication:
 - Internal records can change after sharing.
 - Public share cards should remain stable unless a new snapshot/version is created.
 - Public DTOs should not embed internal entities or mapper result objects.
+- Public image URLs should use share-scoped public references, not file-storage keys or original internal filenames.
 
 ## Address Separation
 
@@ -54,6 +55,7 @@ Required implication:
 - Business-type templates should be data-driven.
 - Answers should be stored separately from template definitions.
 - Historical inspections should remain understandable if templates later change.
+- Customer share cards may include only answers marked customer-visible at snapshot time.
 
 ## Map Search
 

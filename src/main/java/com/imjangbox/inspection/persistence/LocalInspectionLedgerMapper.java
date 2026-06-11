@@ -57,6 +57,11 @@ class LocalInspectionLedgerMapper implements PropertyInspectionMapper {
 	}
 
 	@Override
+	public List<FileAttachmentWriteRow> findFileAttachments(long inspectionId) {
+		return List.copyOf(fileAttachments.getOrDefault(inspectionId, List.of()));
+	}
+
+	@Override
 	public void deleteFacilityAnswers(long inspectionId) {
 		facilityAnswers.remove(inspectionId);
 	}

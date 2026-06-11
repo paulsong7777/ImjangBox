@@ -282,3 +282,36 @@
 - LSP diagnostics: unavailable because `jdtls` is not installed; Gradle compile/test was used as the Java verification substitute.
 - Runtime QA: `./gradlew bootRun --args='--server.port=18097'` started successfully; authenticated create with private leak markers returned `HTTP/1.1 302`, the edit page returned `HTTP/1.1 200`, and authenticated update returned `HTTP/1.1 302`.
 - Cleanup QA: stopped `bootRun`; follow-up curl to port `18097` failed to connect, and `/tmp/imjangbox-search-index-qa.*` artifacts were removed.
+
+## 2026-06-11 - Phase 4 Customer Share Cards
+
+**Scope:** Implement Phase 4 customer share-card snapshots only.
+
+**Actions completed:**
+
+- Expanded `PublicShareSnapshot` with customer-visible facility summaries and share-scoped public image metadata.
+- Added `ShareSnapshotService`, `ShareSnapshotMapper`, local-profile share snapshot storage, MyBatis XML, and Flyway V5 child snapshot tables.
+- Added broker-only share generation at `POST /broker/inspections/{inspectionId}/share`.
+- Added public share rendering at `GET /share/{shareId}` using only persisted snapshot rows.
+- Added a Bootstrap 5.3 public share-card template with public address, public pricing, verification label, visible facility summary, and public image references.
+- Added a share-scoped public image route that streams selected image attachments by share ID and display order without exposing storage keys or original filenames.
+- Kept storage keys, original filenames, internal addresses, private memos, private price notes, contact logs, stakeholder contacts, internal risk fields, and search-index-only fields out of public DTOs/templates/mapper output.
+- Added regression tests for snapshot stability after internal updates, denied-field absence in JSON and rendered HTML, share mapper privacy shape, public route rendering, broker share-link generation, and verification labels for every status.
+
+**Constraints honored:**
+
+- Existing public share cards remain stable after internal inspection records change.
+- Public routes read snapshot rows, not live internal inspection records.
+- No external listing upload, AI ad-copy generation, customer CRM, payment, legal judgment, or commercial district scoring was started.
+- No JPA, React, Vue, or Next.js was introduced.
+
+**Validation receipts:**
+
+- Full verification: `./gradlew test` passed.
+- Runtime QA: `./gradlew bootRun` started on the default `local` profile at `http://localhost:8080`.
+- Broker create QA: authenticated GET `/broker/inspections/new` returned a CSRF token; authenticated POST to `/broker/inspections` returned `HTTP/1.1 302` to `/broker/inspections/41/edit`.
+- Share generation QA: authenticated POST `/broker/inspections/41/share` returned `HTTP/1.1 302` to `/share/b2eb74da-b41e-4e2a-a30b-e70b1d9f26ec`.
+- Public render QA: unauthenticated GET of that share URL returned `HTTP/1.1 200` and rendered `QA Share Card`, `PUBLIC_DISTRICT_QA`, `Agent checked`, `급배수 확인`, and a share-scoped `/images/1` URL without the private marker values.
+- Public image QA: unauthenticated GET `/share/{shareId}/images/1` returned `HTTP/1.1 200`, `Content-Type: image/png`, and the selected PNG bytes.
+- Snapshot stability QA: after updating internal inspection `41` to `UPDATED_PUBLIC_TITLE`, `UPDATED_PUBLIC_ADDRESS`, `UPDATED_PRIVATE_MEMO`, and `UPDATED_RISK`, the same public share URL still rendered the original `QA Share Card`, `PUBLIC_DISTRICT_QA`, and `Agent checked`.
+- Cleanup QA: stopped the local `bootRun` processes; follow-up process check found no running `bootRun`/`ImjangboxApplication` process.

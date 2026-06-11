@@ -22,6 +22,8 @@ import com.imjangbox.inspection.InspectionService;
 import com.imjangbox.map.KakaoMapView;
 import com.imjangbox.map.KakaoMapViewFactory;
 import com.imjangbox.property.VerificationStatus;
+import com.imjangbox.share.PublicShareSnapshot;
+import com.imjangbox.share.ShareSnapshotService;
 
 @Controller
 @RequestMapping("/broker/inspections")
@@ -30,14 +32,17 @@ public class BrokerInspectionController {
 	private final InspectionService inspectionService;
 	private final FacilityTemplateService facilityTemplateService;
 	private final KakaoMapViewFactory kakaoMapViewFactory;
+	private final ShareSnapshotService shareSnapshotService;
 
 	public BrokerInspectionController(
 			InspectionService inspectionService,
 			FacilityTemplateService facilityTemplateService,
-			KakaoMapViewFactory kakaoMapViewFactory) {
+			KakaoMapViewFactory kakaoMapViewFactory,
+			ShareSnapshotService shareSnapshotService) {
 		this.inspectionService = inspectionService;
 		this.facilityTemplateService = facilityTemplateService;
 		this.kakaoMapViewFactory = kakaoMapViewFactory;
+		this.shareSnapshotService = shareSnapshotService;
 	}
 
 	@ModelAttribute("verificationStatuses")
@@ -126,6 +131,12 @@ public class BrokerInspectionController {
 			return "inspection/form";
 		}
 		return "redirect:/broker/inspections/" + inspectionId + "/edit";
+	}
+
+	@PostMapping("/{inspectionId}/share")
+	String createShare(@PathVariable long inspectionId) {
+		PublicShareSnapshot snapshot = shareSnapshotService.createSnapshot(inspectionId);
+		return "redirect:/share/" + snapshot.shareId();
 	}
 
 	private void populateFormModel(Model model, Long inspectionId, String formAction, String submitLabel) {

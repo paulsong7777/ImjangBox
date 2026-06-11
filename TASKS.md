@@ -42,12 +42,12 @@
 
 ## Phase 4 - Customer Share Cards
 
-- [ ] Generate share card snapshots from internal records.
-- [ ] Render share cards with Thymeleaf and Bootstrap 5.3.
-- [ ] Ensure public address and internal address remain separated.
-- [ ] Ensure private fields are absent from public DTOs, templates, JSON responses, and snapshots.
-- [ ] Add customer-safe verification display rules.
-- [ ] Add regression tests for every denied field and each verification status.
+- [x] Generate share card snapshots from internal records.
+- [x] Render share cards with Thymeleaf and Bootstrap 5.3.
+- [x] Ensure public address and internal address remain separated.
+- [x] Ensure private fields are absent from public DTOs, templates, JSON responses, and snapshots.
+- [x] Add customer-safe verification display rules.
+- [x] Add regression tests for every denied field and each verification status.
 
 ## Phase 5 - Hardening, Operations, And Release Readiness
 

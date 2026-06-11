@@ -20,6 +20,8 @@ public interface PropertyInspectionMapper {
 
 	void insertFileAttachment(FileAttachmentWriteRow row);
 
+	List<FileAttachmentWriteRow> findFileAttachments(long inspectionId);
+
 	void deleteFacilityAnswers(long inspectionId);
 
 	void insertFacilityAnswer(FacilityAnswerWriteRow row);

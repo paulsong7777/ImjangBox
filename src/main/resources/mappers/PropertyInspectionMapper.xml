@@ -37,6 +37,16 @@
         </constructor>
     </resultMap>
 
+    <resultMap id="fileAttachmentWriteRow" type="com.imjangbox.inspection.persistence.FileAttachmentWriteRow">
+        <constructor>
+            <arg column="inspection_id" javaType="long"/>
+            <arg column="original_filename" javaType="String"/>
+            <arg column="storage_key" javaType="String"/>
+            <arg column="content_type" javaType="String"/>
+            <arg column="size_bytes" javaType="long"/>
+        </constructor>
+    </resultMap>
+
     <resultMap id="searchIndexWriteRow" type="com.imjangbox.inspection.persistence.SearchIndexWriteRow">
         <constructor>
             <arg column="inspection_id" javaType="long"/>
@@ -168,6 +178,17 @@
             #{sizeBytes}
         )
     </insert>
+
+    <select id="findFileAttachments" resultMap="fileAttachmentWriteRow">
+        SELECT inspection_id,
+               original_filename,
+               storage_key,
+               content_type,
+               size_bytes
+          FROM property_file_attachments
+         WHERE inspection_id = #{inspectionId}
+         ORDER BY file_attachment_id
+    </select>
 
     <delete id="deleteFacilityAnswers">
         DELETE FROM property_facility_check_answers

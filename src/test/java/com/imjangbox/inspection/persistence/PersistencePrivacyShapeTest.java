@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import org.apache.ibatis.annotations.Mapper;
 import org.junit.jupiter.api.Test;
 
+import com.imjangbox.share.ShareSnapshotMapper;
+
 class PersistencePrivacyShapeTest {
 
 	@Test
@@ -139,5 +141,53 @@ class PersistencePrivacyShapeTest {
 	@Test
 	void mapperInterfaceIsRegisteredForMyBatisBootScanning() {
 		assertThat(PropertyInspectionMapper.class).hasAnnotation(Mapper.class);
+	}
+
+	@Test
+	void phaseFourMigrationAddsSnapshotChildrenWithoutInternalAttachmentFilenames() throws Exception {
+		String sql = Files.readString(
+				Path.of("src/main/resources/db/migration/V5__create_share_snapshot_children.sql"),
+				StandardCharsets.UTF_8);
+
+		assertThat(sql)
+				.contains("CREATE TABLE public_share_snapshot_facilities")
+				.contains("CREATE TABLE public_share_snapshot_images")
+				.contains("share_id")
+				.contains("display_order")
+				.contains("content_type")
+				.contains("source_storage_key")
+				.doesNotContain("original_filename")
+				.doesNotContain("private_memo")
+				.doesNotContain("internal_risk_memo")
+				.doesNotContain("contact_log");
+	}
+
+	@Test
+	void shareSnapshotMapperReadsOnlyPublicSnapshotTables() throws Exception {
+		String mapper = Files.readString(
+				Path.of("src/main/resources/mappers/ShareSnapshotMapper.xml"),
+				StandardCharsets.UTF_8);
+
+		assertThat(mapper)
+				.contains("com.imjangbox.share.ShareSnapshotMapper")
+				.contains("public_share_snapshots")
+				.contains("public_share_snapshot_facilities")
+				.contains("public_share_snapshot_images")
+				.contains("public_address_summary")
+				.contains("source_storage_key")
+				.doesNotContain("internal_road_address")
+				.doesNotContain("internal_detail_address")
+				.doesNotContain("private_memo")
+				.doesNotContain("price_private_note")
+				.doesNotContain("stakeholder")
+				.doesNotContain("contact_log")
+				.doesNotContain("internal_risk_memo")
+				.doesNotContain("property_search_index")
+				.doesNotContain("original_filename");
+	}
+
+	@Test
+	void shareMapperInterfaceIsRegisteredForMyBatisBootScanning() {
+		assertThat(ShareSnapshotMapper.class).hasAnnotation(Mapper.class);
 	}
 }

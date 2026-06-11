@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imjangbox.share.ShareSnapshotMapper">
+    <resultMap id="shareSnapshotRow" type="com.imjangbox.share.ShareSnapshotRow">
+        <constructor>
+            <arg column="share_id" javaType="String"/>
+            <arg column="title" javaType="String"/>
+            <arg column="verification_status" javaType="String"/>
+            <arg column="verification_display_text" javaType="String"/>
+            <arg column="public_address_summary" javaType="String"/>
+            <arg column="public_landmark_hint" javaType="String"/>
+            <arg column="deposit_amount" javaType="long"/>
+            <arg column="monthly_rent_amount" javaType="long"/>
+            <arg column="premium_amount" javaType="long"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="shareFacilitySnapshotRow" type="com.imjangbox.share.ShareFacilitySnapshotRow">
+        <constructor>
+            <arg column="share_id" javaType="String"/>
+            <arg column="display_order" javaType="int"/>
+            <arg column="label" javaType="String"/>
+            <arg column="answer" javaType="String"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="shareImageSnapshotRow" type="com.imjangbox.share.ShareImageSnapshotRow">
+        <constructor>
+            <arg column="share_id" javaType="String"/>
+            <arg column="display_order" javaType="int"/>
+            <arg column="content_type" javaType="String"/>
+            <arg column="source_storage_key" javaType="String"/>
+        </constructor>
+    </resultMap>
+
+    <insert id="insertSnapshot" parameterType="com.imjangbox.share.ShareSnapshotWriteRow">
+        INSERT INTO public_share_snapshots (
+            share_id,
+            inspection_id,
+            title,
+            verification_status,
+            verification_display_text,
+            public_address_summary,
+            public_landmark_hint,
+            deposit_amount,
+            monthly_rent_amount,
+            premium_amount
+        ) VALUES (
+            #{shareId},
+            #{inspectionId},
+            #{title},
+            #{verificationStatus},
+            #{verificationDisplayText},
+            #{publicAddressSummary},
+            #{publicLandmarkHint},
+            #{depositAmount},
+            #{monthlyRentAmount},
+            #{premiumAmount}
+        )
+    </insert>
+
+    <insert id="insertFacility" parameterType="com.imjangbox.share.ShareFacilitySnapshotRow">
+        INSERT INTO public_share_snapshot_facilities (
+            share_id,
+            display_order,
+            label,
+            answer
+        ) VALUES (
+            #{shareId},
+            #{displayOrder},
+            #{label},
+            #{answer}
+        )
+    </insert>
+
+    <insert id="insertImage" parameterType="com.imjangbox.share.ShareImageSnapshotRow">
+        INSERT INTO public_share_snapshot_images (
+            share_id,
+            display_order,
+            content_type,
+            source_storage_key
+        ) VALUES (
+            #{shareId},
+            #{displayOrder},
+            #{contentType},
+            #{sourceStorageKey}
+        )
+    </insert>
+
+    <select id="findSnapshotByShareId" resultMap="shareSnapshotRow">
+        SELECT share_id,
+               title,
+               verification_status,
+               verification_display_text,
+               public_address_summary,
+               public_landmark_hint,
+               deposit_amount,
+               monthly_rent_amount,
+               premium_amount
+          FROM public_share_snapshots
+         WHERE share_id = #{shareId}
+    </select>
+
+    <select id="findFacilitiesByShareId" resultMap="shareFacilitySnapshotRow">
+        SELECT share_id,
+               display_order,
+               label,
+               answer
+          FROM public_share_snapshot_facilities
+         WHERE share_id = #{shareId}
+         ORDER BY display_order
+    </select>
+
+    <select id="findImagesByShareId" resultMap="shareImageSnapshotRow">
+        SELECT share_id,
+               display_order,
+               content_type,
+               source_storage_key
+          FROM public_share_snapshot_images
+         WHERE share_id = #{shareId}
+         ORDER BY display_order
+    </select>
+
+    <select id="findImageByShareIdAndDisplayOrder" resultMap="shareImageSnapshotRow">
+        SELECT share_id,
+               display_order,
+               content_type,
+               source_storage_key
+          FROM public_share_snapshot_images
+         WHERE share_id = #{shareId}
+           AND display_order = #{displayOrder}
+    </select>
+</mapper>

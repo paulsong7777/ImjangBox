@@ -27,4 +27,15 @@ class LocalFileStorageTest {
 				.doesNotContain("\n");
 		assertThat(Files.readString(localRoot.resolve(storedFile.storageKey()))).isEqualTo("file");
 	}
+
+	@Test
+	void loadReturnsOnlyFilesUnderConfiguredRoot(@TempDir Path localRoot) throws Exception {
+		LocalFileStorage storage = new LocalFileStorage(localRoot);
+		StoredFile storedFile = storage.store(41L, new MockMultipartFile(
+				"attachments", "photo.png", "image/png", "file".getBytes()));
+
+		assertThat(storage.load(storedFile.storageKey())).isPresent();
+		assertThat(storage.load("../outside.txt")).isEmpty();
+		assertThat(storage.load("missing.png")).isEmpty();
+	}
 }

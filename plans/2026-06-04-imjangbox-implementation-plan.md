@@ -167,3 +167,7 @@ Implemented on 2026-06-06: Phase 3 integrated Kakao Maps through an explicit bro
 ## Sixth Worker Task
 
 Implemented on 2026-06-06: Phase 3 created the separate `property_search_index` structure for map and keyword search. Inspection create/update now refreshes the index from broker-safe fields only, V4/MyBatis/local mapper shapes keep it separate from internal notes, and regression tests cover template rendering, geocoding failures, and search-index updates.
+
+## Seventh Worker Task
+
+Implemented on 2026-06-11: Phase 4 created persisted customer share-card snapshots. Broker edit pages can generate share links, public `/share/{shareId}` pages render from snapshot rows only, customer-visible facility answers and public image metadata are stored as share-scoped child rows, and regression tests prove denied fields are absent and snapshots remain stable after internal inspection updates.

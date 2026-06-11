@@ -93,3 +93,17 @@ Product code exists. Use the running Spring Boot application as the main manual 
 - LSP diagnostics should be run when `jdtls` is installed; otherwise record `jdtls` as unavailable and rely on Gradle compile/test.
 - Runtime broker QA: `./gradlew bootRun --args='--server.port=18097'`; authenticated create and update requests with private leak markers should return redirects and keep the broker edit flow working.
 - Cleanup QA: stop `bootRun`, then a bounded curl to port `18097` should fail to connect.
+
+## Phase 4 Share Card Validation
+
+- Full verification: `./gradlew test`.
+- Focused share checks: `./gradlew test --tests 'com.imjangbox.share.*' --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest`.
+- Runtime QA: `./gradlew bootRun` on the default local profile.
+- Manual HTTP QA:
+  - authenticated GET `/broker/inspections/new` should return `200` and a CSRF token
+  - authenticated POST `/broker/inspections` with public and private marker values should redirect to `/broker/inspections/{id}/edit`
+  - authenticated POST `/broker/inspections/{id}/share` with CSRF should redirect to `/share/{shareId}`
+  - unauthenticated GET `/share/{shareId}` should return `200` and render only public title, public address, public pricing, customer-safe verification text, and customer-visible facilities
+  - the public page should not render private memo, private price note, stakeholder phone, contact-log content, internal address, internal risk memo, storage key, original attachment filename, or search-index-only fields
+  - after updating the internal inspection, the same `/share/{shareId}` page should still render the original snapshot values
+- Cleanup QA: stop `bootRun`, then verify no `bootRun`/`ImjangboxApplication` process remains.

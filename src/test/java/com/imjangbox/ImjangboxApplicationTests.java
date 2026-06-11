@@ -7,6 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.imjangbox.facility.FacilityTemplateMapper;
 import com.imjangbox.inspection.persistence.PropertyInspectionMapper;
+import com.imjangbox.share.ShareSnapshotMapper;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -17,6 +18,9 @@ class ImjangboxApplicationTests {
 
 	@MockitoBean
 	private FacilityTemplateMapper facilityTemplateMapper;
+
+	@MockitoBean
+	private ShareSnapshotMapper shareSnapshotMapper;
 
 	@Test
 	void contextLoads() {

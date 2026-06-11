@@ -260,6 +260,11 @@ class InspectionServiceTest {
 		}
 
 		@Override
+		public List<FileAttachmentWriteRow> findFileAttachments(long inspectionId) {
+			return List.copyOf(attachments);
+		}
+
+		@Override
 		public void deleteFacilityAnswers(long inspectionId) {
 			deletedFacilityAnswerInspectionIds.add(inspectionId);
 		}

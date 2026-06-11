@@ -1,22 +1,22 @@
 # CHECKPOINT
 
-**Checkpoint date:** 2026-06-06
+**Checkpoint date:** 2026-06-11
 **Project:** imjangbox
-**Current state:** Phase 3 is complete. Dynamic facility-check template definitions now exist by business type, with MySQL/Flyway template tables, a MyBatis mapper/service boundary, local-profile configuration-backed seed templates, broker-form rendering for selected business types, independently persisted facility answers, an explicit `GeocodingGateway` boundary with a disabled local default and Kakao REST adapter, a broker-form Kakao Maps UI boundary configured by a browser JavaScript key, and a separate `property_search_index` structure refreshed from broker-safe fields on inspection create/update.
+**Current state:** Phase 4 is complete. Customer share cards are generated as stored snapshots from internal inspection records, with separate public snapshot rows for the card, customer-visible facility answers, and share-scoped public image metadata. Broker edit pages can generate a new share link, public `/share/{shareId}` pages render from snapshots with Thymeleaf/Bootstrap, and regression tests prove denied internal fields stay out of DTOs, JSON, templates, snapshot mapper shapes, and stable public output after internal record updates.
 
 ## Resume Here Next Time
 
 1. Read `AGENTS.md`.
 2. Read `plans/2026-06-04-imjangbox-implementation-plan.md`.
 3. Read `TASKS.md`.
-4. Start the next unchecked Phase 4 customer share-card task.
+4. Start the next unchecked Phase 5 hardening task only when explicitly asked.
 
 ## Exact Next Implementation Step
 
-Start Phase 4 customer share-card work:
+Start Phase 5 hardening work:
 
-- generate customer-safe share snapshots from internal inspection records
-- keep share cards backed by snapshots, not direct internal entities
+- add audit logging for share-card creation and updates
+- keep Phase 4 snapshot privacy guarantees intact
 
 Phase 2 notes to preserve:
 
@@ -36,6 +36,7 @@ Phase 2 notes to preserve:
 - Kakao Maps JavaScript keys mixed with backend Kakao REST API keys.
 - Search scans over private internal notes.
 - Customer share cards backed directly by internal records.
+- Mutating existing public share snapshots when internal records change.
 - Automatic ad-copy generation.
 - Automatic business-type legal judgment.
 - Automatic commercial district scoring.

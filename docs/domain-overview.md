@@ -12,6 +12,7 @@ imjangbox supports commercial real estate brokers who inspect candidate properti
 - **Premium/key-money:** Commercial-property pricing context that may include public figures and private broker notes.
 - **Verification status:** Explicit claim/check state for facts about the property.
 - **Share card:** Customer-facing snapshot generated from internal records.
+- **Share snapshot:** Persisted customer-safe copy of selected public inspection fields, facility summaries, verification display labels, and share-scoped image metadata.
 
 ## Verification Status Definitions
 

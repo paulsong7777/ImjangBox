@@ -35,6 +35,9 @@ import com.imjangbox.facility.FacilityTemplateService;
 import com.imjangbox.map.KakaoMapView;
 import com.imjangbox.map.KakaoMapViewFactory;
 import com.imjangbox.property.VerificationStatus;
+import com.imjangbox.share.PublicPricingSnapshot;
+import com.imjangbox.share.PublicShareSnapshot;
+import com.imjangbox.share.ShareSnapshotService;
 
 @WebMvcTest(BrokerInspectionController.class)
 @Import(SecurityConfig.class)
@@ -51,6 +54,9 @@ class BrokerInspectionControllerTest {
 
 	@MockitoBean
 	private KakaoMapViewFactory kakaoMapViewFactory;
+
+	@MockitoBean
+	private ShareSnapshotService shareSnapshotService;
 
 	@Autowired
 	BrokerInspectionControllerTest(MockMvc mockMvc) {
@@ -262,6 +268,26 @@ class BrokerInspectionControllerTest {
 				.andExpect(redirectedUrl("/broker/inspections/41/edit"));
 
 		verify(inspectionService).update(eq(41L), any(InspectionForm.class), anyAttachmentList());
+	}
+
+	@Test
+	void createShareSnapshotRedirectsToPublicShareCard() throws Exception {
+		when(shareSnapshotService.createSnapshot(41L)).thenReturn(new PublicShareSnapshot(
+				"share-41",
+				"성수역 1층 상가",
+				new com.imjangbox.property.PublicAddress("성수역 인근", "대로변"),
+				new PublicPricingSnapshot(10_000L, 550L, 3_000L),
+				VerificationStatus.AGENT_CHECKED,
+				"Agent checked",
+				List.of(),
+				List.of()));
+
+		mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+				.post("/broker/inspections/41/share").with(csrf()))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/share/share-41"));
+
+		verify(shareSnapshotService).createSnapshot(41L);
 	}
 
 	private List<MultipartFile> anyAttachmentList() {

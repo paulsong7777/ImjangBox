@@ -5,11 +5,14 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.Normalizer;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +43,18 @@ public class LocalFileStorage implements FileStorage {
 			Files.copy(input, target);
 		}
 		return new StoredFile(storageKey, originalFilename, file.getContentType(), file.getSize());
+	}
+
+	@Override
+	public Optional<Resource> load(String storageKey) {
+		if (storageKey == null || storageKey.isBlank()) {
+			return Optional.empty();
+		}
+		Path target = localRoot.resolve(storageKey).normalize();
+		if (!target.startsWith(localRoot) || !Files.isRegularFile(target)) {
+			return Optional.empty();
+		}
+		return Optional.of(new FileSystemResource(target));
 	}
 
 	private String safeFilename(String originalFilename) {
