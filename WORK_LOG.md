@@ -315,3 +315,31 @@
 - Public image QA: unauthenticated GET `/share/{shareId}/images/1` returned `HTTP/1.1 200`, `Content-Type: image/png`, and the selected PNG bytes.
 - Snapshot stability QA: after updating internal inspection `41` to `UPDATED_PUBLIC_TITLE`, `UPDATED_PUBLIC_ADDRESS`, `UPDATED_PRIVATE_MEMO`, and `UPDATED_RISK`, the same public share URL still rendered the original `QA Share Card`, `PUBLIC_DISTRICT_QA`, and `Agent checked`.
 - Cleanup QA: stopped the local `bootRun` processes; follow-up process check found no running `bootRun`/`ImjangboxApplication` process.
+
+## 2026-06-11 - Phase 5 Share Snapshot Audit Logging
+
+**Scope:** Complete the next unchecked Phase 5 MVP task: audit logging for share-card creation and updates.
+
+**Actions completed:**
+
+- Added `share_snapshot_audit_logs` in Flyway V6 with share ID, inspection ID, action, broker actor, and creation timestamp.
+- Added share audit row/write records and mapper methods for inserting and reading audit records.
+- Updated `ShareSnapshotService` to write `CREATED` for the first generated snapshot of an inspection and `UPDATED` for later broker-generated snapshot versions of the same inspection.
+- Passed the authenticated broker username from `BrokerInspectionController` into share snapshot generation.
+- Kept public share DTOs, templates, and public routes unchanged so audit data remains internal-only.
+- Added regression coverage for `CREATED` and `UPDATED` audit actions, controller actor propagation, and V6 privacy-safe persistence shape.
+
+**Constraints honored:**
+
+- Existing public share cards remain stable and are still backed by snapshot rows, not live internal records.
+- Audit rows do not add private memo, private price note, contact-log content, internal risk memo, internal address, file storage keys, or audit data to public DTOs/templates.
+- Phase 5 broker authentication was not duplicated.
+- No JPA, React, Vue, Next.js, or prohibited product automation features were introduced.
+
+**Validation receipts:**
+
+- Focused verification: `./gradlew test --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest` passed.
+- Full verification: `./gradlew test` passed.
+- Manual QA: `./gradlew bootRun --args='--server.port=18101'` started on the default `local` profile.
+- Broker/public share QA: authenticated create returned a broker edit redirect for inspection `43`; two authenticated share-generation POSTs returned `/share/d0278ab2-9708-4cad-88a8-a07560459760` and `/share/934822df-8ebd-418e-927b-4fffa62a9c8e`; unauthenticated GETs of both share pages returned public content and excluded `PRIVATE_MEMO_AUDIT_QA`, `PRIVATE_RISK_AUDIT_QA`, and `PRIVATE_INTERNAL_AUDIT_QA`.
+- Cleanup QA: stopped `bootRun`; follow-up process check found no running `bootRun`/`ImjangboxApplication` process.

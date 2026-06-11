@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -134,9 +135,13 @@ public class BrokerInspectionController {
 	}
 
 	@PostMapping("/{inspectionId}/share")
-	String createShare(@PathVariable long inspectionId) {
-		PublicShareSnapshot snapshot = shareSnapshotService.createSnapshot(inspectionId);
+	String createShare(@PathVariable long inspectionId, Authentication authentication) {
+		PublicShareSnapshot snapshot = shareSnapshotService.createSnapshot(inspectionId, brokerUsername(authentication));
 		return "redirect:/share/" + snapshot.shareId();
+	}
+
+	private String brokerUsername(Authentication authentication) {
+		return authentication == null || authentication.getName() == null ? "unknown" : authentication.getName();
 	}
 
 	private void populateFormModel(Model model, Long inspectionId, String formAction, String submitLabel) {

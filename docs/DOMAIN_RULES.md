@@ -22,6 +22,7 @@ Required implication:
 - Public share cards should remain stable unless a new snapshot/version is created.
 - Public DTOs should not embed internal entities or mapper result objects.
 - Public image URLs should use share-scoped public references, not file-storage keys or original internal filenames.
+- Share-card snapshot creation and regenerated share-card versions should leave internal audit records without adding audit data to public output.
 
 ## Address Separation
 

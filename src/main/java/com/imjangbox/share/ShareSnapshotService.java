@@ -50,6 +50,11 @@ public class ShareSnapshotService {
 
 	@Transactional
 	public PublicShareSnapshot createSnapshot(long inspectionId) {
+		return createSnapshot(inspectionId, "system");
+	}
+
+	@Transactional
+	public PublicShareSnapshot createSnapshot(long inspectionId, String actorUsername) {
 		PropertyInspectionRow inspection = inspectionMapper.findById(inspectionId)
 				.orElseThrow(() -> new InspectionNotFoundException(inspectionId));
 		List<FacilityAnswerWriteRow> facilityAnswers = inspectionMapper.findFacilityAnswers(inspectionId);
@@ -58,6 +63,9 @@ public class ShareSnapshotService {
 				.limit(MAX_PUBLIC_IMAGES)
 				.toList();
 		String shareId = shareIdGenerator.get();
+		ShareSnapshotAuditAction auditAction = shareMapper.countSnapshotsByInspectionId(inspectionId) == 0
+				? ShareSnapshotAuditAction.CREATED
+				: ShareSnapshotAuditAction.UPDATED;
 		PublicShareSnapshot snapshot = PublicShareSnapshotFactory.from(
 				shareId,
 				inspection,
@@ -79,6 +87,11 @@ public class ShareSnapshotService {
 						publicImages.get(index).contentType(),
 						publicImages.get(index).storageKey()))
 				.forEach(shareMapper::insertImage);
+		shareMapper.insertAuditLog(ShareSnapshotAuditWriteRow.of(
+				shareId,
+				inspectionId,
+				auditAction,
+				actorUsername));
 
 		return snapshot;
 	}

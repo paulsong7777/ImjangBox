@@ -1,7 +1,7 @@
 # TASKS
 
 **Project:** imjangbox
-**Last updated:** 2026-06-06
+**Last updated:** 2026-06-11
 
 ## Phase 0 - Repository And Spring Boot Foundation
 
@@ -52,7 +52,7 @@
 ## Phase 5 - Hardening, Operations, And Release Readiness
 
 - [x] Add authentication/authorization for broker-only internal screens.
-- [ ] Add audit logging for share-card creation and updates.
+- [x] Add audit logging for share-card creation and updates.
 - [ ] Add integration tests for MyBatis/MySQL behavior using the chosen test database approach.
 - [ ] Add file-storage validation for size, type, and access control.
 - [ ] Add operational docs for deployment, configuration, and backup.

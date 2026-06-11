@@ -107,3 +107,15 @@ Product code exists. Use the running Spring Boot application as the main manual 
   - the public page should not render private memo, private price note, stakeholder phone, contact-log content, internal address, internal risk memo, storage key, original attachment filename, or search-index-only fields
   - after updating the internal inspection, the same `/share/{shareId}` page should still render the original snapshot values
 - Cleanup QA: stop `bootRun`, then verify no `bootRun`/`ImjangboxApplication` process remains.
+
+## Phase 5 Share Audit Validation
+
+- Focused audit/share checks: `./gradlew test --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest`.
+- Full verification: `./gradlew test`.
+- Runtime QA: start `./gradlew bootRun --args='--server.port=18101'` on the default local profile.
+- Manual HTTP QA:
+  - authenticated GET `/broker/inspections/new?businessType=CAFE` should return `200` and a CSRF token
+  - authenticated POST `/broker/inspections` with private marker values should redirect to the broker edit page
+  - authenticated POST `/broker/inspections/{inspectionId}/share` twice should redirect to two `/share/{shareId}` URLs
+  - unauthenticated GET of both share URLs should return `200`, render public title/address/verification values, and exclude private marker values
+  - focused service tests should prove the first snapshot audit action is `CREATED` and the second generated snapshot for the same inspection is `UPDATED`

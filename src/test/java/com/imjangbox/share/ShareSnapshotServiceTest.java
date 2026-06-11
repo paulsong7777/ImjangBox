@@ -3,8 +3,10 @@ package com.imjangbox.share;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imjangbox.file.FileStorage;
@@ -46,7 +48,7 @@ class ShareSnapshotServiceTest {
 				noOpFileStorage(),
 				() -> "share-stable");
 
-		PublicShareSnapshot created = service.createSnapshot(41L);
+		PublicShareSnapshot created = service.createSnapshot(41L, "broker-user");
 		inspectionMapper.row = row("UPDATED_PUBLIC_TITLE", "UPDATED_PUBLIC_ADDRESS", VerificationStatus.DOCUMENT_CHECKED);
 		PublicShareSnapshot found = service.findSnapshot(created.shareId());
 
@@ -72,6 +74,40 @@ class ShareSnapshotServiceTest {
 				.doesNotContain("contactLogs")
 				.doesNotContain("storageKey")
 				.doesNotContain("inspectionId");
+		assertThat(shareMapper.findAuditLogsByShareId("share-stable"))
+				.extracting(
+						ShareSnapshotAuditRow::shareId,
+						ShareSnapshotAuditRow::inspectionId,
+						ShareSnapshotAuditRow::action,
+						ShareSnapshotAuditRow::actorUsername)
+				.containsExactly(org.assertj.core.groups.Tuple.tuple(
+						"share-stable",
+						41L,
+						ShareSnapshotAuditAction.CREATED.name(),
+						"broker-user"));
+	}
+
+	@Test
+	void recordsUpdatedAuditActionWhenBrokerRegeneratesShareSnapshotForSameInspection() {
+		Queue<String> shareIds = new ArrayDeque<>(List.of("share-v1", "share-v2"));
+		LocalShareSnapshotMapper shareMapper = new LocalShareSnapshotMapper();
+		ShareSnapshotService service = new ShareSnapshotService(
+				new CapturingInspectionMapper(),
+				shareMapper,
+				noOpFileStorage(),
+				shareIds::remove);
+
+		service.createSnapshot(41L, "broker-user");
+		service.createSnapshot(41L, "broker-user");
+
+		assertThat(shareMapper.findAuditLogsByShareId("share-v1"))
+				.extracting(ShareSnapshotAuditRow::action)
+				.containsExactly(ShareSnapshotAuditAction.CREATED.name());
+		assertThat(shareMapper.findAuditLogsByShareId("share-v2"))
+				.extracting(ShareSnapshotAuditRow::action, ShareSnapshotAuditRow::actorUsername)
+				.containsExactly(org.assertj.core.groups.Tuple.tuple(
+						ShareSnapshotAuditAction.UPDATED.name(),
+						"broker-user"));
 	}
 
 	@ParameterizedTest

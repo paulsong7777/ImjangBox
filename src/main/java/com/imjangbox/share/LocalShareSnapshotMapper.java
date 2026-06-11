@@ -17,6 +17,8 @@ class LocalShareSnapshotMapper implements ShareSnapshotMapper {
 	private final Map<String, ShareSnapshotRow> snapshots = new LinkedHashMap<>();
 	private final Map<String, List<ShareFacilitySnapshotRow>> facilities = new LinkedHashMap<>();
 	private final Map<String, List<ShareImageSnapshotRow>> images = new LinkedHashMap<>();
+	private final Map<String, List<ShareSnapshotAuditRow>> auditLogs = new LinkedHashMap<>();
+	private final Map<Long, Integer> snapshotCountsByInspectionId = new LinkedHashMap<>();
 
 	@Override
 	public void insertSnapshot(ShareSnapshotWriteRow row) {
@@ -30,6 +32,7 @@ class LocalShareSnapshotMapper implements ShareSnapshotMapper {
 				row.depositAmount(),
 				row.monthlyRentAmount(),
 				row.premiumAmount()));
+		snapshotCountsByInspectionId.merge(row.inspectionId(), 1, Integer::sum);
 	}
 
 	@Override
@@ -40,6 +43,20 @@ class LocalShareSnapshotMapper implements ShareSnapshotMapper {
 	@Override
 	public void insertImage(ShareImageSnapshotRow row) {
 		images.computeIfAbsent(row.shareId(), ignored -> new ArrayList<>()).add(row);
+	}
+
+	@Override
+	public void insertAuditLog(ShareSnapshotAuditWriteRow row) {
+		auditLogs.computeIfAbsent(row.shareId(), ignored -> new ArrayList<>()).add(new ShareSnapshotAuditRow(
+				row.shareId(),
+				row.inspectionId(),
+				row.action(),
+				row.actorUsername()));
+	}
+
+	@Override
+	public int countSnapshotsByInspectionId(long inspectionId) {
+		return snapshotCountsByInspectionId.getOrDefault(inspectionId, 0);
 	}
 
 	@Override
@@ -62,6 +79,11 @@ class LocalShareSnapshotMapper implements ShareSnapshotMapper {
 		return images.getOrDefault(shareId, List.of()).stream()
 				.filter(image -> image.displayOrder() == displayOrder)
 				.findFirst();
+	}
+
+	@Override
+	public List<ShareSnapshotAuditRow> findAuditLogsByShareId(String shareId) {
+		return List.copyOf(auditLogs.getOrDefault(shareId, List.of()));
 	}
 
 	private <T extends Record> List<T> sortedCopy(List<T> rows) {

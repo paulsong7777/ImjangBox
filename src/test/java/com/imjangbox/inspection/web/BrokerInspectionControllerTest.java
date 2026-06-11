@@ -272,7 +272,7 @@ class BrokerInspectionControllerTest {
 
 	@Test
 	void createShareSnapshotRedirectsToPublicShareCard() throws Exception {
-		when(shareSnapshotService.createSnapshot(41L)).thenReturn(new PublicShareSnapshot(
+		when(shareSnapshotService.createSnapshot(41L, "user")).thenReturn(new PublicShareSnapshot(
 				"share-41",
 				"성수역 1층 상가",
 				new com.imjangbox.property.PublicAddress("성수역 인근", "대로변"),
@@ -287,7 +287,7 @@ class BrokerInspectionControllerTest {
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("/share/share-41"));
 
-		verify(shareSnapshotService).createSnapshot(41L);
+		verify(shareSnapshotService).createSnapshot(41L, "user");
 	}
 
 	private List<MultipartFile> anyAttachmentList() {

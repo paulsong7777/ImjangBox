@@ -163,6 +163,26 @@ class PersistencePrivacyShapeTest {
 	}
 
 	@Test
+	void phaseFiveMigrationAddsShareSnapshotAuditLogsWithoutPrivateFields() throws Exception {
+		String sql = Files.readString(
+				Path.of("src/main/resources/db/migration/V6__create_share_snapshot_audit_logs.sql"),
+				StandardCharsets.UTF_8);
+
+		assertThat(sql)
+				.contains("CREATE TABLE share_snapshot_audit_logs")
+				.contains("share_id")
+				.contains("inspection_id")
+				.contains("actor_username")
+				.contains("CREATED")
+				.contains("UPDATED")
+				.doesNotContain("private_memo")
+				.doesNotContain("price_private_note")
+				.doesNotContain("contact_log")
+				.doesNotContain("internal_risk_memo")
+				.doesNotContain("source_storage_key");
+	}
+
+	@Test
 	void shareSnapshotMapperReadsOnlyPublicSnapshotTables() throws Exception {
 		String mapper = Files.readString(
 				Path.of("src/main/resources/mappers/ShareSnapshotMapper.xml"),
@@ -173,8 +193,10 @@ class PersistencePrivacyShapeTest {
 				.contains("public_share_snapshots")
 				.contains("public_share_snapshot_facilities")
 				.contains("public_share_snapshot_images")
+				.contains("share_snapshot_audit_logs")
 				.contains("public_address_summary")
 				.contains("source_storage_key")
+				.contains("insertAuditLog")
 				.doesNotContain("internal_road_address")
 				.doesNotContain("internal_detail_address")
 				.doesNotContain("private_memo")

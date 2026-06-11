@@ -35,6 +35,15 @@
         </constructor>
     </resultMap>
 
+    <resultMap id="shareSnapshotAuditRow" type="com.imjangbox.share.ShareSnapshotAuditRow">
+        <constructor>
+            <arg column="share_id" javaType="String"/>
+            <arg column="inspection_id" javaType="long"/>
+            <arg column="action" javaType="String"/>
+            <arg column="actor_username" javaType="String"/>
+        </constructor>
+    </resultMap>
+
     <insert id="insertSnapshot" parameterType="com.imjangbox.share.ShareSnapshotWriteRow">
         INSERT INTO public_share_snapshots (
             share_id,
@@ -89,6 +98,26 @@
         )
     </insert>
 
+    <insert id="insertAuditLog" parameterType="com.imjangbox.share.ShareSnapshotAuditWriteRow">
+        INSERT INTO share_snapshot_audit_logs (
+            share_id,
+            inspection_id,
+            action,
+            actor_username
+        ) VALUES (
+            #{shareId},
+            #{inspectionId},
+            #{action},
+            #{actorUsername}
+        )
+    </insert>
+
+    <select id="countSnapshotsByInspectionId" resultType="int">
+        SELECT COUNT(*)
+          FROM public_share_snapshots
+         WHERE inspection_id = #{inspectionId}
+    </select>
+
     <select id="findSnapshotByShareId" resultMap="shareSnapshotRow">
         SELECT share_id,
                title,
@@ -131,5 +160,15 @@
           FROM public_share_snapshot_images
          WHERE share_id = #{shareId}
            AND display_order = #{displayOrder}
+    </select>
+
+    <select id="findAuditLogsByShareId" resultMap="shareSnapshotAuditRow">
+        SELECT share_id,
+               inspection_id,
+               action,
+               actor_username
+          FROM share_snapshot_audit_logs
+         WHERE share_id = #{shareId}
+         ORDER BY share_snapshot_audit_log_id
     </select>
 </mapper>

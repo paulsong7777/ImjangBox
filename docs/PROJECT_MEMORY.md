@@ -42,6 +42,8 @@ As of 2026-06-06, Phase 3 is complete. Dynamic facility-check template definitio
 
 As of 2026-06-11, Phase 4 is complete. Broker edit pages can create customer share links backed by persisted `public_share_snapshots` rows and child snapshot rows for customer-visible facility summaries and share-scoped image metadata. Public `/share/{shareId}` pages render from snapshots only, not live internal inspection rows, so existing cards remain stable after internal updates.
 
+As of later on 2026-06-11, Phase 5 hardening has started. Share-card generation writes internal audit records to `share_snapshot_audit_logs`; first snapshots are marked `CREATED`, and later broker-generated snapshot versions for the same inspection are marked `UPDATED`.
+
 ## Key Assumptions
 
 - Public customer share cards should be generated from snapshot data.
@@ -52,3 +54,4 @@ As of 2026-06-11, Phase 4 is complete. Broker edit pages can create customer sha
 - Kakao Maps browser display should be configured separately from backend geocoding and should not expose `KAKAO_REST_API_KEY`.
 - Search and maps should use a dedicated search/index structure rather than private internal notes.
 - Share cards should be regenerated as new snapshots when customer-facing content needs to change.
+- Share-card snapshot generation should be auditable internally without expanding public share DTOs or templates.

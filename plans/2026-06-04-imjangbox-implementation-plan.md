@@ -117,7 +117,7 @@ Build a Spring Boot 3.x application that helps Korean commercial real estate bro
 ## Phase 5 - Hardening And Release
 
 1. Broker authentication and authorization. Completed early during Phase 2 review hardening.
-2. Add audit records for share snapshot creation and changes.
+2. Add audit records for share snapshot creation and changes. Completed during Phase 5 hardening on 2026-06-11.
 3. Add integration tests for MyBatis and MySQL behavior.
 4. Add file access-control tests.
 5. Add deployment/configuration docs.
@@ -171,3 +171,7 @@ Implemented on 2026-06-06: Phase 3 created the separate `property_search_index` 
 ## Seventh Worker Task
 
 Implemented on 2026-06-11: Phase 4 created persisted customer share-card snapshots. Broker edit pages can generate share links, public `/share/{shareId}` pages render from snapshot rows only, customer-visible facility answers and public image metadata are stored as share-scoped child rows, and regression tests prove denied fields are absent and snapshots remain stable after internal inspection updates.
+
+## Eighth Worker Task
+
+Implemented on 2026-06-11: Phase 5 hardening added internal audit logging for share-card snapshot creation and regenerated share-card versions. `share_snapshot_audit_logs` records share ID, inspection ID, `CREATED` or `UPDATED`, and the broker actor while keeping public share DTOs/templates unchanged. Focused and full regression tests passed, and manual broker/public share QA confirmed the share surface still excludes private markers.

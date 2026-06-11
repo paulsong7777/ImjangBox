@@ -22,6 +22,8 @@ Current implementation stores the top-level card in `public_share_snapshots`, cu
 
 Snapshot stability is required: changing an internal inspection after share-card generation must not change an existing public card. A broker should create a new share snapshot when a new customer-facing version is needed.
 
+Share-card generation is audited internally in `share_snapshot_audit_logs`. The first snapshot for an inspection records `CREATED`; later broker-generated snapshots for the same inspection record `UPDATED`. Audit rows are not public DTOs or public template inputs.
+
 ## Address Separation
 
 Internal address and public address must be distinct.
@@ -40,3 +42,4 @@ Public Thymeleaf templates should receive public snapshot DTOs only. Passing int
 - Internal address values do not appear where public address values are expected.
 - Share-card pages render from snapshots and remain stable after internal record updates.
 - Every verification status has customer-safe display text.
+- Share-card generation writes internal audit records without adding audit fields to public share output.
