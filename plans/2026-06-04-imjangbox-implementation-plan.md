@@ -120,7 +120,7 @@ Build a Spring Boot 3.x application that helps Korean commercial real estate bro
 2. Add audit records for share snapshot creation and changes. Completed during Phase 5 hardening on 2026-06-11.
 3. Add integration tests for MyBatis and MySQL behavior. Completed during Phase 5 hardening on 2026-06-11.
 4. Add file access-control tests. Completed during Phase 5 hardening on 2026-06-11.
-5. Add deployment/configuration docs.
+5. Add deployment/configuration docs. Completed during Phase 5 hardening on 2026-06-11.
 6. Run manual QA for inspection capture, facility templates, map search, and customer share cards.
 
 **Acceptance criteria:**
@@ -183,3 +183,7 @@ Implemented on 2026-06-11: Phase 5 hardening added SQL-backed MyBatis integratio
 ## Tenth Worker Task
 
 Implemented on 2026-06-11: Phase 5 hardening strengthened file-storage validation and access-control boundaries. Broker uploads now reject oversized files, unsupported types, filename extension/content-type mismatches, and header/content-type mismatches before storage. Public share image streaming uses share-scoped snapshot rows, refuses non-image snapshot rows before loading storage, and keeps storage keys, local paths, and original filenames out of public URLs, templates, and response headers.
+
+## Eleventh Worker Task
+
+Implemented on 2026-06-11: Phase 5 hardening added practical operational documentation for local, test, `mybatis-integration`, and `local-db` profiles; required environment variables and secrets; separate Kakao REST and JavaScript key configuration; local file-storage root and backup expectations; MySQL/Flyway migration, backup, and restore expectations; small MVP server deployment; smoke tests; and rollback steps.

@@ -399,3 +399,27 @@
 - Public image QA: unauthenticated GET `/share/60cc0025-9d4f-4af6-beb1-fa076b0bbf1e/images/1` returned `HTTP/1.1 200`, `Content-Type: image/png`, and no `Content-Disposition` filename header.
 - Raw storage route QA: unauthenticated GET `/inspection-files/41/qa-photo.png` returned `HTTP/1.1 404`.
 - Cleanup QA: stopped `bootRun`; follow-up bounded curl to port `18102` failed to connect.
+
+## 2026-06-11 - Phase 5 Operational Documentation
+
+**Scope:** Complete the next unchecked Phase 5 hardening task: operational docs for deployment, configuration, and backup.
+
+**Actions completed:**
+
+- Added `docs/operations.md` covering current `local`, `test`, `mybatis-integration`, and `local-db` profile behavior.
+- Documented required MySQL and broker secret configuration without committing real keys or real credentials.
+- Documented separate Kakao REST API and Kakao JavaScript key configuration, with both integrations disabled by default.
+- Documented local file-storage root configuration, public share image routing expectations, and file backup requirements.
+- Documented Flyway/MySQL migration expectations, logical database backup/restore flow, small MVP server deployment checklist, smoke tests, and rollback steps.
+- Updated `README.md` to point operators to the new guide and changed the `local-db` example to placeholder-only values.
+- Updated `TASKS.md`, `CHECKPOINT.md`, and the implementation plan so the next unchecked Phase 5 task is full manual QA.
+
+**Constraints honored:**
+
+- No product code or unrelated Phase 6 features were changed.
+- Current privacy boundaries remain documented: public share cards use snapshots, and public image routes stay share-scoped.
+- No real secrets, Kakao keys, or realistic fake credentials were added.
+
+**Validation receipts:**
+
+- Full verification: `./gradlew test` passed.

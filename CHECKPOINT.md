@@ -2,7 +2,7 @@
 
 **Checkpoint date:** 2026-06-11
 **Project:** imjangbox
-**Current state:** Phase 5 hardening is in progress. Broker authentication was already completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, and file-storage validation now enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output.
+**Current state:** Phase 5 hardening is in progress. Broker authentication was already completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation now enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, and operational deployment/configuration/backup docs now exist in `docs/operations.md`. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output.
 
 ## Resume Here Next Time
 
@@ -15,7 +15,7 @@
 
 Continue Phase 5 hardening work:
 
-- add operational docs for deployment, configuration, and backup
+- run full manual QA across inspection capture, map search, and share card views
 - keep Phase 4 snapshot privacy guarantees, Phase 5 share audit logging, and SQL-backed mapper integration tests intact
 
 Phase 2 notes to preserve:
@@ -24,6 +24,7 @@ Phase 2 notes to preserve:
 - Broker create form is `/broker/inspections/new`.
 - Contact-log writes are append-only unless `deleteContactLogs` is explicitly called.
 - Local attachment storage root is `imjangbox.file-storage.local-root`, defaulting to `${java.io.tmpdir}/imjangbox-local-files`.
+- Operational docs for the current profiles, required secrets, Kakao key separation, file/database backups, small-server deployment, smoke tests, and rollback are in `docs/operations.md`.
 
 ## Do Not Start With
 
@@ -53,6 +54,7 @@ The repository includes a Gradle wrapper. In this `/mnt/c` workspace, Gradle wri
 
 Most recent verification:
 
+- `./gradlew test` passed on 2026-06-11 after the operational documentation update.
 - `./gradlew test --tests com.imjangbox.inspection.persistence.MyBatisPersistenceIntegrationTest` passed on 2026-06-11.
 - `./gradlew test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest` passed on 2026-06-11.
 - `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.file.LocalFileStorageTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest` passed on 2026-06-11.

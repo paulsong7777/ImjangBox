@@ -102,13 +102,18 @@ http://localhost:8080/broker/inspections/new
 The `local-db` profile uses MyBatis/MySQL and Flyway migrations instead of the in-memory local mapper:
 
 ```bash
-IMJANGBOX_DB_URL=jdbc:mysql://localhost:3306/imjangbox \
-IMJANGBOX_DB_USERNAME=imjangbox \
-IMJANGBOX_DB_PASSWORD=change-me \
+IMJANGBOX_DB_URL='jdbc:mysql://<db-host>:3306/<database-name>' \
+IMJANGBOX_DB_USERNAME='<database-user>' \
+IMJANGBOX_DB_PASSWORD='<database-password>' \
+IMJANGBOX_BROKER_PASSWORD='<broker-password>' \
 ./gradlew bootRun --args='--spring.profiles.active=local-db'
 ```
 
 Outside the `local` and `test` profiles, set `imjangbox.broker.password` to a non-empty secret.
+
+## Operations
+
+See [docs/operations.md](docs/operations.md) for the current deployment, configuration, Kakao key, file-storage, backup/restore, smoke-test, and rollback checklist.
 
 ## Attachments
 
