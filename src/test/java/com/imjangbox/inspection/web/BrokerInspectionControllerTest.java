@@ -23,6 +23,7 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -238,6 +239,15 @@ class BrokerInspectionControllerTest {
 				.param("verificationStatus", "AGENT_CHECKED"))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("첨부 파일을 확인해 주세요.")));
+	}
+
+	@Test
+	@WithAnonymousUser
+	void attachmentUploadRequiresBrokerAuthentication() throws Exception {
+		mockMvc.perform(multipart("/broker/inspections")
+				.file("attachments", "payload".getBytes())
+				.with(csrf()))
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test

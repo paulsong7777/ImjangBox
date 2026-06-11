@@ -368,3 +368,34 @@
 - Focused integration verification: `./gradlew test --tests com.imjangbox.inspection.persistence.MyBatisPersistenceIntegrationTest` passed.
 - Focused privacy/share verification: `./gradlew test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.inspection.persistence.PersistencePrivacyShapeTest` passed.
 - Full verification: `./gradlew test` passed.
+
+## 2026-06-11 - Phase 5 File Storage Validation And Access Control
+
+**Scope:** Complete the next unchecked Phase 5 hardening task: file-storage validation for size, type, and access control.
+
+**Actions completed:**
+
+- Added `AttachmentFilePolicy` as the shared file-boundary allowlist for internal attachments and public share image content types.
+- Kept broker upload validation in `InspectionService` and strengthened it to require matching filename extension, declared content type, and file header before any `FileStorage.store` call.
+- Preserved existing attachment limits: maximum 5 non-empty attachments and maximum 10 MiB per attachment.
+- Updated public share image lookup to refuse non-image snapshot rows before loading storage.
+- Kept public image URLs share-scoped as `/share/{shareId}/images/{displayOrder}` and continued to avoid public exposure of storage keys, local paths, and original filenames.
+- Added focused tests for extension mismatch, oversize rejection before storage, local path containment, broker-only upload access, public share image streaming without filename headers, raw storage path 404s, and non-image share image row refusal.
+
+**Constraints honored:**
+
+- Internal attachments remain reachable only through broker-authenticated create/update flows or share-scoped public image snapshots.
+- Public share cards do not expose `private_memo`, `price_private_note`, `stakeholder.phone`, `contact_log.content`, `internal_risk_memo`, storage keys, local paths, or original filenames.
+- No unrelated Phase 6 or new product features were started.
+- No JPA, React, Vue, Next.js, or prohibited product automation features were introduced.
+
+**Validation receipts:**
+
+- Focused verification: `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.file.LocalFileStorageTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest` passed.
+- Full verification: `./gradlew test` passed.
+- Manual QA: `./gradlew bootRun --args='--server.port=18102 --imjangbox.file-storage.local-root=/tmp/imjangbox-phase5-file-storage-qa'` started on the default `local` profile.
+- Broker upload QA: authenticated create with CSRF and a PNG attachment returned `HTTP/1.1 302` to `/broker/inspections/41/edit`.
+- Public share QA: authenticated share generation returned `HTTP/1.1 302` to `/share/60cc0025-9d4f-4af6-beb1-fa076b0bbf1e`; unauthenticated GET of that page rendered `PUBLIC_FILE_QA` and did not render `PRIVATE_` markers, `qa-photo.png`, or `inspection-files`.
+- Public image QA: unauthenticated GET `/share/60cc0025-9d4f-4af6-beb1-fa076b0bbf1e/images/1` returned `HTTP/1.1 200`, `Content-Type: image/png`, and no `Content-Disposition` filename header.
+- Raw storage route QA: unauthenticated GET `/inspection-files/41/qa-photo.png` returned `HTTP/1.1 404`.
+- Cleanup QA: stopped `bootRun`; follow-up bounded curl to port `18102` failed to connect.

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.imjangbox.file.AttachmentFilePolicy;
 import com.imjangbox.file.FileStorage;
 import com.imjangbox.inspection.InspectionNotFoundException;
 import com.imjangbox.inspection.persistence.FacilityAnswerWriteRow;
@@ -124,11 +125,15 @@ public class ShareSnapshotService {
 		if (row.isEmpty()) {
 			return Optional.empty();
 		}
-		Optional<Resource> resource = fileStorage.load(row.orElseThrow().sourceStorageKey());
-		return resource.map(value -> new PublicImageFile(value, row.orElseThrow().contentType()));
+		ShareImageSnapshotRow image = row.orElseThrow();
+		if (!AttachmentFilePolicy.isPublicImageType(image.contentType())) {
+			return Optional.empty();
+		}
+		Optional<Resource> resource = fileStorage.load(image.sourceStorageKey());
+		return resource.map(value -> new PublicImageFile(value, image.contentType()));
 	}
 
 	private boolean isPublicImage(FileAttachmentWriteRow attachment) {
-		return "image/jpeg".equals(attachment.contentType()) || "image/png".equals(attachment.contentType());
+		return AttachmentFilePolicy.isPublicImageType(attachment.contentType());
 	}
 }

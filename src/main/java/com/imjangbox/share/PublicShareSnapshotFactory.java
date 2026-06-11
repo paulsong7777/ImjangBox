@@ -3,6 +3,7 @@ package com.imjangbox.share;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.imjangbox.file.AttachmentFilePolicy;
 import com.imjangbox.inspection.persistence.FacilityAnswerWriteRow;
 import com.imjangbox.inspection.persistence.FileAttachmentWriteRow;
 import com.imjangbox.inspection.persistence.PropertyInspectionRow;
@@ -71,7 +72,7 @@ public final class PublicShareSnapshotFactory {
 	}
 
 	private static boolean isPublicImage(FileAttachmentWriteRow attachment) {
-		return "image/jpeg".equals(attachment.contentType()) || "image/png".equals(attachment.contentType());
+		return AttachmentFilePolicy.isPublicImageType(attachment.contentType());
 	}
 
 	private static boolean hasText(String value) {

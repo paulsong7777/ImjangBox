@@ -36,6 +36,7 @@ class LocalFileStorageTest {
 
 		assertThat(storage.load(storedFile.storageKey())).isPresent();
 		assertThat(storage.load("../outside.txt")).isEmpty();
+		assertThat(storage.load(localRoot.getParent().resolve("outside.txt").toString())).isEmpty();
 		assertThat(storage.load("missing.png")).isEmpty();
 	}
 }

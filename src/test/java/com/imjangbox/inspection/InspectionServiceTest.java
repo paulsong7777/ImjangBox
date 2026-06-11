@@ -146,6 +146,38 @@ class InspectionServiceTest {
 	}
 
 	@Test
+	void createRejectsAttachmentFilenameExtensionThatDoesNotMatchDeclaredType() {
+		CapturingPropertyInspectionMapper mapper = new CapturingPropertyInspectionMapper();
+		CapturingFileStorage fileStorage = new CapturingFileStorage();
+		InspectionService service = new InspectionService(mapper, fileStorage);
+
+		assertThatThrownBy(() -> service.create(form(), List.of(new MockMultipartFile(
+				"attachments",
+				"renamed.txt",
+				"image/png",
+				new byte[] { (byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A }))))
+				.isInstanceOf(AttachmentValidationException.class);
+
+		assertThat(fileStorage.storedOriginalNames).isEmpty();
+	}
+
+	@Test
+	void createRejectsOversizedAttachmentsBeforeStorage() {
+		CapturingPropertyInspectionMapper mapper = new CapturingPropertyInspectionMapper();
+		CapturingFileStorage fileStorage = new CapturingFileStorage();
+		InspectionService service = new InspectionService(mapper, fileStorage);
+
+		assertThatThrownBy(() -> service.create(form(), List.of(new MockMultipartFile(
+				"attachments",
+				"large.txt",
+				"text/plain",
+				new byte[(10 * 1024 * 1024) + 1]))))
+				.isInstanceOf(AttachmentValidationException.class);
+
+		assertThat(fileStorage.storedOriginalNames).isEmpty();
+	}
+
+	@Test
 	void createRejectsTooManyAttachmentsBeforeStorage() {
 		CapturingPropertyInspectionMapper mapper = new CapturingPropertyInspectionMapper();
 		CapturingFileStorage fileStorage = new CapturingFileStorage();

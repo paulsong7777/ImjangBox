@@ -3,12 +3,12 @@ package com.imjangbox.inspection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.imjangbox.file.AttachmentFilePolicy;
 import com.imjangbox.file.FileStorage;
 import com.imjangbox.file.StoredFile;
 import com.imjangbox.inspection.persistence.ContactLogWriteRow;
@@ -26,11 +26,6 @@ public class InspectionService {
 
 	private static final int MAX_ATTACHMENT_COUNT = 5;
 	private static final long MAX_ATTACHMENT_BYTES = 10L * 1024L * 1024L;
-	private static final Set<String> ALLOWED_ATTACHMENT_TYPES = Set.of(
-			"application/pdf",
-			"image/jpeg",
-			"image/png",
-			"text/plain");
 
 	private final PropertyInspectionMapper mapper;
 	private final FileStorage fileStorage;
@@ -97,8 +92,11 @@ public class InspectionService {
 				throw new AttachmentValidationException("Attachment is too large");
 			}
 			String contentType = attachment.getContentType();
-			if (contentType == null || !ALLOWED_ATTACHMENT_TYPES.contains(contentType)) {
+			if (contentType == null || !AttachmentFilePolicy.isAllowedAttachmentType(contentType)) {
 				throw new AttachmentValidationException("Unsupported attachment content type");
+			}
+			if (!AttachmentFilePolicy.extensionMatchesContentType(attachment.getOriginalFilename(), contentType)) {
+				throw new AttachmentValidationException("Attachment filename extension does not match content type");
 			}
 			if (!contentMatches(contentType, attachment)) {
 				throw new AttachmentValidationException("Attachment content does not match content type");

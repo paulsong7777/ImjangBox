@@ -20,6 +20,8 @@ Snapshots should contain only customer-safe fields selected at share time. They 
 
 Current implementation stores the top-level card in `public_share_snapshots`, customer-visible facility answers in `public_share_snapshot_facilities`, and share-scoped image metadata in `public_share_snapshot_images`. Public reads reconstruct `PublicShareSnapshot` from those snapshot tables only. Image binaries are served through share-scoped URLs, not by exposing file-storage keys or original filenames.
 
+Public image streaming is image allowlist-first. Share image routes load only `image/jpeg` or `image/png` snapshot rows and keep source storage keys, local paths, and original filenames out of public URLs, HTML, and response filename headers.
+
 Snapshot stability is required: changing an internal inspection after share-card generation must not change an existing public card. A broker should create a new share snapshot when a new customer-facing version is needed.
 
 Share-card generation is audited internally in `share_snapshot_audit_logs`. The first snapshot for an inspection records `CREATED`; later broker-generated snapshots for the same inspection record `UPDATED`. Audit rows are not public DTOs or public template inputs.

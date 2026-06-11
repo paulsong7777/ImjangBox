@@ -42,6 +42,14 @@ Expected behavior:
 - Avoid exposing private storage paths or unrestricted file URLs in public share cards.
 - Support validation for file size, type, and access control.
 
+Current implementation:
+
+- Broker inspection uploads are validated before storage: at most 5 non-empty attachments, at most 10 MiB per attachment, and only `application/pdf`, `image/jpeg`, `image/png`, and `text/plain`.
+- Upload validation requires filename extension, declared content type, and file header to agree. Public share images are limited to `image/jpeg` and `image/png`.
+- Local storage writes under `imjangbox.file-storage.local-root` and `load` refuses blank keys, missing files, absolute paths, and traversal outside the configured root.
+- Public share pages expose only share-scoped image URLs such as `/share/{shareId}/images/{displayOrder}`. They do not expose storage keys, local paths, original filenames, or unrestricted file URLs.
+- Public image streaming refuses non-image snapshot rows before loading storage and does not set an original-filename `Content-Disposition` header.
+
 ## Test Direction
 
 - Unit test gateway failure mapping.

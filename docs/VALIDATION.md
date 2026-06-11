@@ -127,3 +127,18 @@ Product code exists. Use the running Spring Boot application as the main manual 
 - Full verification: `./gradlew test`.
 - The mapper integration profile is `mybatis-integration`; it uses H2 in MySQL compatibility mode with test-only schema migration resources under `src/test/resources/db/mybatis-integration`.
 - Keep production MySQL migration shape coverage in `PersistencePrivacyShapeTest`, because the integration profile intentionally uses a local-friendly final schema rather than requiring Docker or an external MySQL server.
+
+## Phase 5 File Storage Validation
+
+- Focused file/share checks: `./gradlew test --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.file.LocalFileStorageTest --tests com.imjangbox.share.ShareSnapshotServiceTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`.
+- Full verification: `./gradlew test`.
+- Runtime QA: start `./gradlew bootRun --args='--server.port=18102 --imjangbox.file-storage.local-root=/tmp/imjangbox-phase5-file-storage-qa'` on the default local profile.
+- Manual HTTP QA:
+  - authenticated GET `/broker/inspections/new` should return `200` and a CSRF token
+  - authenticated multipart POST `/broker/inspections` with a valid `.png` file, `Content-Type: image/png`, and PNG header bytes should redirect to `/broker/inspections/{id}/edit`
+  - unsupported content types, oversized files, extension/type mismatches, and header/type mismatches should be rejected before storage in focused tests
+  - authenticated POST `/broker/inspections/{id}/share` should redirect to `/share/{shareId}`
+  - unauthenticated GET `/share/{shareId}` should render public values and should not render private markers, storage keys, `inspection-files`, local paths, or original filenames
+  - unauthenticated GET `/share/{shareId}/images/1` should return `200` with an image content type and no original-filename `Content-Disposition` header
+  - unauthenticated GET of a raw storage-like route such as `/inspection-files/{id}/file.png` should return `404`
+  - stop `bootRun`, then a bounded curl to port `18102` should fail to connect

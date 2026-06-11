@@ -2,6 +2,7 @@ package com.imjangbox.share;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Queue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imjangbox.file.FileStorage;
+import com.imjangbox.file.StoredFile;
 import com.imjangbox.inspection.persistence.ContactLogWriteRow;
 import com.imjangbox.inspection.persistence.FacilityAnswerWriteRow;
 import com.imjangbox.inspection.persistence.FileAttachmentWriteRow;
@@ -21,6 +23,9 @@ import com.imjangbox.property.VerificationStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
 class ShareSnapshotServiceTest {
 
@@ -110,6 +115,42 @@ class ShareSnapshotServiceTest {
 						"broker-user"));
 	}
 
+	@Test
+	void streamsOnlyShareScopedPublicImageTypes() throws Exception {
+		LocalShareSnapshotMapper shareMapper = new LocalShareSnapshotMapper();
+		shareMapper.insertImage(new ShareImageSnapshotRow(
+				"share-1", 1, "image/png", "inspection-files/41/private-storage-key.png"));
+		CapturingFileStorage fileStorage = new CapturingFileStorage();
+		ShareSnapshotService service = new ShareSnapshotService(
+				new CapturingInspectionMapper(),
+				shareMapper,
+				fileStorage,
+				() -> "unused");
+
+		Optional<PublicImageFile> image = service.findImageFile("share-1", 1);
+
+		assertThat(image).isPresent();
+		assertThat(image.orElseThrow().contentType()).isEqualTo("image/png");
+		assertThat(fileStorage.loadedStorageKeys)
+				.containsExactly("inspection-files/41/private-storage-key.png");
+	}
+
+	@Test
+	void refusesNonImageSnapshotRowsBeforeLoadingStorage() throws Exception {
+		LocalShareSnapshotMapper shareMapper = new LocalShareSnapshotMapper();
+		shareMapper.insertImage(new ShareImageSnapshotRow(
+				"share-1", 1, "text/plain", "inspection-files/41/private-note.txt"));
+		CapturingFileStorage fileStorage = new CapturingFileStorage();
+		ShareSnapshotService service = new ShareSnapshotService(
+				new CapturingInspectionMapper(),
+				shareMapper,
+				fileStorage,
+				() -> "unused");
+
+		assertThat(service.findImageFile("share-1", 1)).isEmpty();
+		assertThat(fileStorage.loadedStorageKeys).isEmpty();
+	}
+
 	@ParameterizedTest
 	@EnumSource(VerificationStatus.class)
 	void snapshotsUseCustomerSafeVerificationLabelForEveryStatus(VerificationStatus status) {
@@ -158,6 +199,22 @@ class ShareSnapshotServiceTest {
 
 	private static FileStorage noOpFileStorage() {
 		return (inspectionId, file) -> null;
+	}
+
+	private static final class CapturingFileStorage implements FileStorage {
+
+		private final List<String> loadedStorageKeys = new ArrayList<>();
+
+		@Override
+		public StoredFile store(long inspectionId, MultipartFile file) {
+			throw new UnsupportedOperationException("store is not used by share image reads");
+		}
+
+		@Override
+		public Optional<Resource> load(String storageKey) throws IOException {
+			loadedStorageKeys.add(storageKey);
+			return Optional.of(new ByteArrayResource("image-bytes".getBytes()));
+		}
 	}
 
 	private static final class CapturingInspectionMapper implements PropertyInspectionMapper {

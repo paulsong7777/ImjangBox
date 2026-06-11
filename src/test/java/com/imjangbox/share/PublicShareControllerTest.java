@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
@@ -60,11 +61,13 @@ class PublicShareControllerTest {
 				.andExpect(content().string(not(containsString("contactLogs"))))
 				.andExpect(content().string(not(containsString("internalRiskMemo"))))
 				.andExpect(content().string(not(containsString("stakeholder"))))
-				.andExpect(content().string(not(containsString("storageKey"))));
+				.andExpect(content().string(not(containsString("storageKey"))))
+				.andExpect(content().string(not(containsString("PRIVATE_STORAGE_KEY"))))
+				.andExpect(content().string(not(containsString("PRIVATE_FILE_NAME.png"))));
 	}
 
 	@Test
-	void publicShareImageStreamsSelectedSnapshotImageWithoutStorageKeyInUrl() throws Exception {
+	void publicShareImageStreamsSelectedSnapshotImageWithoutStorageDetails() throws Exception {
 		when(shareSnapshotService.findImageFile("share-1", 1)).thenReturn(Optional.of(new PublicImageFile(
 				new ByteArrayResource("image-bytes".getBytes()),
 				"image/png")));
@@ -72,6 +75,14 @@ class PublicShareControllerTest {
 		mockMvc.perform(get("/share/share-1/images/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("image/png"))
+				.andExpect(header().doesNotExist("Content-Disposition"))
 				.andExpect(content().bytes("image-bytes".getBytes()));
+	}
+
+	@Test
+	void rawInspectionStorageKeysAreNotPublicRoutes() throws Exception {
+		mockMvc.perform(get("/inspection-files/41/PRIVATE_STORAGE_KEY.png"))
+				.andExpect(status().isNotFound())
+				.andExpect(content().string(not(containsString("PRIVATE_STORAGE_KEY"))));
 	}
 }
