@@ -50,6 +50,29 @@ Product code exists. Use the running Spring Boot application as the main manual 
 - Run `git diff --check`.
 - Do not run product-code implementation or Phase 6 work during the planning-only pass.
 
+## Issue #4 Mobile Broker Form UX Implementation Validation
+
+- Baseline focused broker controller check before restructuring: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`.
+- Add or run broker form structure tests proving:
+  - quick-save heading renders before detailed follow-up headings;
+  - required quick-save fields and `attachments` appear before `위치 보강`;
+  - internal-only fields render below `내부 전용`;
+  - edit pages keep share-card generation in a separate form after the save form.
+- Focused broker form check: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`.
+- Focused broker/map/file/share regression check: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.map.KakaoMapViewFactoryTest --tests com.imjangbox.file.LocalFileStorageTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.ShareSnapshotServiceTest`.
+- Full verification: `./gradlew test`.
+- `git diff --check`.
+- Manual mobile-width broker/share QA:
+  - unauthenticated GET `/broker/inspections/new` returns `401`;
+  - authenticated GET `/broker/inspections/new?businessType=CAFE` renders one CSRF token, viewport meta, quick-save first, mobile Bootstrap layout classes, `attachments`, and facility follow-up;
+  - disabled Kakao map state renders the disabled message and no `data-kakao-sdk-src`;
+  - invalid create preserves selected facility answers and shows validation errors;
+  - valid multipart create with required fields and a valid PNG redirects to `/broker/inspections/{inspectionId}/edit`;
+  - edit page renders saved values and keeps share-card generation separate from the save form;
+  - generated public share card renders public marker values and excludes private memo, internal risk memo, contact-log content, internal address, storage key/path text, and original filename;
+  - enabled Kakao map state renders `data-kakao-map`, encoded browser SDK URL, default coordinates, and no `KAKAO_REST_API_KEY` or REST-key marker text;
+  - stop all `bootRun` sessions after QA.
+
 ## Phase 1 Validation
 
 - `./gradlew test`

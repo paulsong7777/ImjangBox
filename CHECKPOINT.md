@@ -2,7 +2,7 @@
 
 **Checkpoint date:** 2026-06-12
 **Project:** imjangbox
-**Current state:** Phase 0 through Phase 5 are complete, `v0.2.0-alpha` is published as the latest GitHub pre-release, and post-publication GitHub issue cleanup is complete. Issue #1 Phase 4 share-card snapshot generation and Issue #2 public share-card privacy/security verification are closed as completed. Issue #4 mobile-first broker inspection form UX planning is complete in `plans/2026-06-12-issue-4-mobile-first-broker-form-ux-plan.md`, but implementation has not started and the issue remains open until the planned UX pass is implemented and verified. Broker authentication was completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, operational deployment/configuration/backup docs exist in `docs/operations.md`, and full manual QA across inspection capture, map UI/search-index coverage, and share-card views passed on 2026-06-11. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output. The `v0.2.0-alpha` release notes are at `docs/release-notes/v0.2.0-alpha.md`.
+**Current state:** Phase 0 through Phase 5 are complete, `v0.2.0-alpha` is published as the latest GitHub pre-release, and post-publication GitHub issue cleanup is complete. Issue #1 Phase 4 share-card snapshot generation and Issue #2 public share-card privacy/security verification are closed as completed. Issue #4 mobile-first broker inspection form UX planning and implementation are complete and verified locally; the remaining administrative step is to close or update the GitHub issue after review. Broker authentication was completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, operational deployment/configuration/backup docs exist in `docs/operations.md`, and full manual QA across inspection capture, map UI/search-index coverage, share-card views, and the Issue #4 mobile-first broker form pass has passed. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output. The `v0.2.0-alpha` release notes are at `docs/release-notes/v0.2.0-alpha.md`.
 
 ## Resume Here Next Time
 
@@ -15,11 +15,10 @@
 
 ## Exact Next Implementation Step
 
-Next checkpoint is Issue #4 mobile-first broker form UX implementation only if explicitly requested:
+Next checkpoint is Issue #4 administrative cleanup or the next explicitly requested product task:
 
-- Implement the mobile-first broker inspection form UX pass from `plans/2026-06-12-issue-4-mobile-first-broker-form-ux-plan.md`.
-- Keep the change scoped to the existing broker form/controller/template/test behavior unless implementation findings prove a small supporting change is necessary.
-- Keep Issue #4 open until the planned UX pass is completed and verified.
+- Review the implemented and verified Issue #4 mobile-first broker form UX pass.
+- Close or update GitHub Issue #4 if the implementation is accepted.
 - Do not start Phase 6 product features unless explicitly requested.
 
 Phase 2 notes to preserve:
@@ -58,6 +57,13 @@ The repository includes a Gradle wrapper. In this `/mnt/c` workspace, Gradle wri
 
 Most recent verification:
 
+- `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest` passed on 2026-06-12 after the Issue #4 broker form UX restructuring.
+- `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.map.KakaoMapViewFactoryTest --tests com.imjangbox.file.LocalFileStorageTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.ShareSnapshotServiceTest` passed on 2026-06-12 after the Issue #4 broker form UX restructuring.
+- `./gradlew test` passed on 2026-06-12 after the Issue #4 broker form UX restructuring.
+- Manual Issue #4 mobile-width QA passed on 2026-06-12. Disabled-map run on port `18104` confirmed unauthenticated broker form access returned `401`, authenticated create rendered one CSRF token and quick-save/mobile layout first, invalid create preserved facility answer selection, valid create with a PNG attachment redirected to edit, edit rendered saved values and the separate share action, and the generated public share page excluded private marker values, internal address marker, contact-log content, storage path text, and original filename. Enabled-map run on port `18105` confirmed `data-kakao-map`, encoded browser SDK URL, default coordinates, and no REST-key marker text.
+- Pre-commit Issue #4 validation rerun passed on 2026-06-12, including focused broker controller tests, focused broker/map/file/share tests, full `./gradlew test`, disabled-map manual mobile QA on port `18106`, enabled-map manual QA on port `18107`, documentation validation, and `git diff --check`.
+- Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS` on 2026-06-12 after the Issue #4 broker form UX implementation.
+- `git diff --check` passed on 2026-06-12 after the Issue #4 broker form UX implementation.
 - Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS` on 2026-06-12 after the published-release documentation sync.
 - `git diff --check` passed on 2026-06-12 after the published-release documentation sync.
 - `./gradlew test` passed on 2026-06-12 after the published-release documentation sync.

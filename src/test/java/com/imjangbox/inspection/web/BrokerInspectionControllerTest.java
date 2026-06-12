@@ -1,6 +1,7 @@
 package com.imjangbox.inspection.web;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -84,6 +85,47 @@ class BrokerInspectionControllerTest {
 				.andExpect(content().string(containsString("내부 리스크 메모")))
 				.andExpect(content().string(containsString("연락 기록")))
 				.andExpect(content().string(containsString("첨부 파일")));
+	}
+
+	@Test
+	void newFormPrioritizesQuickSaveFieldsBeforeFollowUpSections() throws Exception {
+		String html = mockMvc.perform(get("/broker/inspections/new"))
+				.andExpect(status().isOk())
+				.andReturn()
+				.getResponse()
+				.getContentAsString();
+
+		assertThat(html).contains("빠른 저장", "현장 사진/파일", "위치 보강", "시설 확인", "내부 전용", "연락 기록");
+		assertThat(html).contains("name=\"attachments\"");
+		assertThat(html.indexOf("빠른 저장")).isLessThan(html.indexOf("위치 보강"));
+		assertThat(html.indexOf("위치 보강")).isLessThan(html.indexOf("시설 확인"));
+		assertThat(html.indexOf("시설 확인")).isLessThan(html.indexOf("내부 전용"));
+		assertThat(html.indexOf("내부 전용")).isLessThan(html.indexOf("연락 기록"));
+		assertThat(html.indexOf("name=\"attachments\"")).isLessThan(html.indexOf("위치 보강"));
+		assertThat(html.indexOf("name=\"internalDetailAddress\"")).isGreaterThan(html.indexOf("위치 보강"));
+		assertThat(html.indexOf("name=\"pricePrivateNote\"")).isGreaterThan(html.indexOf("내부 전용"));
+		assertThat(html.indexOf("name=\"privateMemo\"")).isGreaterThan(html.indexOf("내부 전용"));
+		assertThat(html.indexOf("name=\"internalRiskMemo\"")).isGreaterThan(html.indexOf("내부 전용"));
+	}
+
+	@Test
+	void editFormKeepsShareSnapshotActionSeparateFromInspectionSaveForm() throws Exception {
+		InspectionForm form = new InspectionForm();
+		form.setTitle("공유 준비 상가");
+		form.setVerificationStatus(VerificationStatus.UNVERIFIED);
+		when(inspectionService.findForm(41L)).thenReturn(form);
+
+		String html = mockMvc.perform(get("/broker/inspections/41/edit"))
+				.andExpect(status().isOk())
+				.andReturn()
+				.getResponse()
+				.getContentAsString();
+
+		assertThat(html).contains("고객 공유 카드 생성", "/broker/inspections/41/share");
+		assertThat(html.indexOf("action=\"/broker/inspections/41\""))
+				.isLessThan(html.indexOf("action=\"/broker/inspections/41/share\""));
+		assertThat(html.indexOf("type=\"submit\">수정</button>"))
+				.isLessThan(html.indexOf("고객 공유 카드 생성"));
 	}
 
 	@Test

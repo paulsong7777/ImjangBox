@@ -1,7 +1,7 @@
 # Issue #4 Mobile-First Broker Inspection Form UX Plan
 
 **Created:** 2026-06-12
-**Status:** Planning complete; implementation not started
+**Status:** Implemented and verified on 2026-06-12
 **Scope:** Improve the existing broker inspection create/edit form UX for mobile field capture without starting Phase 6.
 
 ## Current Form Findings
@@ -114,16 +114,35 @@ The form is functional but too flat for field use on a phone. Brokers need to sa
 
 ## Acceptance Criteria
 
-- No schema, mapper, service, share snapshot, search-index, file-storage, or authentication behavior changes are required for Issue #4.
-- The broker can still create and update inspections through the existing routes.
-- Existing validation remains intact, including required fields, non-negative pricing, paired contact-log entry, facility answer preservation, and attachment validation.
-- The first mobile screen prioritizes a quick save path: title, business type, internal address, public address summary, pricing, verification, attachments, and save action.
-- Optional follow-up fields are grouped below the quick-save path and remain available on both create and edit.
-- Internal-only fields remain clearly marked and never move into public share DTOs, templates, snapshots, or image routes.
-- Facility template rendering remains dynamic by business type and answers remain independently persisted.
-- Kakao map rendering remains controlled only through the existing `kakaoMap` view model and does not expose `KAKAO_REST_API_KEY`.
-- Edit-only share-card generation remains a separate CSRF-protected action backed by persisted snapshots.
-- Full regression tests and manual mobile broker/share QA pass before closing Issue #4.
+- [x] No schema, mapper, service, share snapshot, search-index, file-storage, or authentication behavior changes are required for Issue #4.
+- [x] The broker can still create and update inspections through the existing routes.
+- [x] Existing validation remains intact, including required fields, non-negative pricing, paired contact-log entry, facility answer preservation, and attachment validation.
+- [x] The first mobile screen prioritizes a quick save path: title, business type, internal address, public address summary, pricing, verification, attachments, and save action.
+- [x] Optional follow-up fields are grouped below the quick-save path and remain available on both create and edit.
+- [x] Internal-only fields remain clearly marked and never move into public share DTOs, templates, snapshots, or image routes.
+- [x] Facility template rendering remains dynamic by business type and answers remain independently persisted.
+- [x] Kakao map rendering remains controlled only through the existing `kakaoMap` view model and does not expose `KAKAO_REST_API_KEY`.
+- [x] Edit-only share-card generation remains a separate CSRF-protected action backed by persisted snapshots.
+- [x] Full regression tests and manual mobile broker/share QA pass before closing Issue #4.
+
+## Implementation Result
+
+- Added focused broker controller/template tests for the mobile-first target shape before restructuring the template.
+- Restructured `src/main/resources/templates/inspection/form.html` into a top `빠른 저장` section and lower `위치 보강`, `시설 확인`, `메모`, `내부 전용 기록`, and `연락 기록` sections.
+- Moved the existing `attachments` multipart field into the quick-save path under `현장 사진/파일`.
+- Kept all existing form action, field names, CSRF behavior, validation, facility answer bindings, Kakao map attributes, contact-log fields, attachment upload behavior, and edit-only share-card POST behavior.
+- Added concise Korean helper text for internal vs public address, first-save required data, optional follow-up, attachments, and internal-only notes.
+
+## Verification Result
+
+- Baseline focused broker controller check passed before restructuring.
+- Red characterization check failed before restructuring because the new quick-save/follow-up structure was not present.
+- Focused broker controller check passed after restructuring: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`.
+- Focused broker/map/file/share regression command passed: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.map.KakaoMapViewFactoryTest --tests com.imjangbox.file.LocalFileStorageTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.ShareSnapshotServiceTest`.
+- Full regression suite passed: `./gradlew test`.
+- Manual mobile-width QA passed with disabled Kakao map on port `18104` and enabled Kakao map on port `18105`; the public share page remained free of private marker values, internal address markers, contact-log content, raw storage path text, and original filenames.
+- Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS`.
+- `git diff --check` passed.
 
 ## Out Of Scope
 

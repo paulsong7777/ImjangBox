@@ -575,3 +575,40 @@
 
 - Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS` on 2026-06-12.
 - `git diff --check` passed on 2026-06-12.
+
+## 2026-06-12 - Issue #4 Mobile-First Broker Form UX Implementation
+
+**Scope:** Implement the planned mobile-first broker inspection create/edit form UX pass without starting Phase 6.
+
+**Actions completed:**
+
+- Read `AGENTS.md`, `CHECKPOINT.md`, `TASKS.md`, `WORK_LOG.md`, `docs/VALIDATION.md`, and `plans/2026-06-12-issue-4-mobile-first-broker-form-ux-plan.md`.
+- Ran the existing focused broker controller test suite before restructuring to characterize the current green behavior.
+- Added broker controller/template tests proving the quick-save section renders before follow-up sections, required quick-save fields and `attachments` stay in the first section, internal-only fields remain in the detailed internal section, and the edit-only share-card form remains separate from the save form.
+- Restructured `src/main/resources/templates/inspection/form.html` into a mobile-first quick-save section and lower follow-up sections for location details, facility checks, notes, internal-only records, and contact logs.
+- Moved `attachments` into the quick-save section as `현장 사진/파일` while keeping the field name exactly `attachments` and preserving multipart upload behavior.
+- Kept the existing Thymeleaf model object, form action, field names, CSRF behavior, facility answer hidden fields, Kakao map view-model attributes, disabled-map fallback, validation rules, and separate share-card snapshot POST route.
+- Improved Korean broker workflow labels and helper text for internal vs public address, first-save required data, attachments, optional follow-up, and internal-only notes.
+- Updated `TASKS.md`, `CHECKPOINT.md`, `docs/VALIDATION.md`, and the Issue #4 plan with implementation and validation results.
+
+**Constraints honored:**
+
+- No Phase 6 work was started.
+- No database schema, migration, mapper, service, authentication, search-index, share snapshot, public share-card, or file-storage behavior was changed.
+- No draft-save persistence was added and no validation rule was relaxed.
+- No React, Vue, Next.js, frontend framework, OMO, LazyCodex command, spawned agent, child agent, subagent, or delegated-agent workflow was used.
+
+**Validation receipts:**
+
+- Baseline focused broker controller check passed before template restructuring: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`.
+- Red characterization check failed as expected before template restructuring because the new quick-save/follow-up structure was not present.
+- Focused broker controller check passed after restructuring: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`.
+- Focused broker/map/file/share regression command passed: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.map.KakaoMapViewFactoryTest --tests com.imjangbox.file.LocalFileStorageTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.ShareSnapshotServiceTest`.
+- Full regression suite passed: `./gradlew test`.
+- Manual mobile-width HTTP QA on port `18104` passed with disabled Kakao map state: unauthenticated broker form access returned `401`; authenticated create page rendered one CSRF token, viewport meta, quick-save first, mobile Bootstrap layout classes, facility section, and no Kakao SDK URL; invalid create preserved selected facility answer; valid create with a PNG attachment redirected to edit; edit rendered saved values and separate share action; generated public share page rendered public marker values and excluded private memo, internal risk, contact log content, internal address marker, raw storage path text, and original filename.
+- Manual enabled-map QA on port `18105` passed with `KAKAO_MAP_JAVASCRIPT_KEY='issue4 browser key only'`: authenticated create form rendered the quick-save section, `data-kakao-map`, encoded browser SDK URL, default coordinates, and no `KAKAO_REST_API_KEY` or REST-key marker text.
+- Cleanup QA: stopped both `bootRun` sessions after manual checks.
+- Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS`.
+- `git diff --check` passed.
+- Final `./gradlew test` passed.
+- Pre-commit validation rerun on 2026-06-12 passed: focused broker controller tests, focused broker/map/file/share tests, full `./gradlew test`, disabled-map manual mobile QA on port `18106`, enabled-map manual QA on port `18107`, documentation validation, and `git diff --check`.
