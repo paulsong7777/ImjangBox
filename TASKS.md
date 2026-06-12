@@ -92,7 +92,17 @@
 - [x] Do not start Phase 6 implementation unless explicitly requested.
 - [x] Close GitHub Issue #4 after implementation, push, and CI verification.
 
+## Product UX Elevation - Broker-Facing MVP Polish
+
+- [x] Improve visible Korean-first product language on the home page, broker form, and public share card.
+- [x] Reduce broker form noise with a prominent required quick-registration section and secondary follow-up sections.
+- [x] Keep save/update actions separate from customer share-card generation.
+- [x] Preserve existing routes, form field names, CSRF behavior, validation, attachment upload, facility bindings, Kakao map boundary, contact logs, public share privacy, and file-storage validation.
+- [x] Add controller/template tests for Korean product wording, preserved bindings, internal-only separation, and share action separation.
+- [x] Document the product UX language and grouping principles in `docs/product-ux-notes.md`.
+- [x] Verify with focused tests, full tests, documentation validation, `git diff --check`, and manual local QA.
+
 ## Next Work Area - Explicit Product Planning
 
-- [ ] Wait for an explicit next-product planning request.
+- [ ] Wait for explicit next-product planning or implementation request before starting any further product area.
 - [ ] Do not start Phase 6 implementation unless explicitly requested.

@@ -101,7 +101,8 @@ class PublicShareSnapshotPrivacyTest {
 		assertThat(rendered)
 				.contains("Customer-safe title")
 				.contains("PUBLIC_DISTRICT_VALUE")
-				.contains("Agent checked");
+				.contains("현장 확인");
+		assertThat(rendered).doesNotContain("Agent checked");
 		assertThat(rendered).doesNotContain(DENIED_TEMPLATE_TOKENS.toArray(String[]::new));
 		assertThat(rendered).doesNotContain(DENIED_VALUES.toArray(String[]::new));
 	}

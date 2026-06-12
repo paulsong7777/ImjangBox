@@ -3,12 +3,43 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>imjangbox</title>
+	<title>임장박스</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" title="Bootstrap 5.3">
 </head>
-<body>
-<main>
-	<h1>imjangbox</h1>
-	<p>Commercial property inspection ledger foundation is ready.</p>
+<body class="bg-light">
+<main class="container py-4 py-md-5">
+	<section class="py-md-4">
+		<p class="text-primary fw-semibold mb-2">상가 중개 현장 장부</p>
+		<h1 class="display-6 fw-semibold mb-3">임장박스</h1>
+		<p class="lead mb-4">
+			현장에서 확인한 상가 임장 기록을 빠르게 저장하고, 내부 기록과 고객 공유를 분리해 안전하게 제안합니다.
+		</p>
+		<div class="d-grid d-sm-flex gap-2 mb-4">
+			<a class="btn btn-primary btn-lg" href="/broker/inspections/new">브로커 화면 열기</a>
+			<a class="btn btn-outline-secondary btn-lg" href="#flow">흐름 보기</a>
+		</div>
+	</section>
+
+	<section id="flow" class="row g-3">
+		<div class="col-md-4">
+			<div class="bg-white border rounded p-3 h-100">
+				<h2 class="h5">1. 현장 정보</h2>
+				<p class="text-body-secondary mb-0">주소, 임대 조건, 권리금, 확인 상태와 사진을 먼저 남깁니다.</p>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="bg-white border rounded p-3 h-100">
+				<h2 class="h5">2. 내부 확인</h2>
+				<p class="text-body-secondary mb-0">시설 확인, 내부 메모, 연락 기록은 고객 공유와 분리해 관리합니다.</p>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="bg-white border rounded p-3 h-100">
+				<h2 class="h5">3. 고객 공유</h2>
+				<p class="text-body-secondary mb-0">고객에게 보여도 되는 주소, 조건, 시설 정보만 공유 카드로 만듭니다.</p>
+			</div>
+		</div>
+	</section>
 </main>
 </body>
 </html>

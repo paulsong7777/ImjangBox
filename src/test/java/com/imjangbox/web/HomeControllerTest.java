@@ -25,10 +25,15 @@ class HomeControllerTest {
 	}
 
 	@Test
-	void indexRendersFoundationPage() throws Exception {
+	void indexRendersProductOverviewPage() throws Exception {
 		mockMvc.perform(get("/"))
 				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("imjangbox")));
+				.andExpect(content().string(containsString("임장박스")))
+				.andExpect(content().string(containsString("상가 임장 기록")))
+				.andExpect(content().string(containsString("내부 기록과 고객 공유를 분리")))
+				.andExpect(content().string(containsString("브로커 화면 열기")))
+				.andExpect(content().string(org.hamcrest.Matchers.not(containsString("foundation"))))
+				.andExpect(content().string(org.hamcrest.Matchers.not(containsString("Commercial property"))));
 	}
 
 	@Test

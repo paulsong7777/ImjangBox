@@ -10,7 +10,7 @@ Use this shell check after planning document edits:
 
 ```bash
 bash -lc 'set -euo pipefail
-required=(AGENTS.md TASKS.md WORK_LOG.md CHECKPOINT.md README.md CHANGELOG.md SECURITY.md plans/2026-06-04-imjangbox-implementation-plan.md plans/0001-product-architecture-plan.md docs/PROJECT_MEMORY.md docs/DOMAIN_RULES.md docs/VALIDATION.md docs/INIT_NOTEPAD.md docs/domain-overview.md docs/privacy-and-share-cards.md docs/architecture-constraints.md docs/integrations.md docs/search-index.md docs/operations.md docs/database-migration-strategy.md)
+required=(AGENTS.md TASKS.md WORK_LOG.md CHECKPOINT.md README.md CHANGELOG.md SECURITY.md plans/2026-06-04-imjangbox-implementation-plan.md plans/0001-product-architecture-plan.md docs/PROJECT_MEMORY.md docs/DOMAIN_RULES.md docs/VALIDATION.md docs/INIT_NOTEPAD.md docs/domain-overview.md docs/privacy-and-share-cards.md docs/architecture-constraints.md docs/integrations.md docs/search-index.md docs/operations.md docs/database-migration-strategy.md docs/product-ux-notes.md)
 for f in "${required[@]}"; do test -f "$f" || { echo "MISSING:$f"; exit 1; }; done
 grep -q "Phase 0" TASKS.md
 grep -q "Phase 5" TASKS.md
@@ -72,6 +72,21 @@ Product code exists. Use the running Spring Boot application as the main manual 
   - generated public share card renders public marker values and excludes private memo, internal risk memo, contact-log content, internal address, storage key/path text, and original filename;
   - enabled Kakao map state renders `data-kakao-map`, encoded browser SDK URL, default coordinates, and no `KAKAO_REST_API_KEY` or REST-key marker text;
   - stop all `bootRun` sessions after QA.
+
+## Product UX Elevation Validation
+
+- Focused Korean product-language/template check: `./gradlew test --tests com.imjangbox.web.HomeControllerTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest`.
+- Focused broker/share/file/facility regression check: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.file.LocalFileStorageTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest --tests com.imjangbox.share.ShareSnapshotServiceTest`.
+- Full verification: `./gradlew test`.
+- Manual local QA at `http://localhost:8080/` and `/broker/inspections/new`:
+  - home page renders Korean product overview, broker entry action, and no scaffold/foundation copy;
+  - authenticated broker form renders one CSRF token, Korean-first section labels, disabled map state, and preserved field names/bindings;
+  - invalid create shows Korean validation guidance and preserves selected facility answers;
+  - valid create with a PNG redirects to edit;
+  - edit page keeps save/update separate from customer share-card generation;
+  - generated public share card renders only public marker values and excludes private memo, internal risk memo, contact-log content, internal address, raw storage path text, and original filename.
+- Run the automated file/content check in this document.
+- Run `git diff --check`.
 
 ## Phase 1 Validation
 

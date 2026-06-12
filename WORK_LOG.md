@@ -629,3 +629,34 @@
 - No Phase 6 work was started.
 - No release tags or published GitHub Release metadata were modified.
 - No OMO, LazyCodex command, child-agent, subagent, delegated-agent, or spawned-agent workflow was used.
+
+## 2026-06-12 - Product UX Elevation Pass
+
+**Scope:** Elevate the visible ImjangBox MVP experience for internal review and early broker-facing testing without starting Phase 6.
+
+**Actions completed:**
+
+- Reworked the home page from scaffold copy into a Korean product overview for `임장박스`, with clear broker flow framing.
+- Polished the broker create/edit form language and hierarchy around `빠른 등록`, `현장 정보`, `임대 조건`, `나중에 보강`, `시설 확인`, `내부 전용`, `연락 기록`, and `고객 공유`.
+- Kept original form actions, field names, CSRF behavior, validation, attachment field name, facility answer bindings, Kakao map attributes, contact log fields, and share-card POST route unchanged.
+- Rendered business type, verification status, public share status, and common facility answer values with Korean labels while preserving underlying submitted/stored values.
+- Polished the public share card with customer-facing Korean labels, Korean status display, and Korean facility answer display without changing public share privacy rules.
+- Added `docs/product-ux-notes.md` to record Korean-first MVP language and mobile-first grouping principles.
+- Updated controller/template tests for product-level Korean copy, preserved bindings, internal-only separation, and customer share action separation.
+
+**Constraints honored:**
+
+- No Phase 6 work was started.
+- No schema, mapper, persistence, service behavior, authentication model, public share privacy rule, file-storage validation, or backend business feature was changed.
+- No React, Vue, Next.js, frontend framework, OMO, LazyCodex command, child-agent, subagent, delegated-agent, or spawned-agent workflow was used.
+
+**Validation receipts:**
+
+- Red characterization run failed before template polish because the existing pages still showed scaffold/developer-like copy.
+- Focused template/controller check passed: `./gradlew test --tests com.imjangbox.web.HomeControllerTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest`.
+- Focused broker/share/file/facility regression check passed: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.inspection.InspectionServiceTest --tests com.imjangbox.file.LocalFileStorageTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest --tests com.imjangbox.share.ShareSnapshotServiceTest`.
+- Full verification passed: `./gradlew test`.
+- Manual local QA on `http://localhost:8080/` and `/broker/inspections/new` passed: home rendered Korean product overview; unauthenticated broker access returned `401`; authenticated broker form rendered Korean product copy, one CSRF token, disabled map state, preserved field bindings, and no raw primary enum labels; invalid create rendered Korean validation guidance and preserved selected facility answer; valid PNG create redirected to edit; edit page rendered `변경사항 저장` and separate `고객 공유 카드 만들기`; generated public share page rendered public marker values, Korean status/facility labels, and excluded private memo, internal risk, contact-log content, internal address marker, raw storage path text, and original filename.
+- Cleanup QA: stopped the local `bootRun` process.
+- Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS`.
+- `git diff --check` passed.

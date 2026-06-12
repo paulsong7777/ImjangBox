@@ -95,17 +95,34 @@ class BrokerInspectionControllerTest {
 				.getResponse()
 				.getContentAsString();
 
-		assertThat(html).contains("빠른 저장", "현장 사진/파일", "위치 보강", "시설 확인", "내부 전용", "연락 기록");
+		assertThat(html).contains("빠른 등록", "현장 사진/파일", "나중에 보강", "시설 확인", "내부 전용", "연락 기록");
 		assertThat(html).contains("name=\"attachments\"");
-		assertThat(html.indexOf("빠른 저장")).isLessThan(html.indexOf("위치 보강"));
-		assertThat(html.indexOf("위치 보강")).isLessThan(html.indexOf("시설 확인"));
+		assertThat(html.indexOf("빠른 등록")).isLessThan(html.indexOf("나중에 보강"));
+		assertThat(html.indexOf("나중에 보강")).isLessThan(html.indexOf("시설 확인"));
 		assertThat(html.indexOf("시설 확인")).isLessThan(html.indexOf("내부 전용"));
 		assertThat(html.indexOf("내부 전용")).isLessThan(html.indexOf("연락 기록"));
-		assertThat(html.indexOf("name=\"attachments\"")).isLessThan(html.indexOf("위치 보강"));
-		assertThat(html.indexOf("name=\"internalDetailAddress\"")).isGreaterThan(html.indexOf("위치 보강"));
+		assertThat(html.indexOf("name=\"attachments\"")).isLessThan(html.indexOf("나중에 보강"));
+		assertThat(html.indexOf("name=\"internalDetailAddress\"")).isGreaterThan(html.indexOf("나중에 보강"));
 		assertThat(html.indexOf("name=\"pricePrivateNote\"")).isGreaterThan(html.indexOf("내부 전용"));
 		assertThat(html.indexOf("name=\"privateMemo\"")).isGreaterThan(html.indexOf("내부 전용"));
 		assertThat(html.indexOf("name=\"internalRiskMemo\"")).isGreaterThan(html.indexOf("내부 전용"));
+	}
+
+	@Test
+	void newFormUsesKoreanProductLanguageWhileKeepingBindings() throws Exception {
+		String html = mockMvc.perform(get("/broker/inspections/new"))
+				.andExpect(status().isOk())
+				.andReturn()
+				.getResponse()
+				.getContentAsString();
+
+		assertThat(html)
+				.contains("필수 입력", "빠른 등록", "현장 정보", "임대 조건", "고객 공유용 주소", "확인 상태", "내부 메모")
+				.contains("name=\"businessType\"", "name=\"verificationStatus\"", "name=\"attachments\"")
+				.contains("카페", "음식점", "미확인", "현장 확인", "서류 확인");
+		assertThat(html)
+				.doesNotContain(">CAFE<", ">RESTAURANT<", ">UNVERIFIED<", ">AGENT_CHECKED<", ">DOCUMENT_CHECKED<")
+				.doesNotContain("빠른 저장", "브로커 매물 입력", "지오코딩", "스냅샷");
 	}
 
 	@Test
@@ -121,11 +138,11 @@ class BrokerInspectionControllerTest {
 				.getResponse()
 				.getContentAsString();
 
-		assertThat(html).contains("고객 공유 카드 생성", "/broker/inspections/41/share");
+		assertThat(html).contains("고객 공유 카드 만들기", "/broker/inspections/41/share");
 		assertThat(html.indexOf("action=\"/broker/inspections/41\""))
 				.isLessThan(html.indexOf("action=\"/broker/inspections/41/share\""));
 		assertThat(html.indexOf("type=\"submit\">수정</button>"))
-				.isLessThan(html.indexOf("고객 공유 카드 생성"));
+				.isLessThan(html.indexOf("고객 공유 카드 만들기"));
 	}
 
 	@Test
@@ -174,7 +191,7 @@ class BrokerInspectionControllerTest {
 		mockMvc.perform(get("/broker/inspections/new").param("businessType", "CAFE"))
 				.andExpect(status().isOk())
 				.andExpect(model().attribute("selectedBusinessType", "CAFE"))
-				.andExpect(content().string(containsString("시설 체크 템플릿")))
+				.andExpect(content().string(containsString("시설 확인")))
 				.andExpect(content().string(containsString("급배수 확인")))
 				.andExpect(content().string(containsString("전기 용량 확인")))
 				.andExpect(content().string(containsString("facilityAnswers[0].templateItemKey")))
@@ -208,7 +225,7 @@ class BrokerInspectionControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(model().attributeHasFieldErrors(
 						"inspectionForm", "title", "internalRoadAddress", "publicAddressSummary", "depositAmount"))
-				.andExpect(content().string(containsString("입력값을 확인해 주세요")))
+				.andExpect(content().string(containsString("필수 입력과 숫자 값을 확인해 주세요")))
 				.andExpect(content().string(containsString("facilityAnswers[0].templateItemKey")))
 				.andExpect(content().string(containsString("<option value=\"OK\" selected=\"selected\">양호</option>")));
 	}
@@ -226,7 +243,7 @@ class BrokerInspectionControllerTest {
 				.param("contactLogContent", "날짜 없는 연락 기록"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeHasFieldErrors("inspectionForm", "contactLogComplete"))
-				.andExpect(content().string(containsString("입력값을 확인해 주세요")));
+				.andExpect(content().string(containsString("필수 입력과 숫자 값을 확인해 주세요")));
 	}
 
 	@Test
