@@ -59,13 +59,22 @@
 - [x] Run full manual QA across inspection capture, map search, and share card views.
 - [x] Revisit AGENTS.md, TASKS.md, WORK_LOG.md, CHECKPOINT.md, plans/, and docs/ after product code landed.
 
-## Release Preparation - v0.2.0-alpha Candidate
+## Release Publication - v0.2.0-alpha
 
 - [x] Inspect completed Phase 0 through Phase 5 state from repository docs and current source layout.
 - [x] Confirm the next alpha version should be `v0.2.0-alpha` because `v0.1.0-alpha` is already tagged and Phase 4/5 work landed afterward.
 - [x] Update README release status away from the older `v0.1.0-alpha` in-progress wording.
-- [x] Update CHANGELOG with the `v0.2.0-alpha` release-candidate scope.
-- [x] Create release notes draft for `v0.2.0-alpha`.
+- [x] Update CHANGELOG with the `v0.2.0-alpha` release scope.
+- [x] Create release notes for `v0.2.0-alpha`.
 - [x] Check local docs for GitHub issue status; no local issue export or open-issue ledger exists, and no network verification is required for this release-preparation pass.
 - [x] Confirm SECURITY, CONTRIBUTING, operations, validation, and privacy docs are consistent with the Phase 5 state.
-- [x] Run release-preparation validation: docs validation, `git diff --check`, and `./gradlew test`.
+- [x] Run release documentation validation: docs validation, `git diff --check`, and `./gradlew test`.
+- [x] Publish GitHub pre-release `v0.2.0-alpha`.
+- [x] Synchronize repository documentation with the published `v0.2.0-alpha` release state.
+
+## Next Work Area - GitHub Issue Cleanup And Product Planning
+
+- [ ] Close completed Phase 4 share-card issue.
+- [ ] Review security/privacy issue.
+- [ ] Keep mobile-first broker form issue open for the next UX pass.
+- [ ] Plan the next product work explicitly before starting any Phase 6 implementation.

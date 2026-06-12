@@ -1,15 +1,17 @@
 # ImjangBox
 
-> **Status:** `v0.2.0-alpha` release candidate preparation
+> **Status:** `v0.2.0-alpha` is the latest published pre-release
 > **Project:** ImjangBox — commercial-property field inspection and proposal ledger  
 > **Focus:** broker-side inspection records, facility checks, contact logs, attachment handling, and privacy-safe customer share cards  
 > **Stack:** Java 21, Spring Boot 3.5.x, Thymeleaf, Bootstrap 5.3, MyBatis, MySQL  
 > **CI:** GitHub Actions test workflow configured; `./gradlew test` is the release gate
 > **Development:** AI-assisted development workflow with Codex
 
-Latest published pre-release: [`v0.1.0-alpha`](https://github.com/paulsong7777/ImjangBox/releases/tag/v0.1.0-alpha)
+Latest published pre-release: [`v0.2.0-alpha`](https://github.com/paulsong7777/ImjangBox/releases/tag/v0.2.0-alpha)
 
-Next release candidate draft: [`v0.2.0-alpha`](docs/release-notes/v0.2.0-alpha.md)
+Previous published alpha: [`v0.1.0-alpha`](https://github.com/paulsong7777/ImjangBox/releases/tag/v0.1.0-alpha)
+
+Release notes: [`docs/release-notes/v0.2.0-alpha.md`](docs/release-notes/v0.2.0-alpha.md)
 
 ## 한국어 개요
 
@@ -39,7 +41,7 @@ Record → Verify → Propose
 
 ### 현재 MVP 상태
 
-현재 `v0.2.0-alpha` release candidate 준비 단계에서는 Phase 0부터 Phase 5까지 구현된 브로커 측 임장 기록 장부, 지도/시설 확인 경계, 고객 공유 카드, 운영 문서, 보안 하드닝 결과를 정리하고 있습니다.
+현재 최신 공개 pre-release인 `v0.2.0-alpha`는 Phase 0부터 Phase 5까지 구현된 브로커 측 임장 기록 장부, 지도/시설 확인 경계, 고객 공유 카드, 운영 문서, 보안 하드닝 결과를 포함합니다.
 
 현재 초점은 다음과 같습니다.
 
@@ -124,8 +126,9 @@ See [docs/operations.md](docs/operations.md) for the current deployment, configu
 
 ## Release Notes
 
-- Published baseline: [`v0.1.0-alpha`](https://github.com/paulsong7777/ImjangBox/releases/tag/v0.1.0-alpha)
-- Next alpha release candidate: [docs/release-notes/v0.2.0-alpha.md](docs/release-notes/v0.2.0-alpha.md)
+- Latest published pre-release: [`v0.2.0-alpha`](https://github.com/paulsong7777/ImjangBox/releases/tag/v0.2.0-alpha)
+- Previous published alpha: [`v0.1.0-alpha`](https://github.com/paulsong7777/ImjangBox/releases/tag/v0.1.0-alpha)
+- Release notes: [docs/release-notes/v0.2.0-alpha.md](docs/release-notes/v0.2.0-alpha.md)
 - Current completed scope: Phase 0 through Phase 5.
 
 ## Attachments

@@ -4,11 +4,11 @@ All notable changes to ImjangBox will be documented in this file.
 
 ImjangBox is currently in an early MVP stage. The project is being developed in phases, with a focus on commercial-property inspection records, broker workflow clarity, privacy-safe public sharing, and AI-assisted development with Codex.
 
-## v0.2.0-alpha - Release Candidate
+## v0.2.0-alpha - Released
 
-Prepared: 2026-06-12
+Released: 2026-06-12
 
-This release candidate captures the completed Phase 0 through Phase 5 MVP state after the published `v0.1.0-alpha` tag.
+This released pre-release captures the completed Phase 0 through Phase 5 MVP state after the published `v0.1.0-alpha` tag.
 
 ### Added
 
@@ -29,10 +29,10 @@ This release candidate captures the completed Phase 0 through Phase 5 MVP state 
 
 ### Documentation
 
-- Updated README status for the next alpha release candidate.
-- Added release notes draft for `v0.2.0-alpha`.
+- Updated README status for the published `v0.2.0-alpha` pre-release.
+- Added release notes for `v0.2.0-alpha`.
 - Confirmed SECURITY, CONTRIBUTING, operations, validation, and privacy docs are consistent with the completed Phase 5 state.
-- Recorded release-preparation status in TASKS, WORK_LOG, CHECKPOINT, and this changelog.
+- Recorded published release status in TASKS, WORK_LOG, CHECKPOINT, and this changelog.
 
 ### Validation
 

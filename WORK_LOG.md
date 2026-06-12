@@ -511,3 +511,25 @@
 - Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS`.
 - `git diff --check` passed after removing README status-block trailing spaces.
 - `./gradlew test` passed.
+
+## 2026-06-12 - v0.2.0-alpha Published Release Documentation Sync
+
+**Scope:** Synchronize repository documentation after the GitHub `v0.2.0-alpha` pre-release was published.
+
+**Actions completed:**
+
+- Updated README, CHANGELOG, and release notes wording from release-candidate draft state to published pre-release state.
+- Recorded `v0.2.0-alpha` as the latest published pre-release and kept `v0.1.0-alpha` as the previous published alpha.
+- Updated TASKS and CHECKPOINT so the next work area is GitHub issue cleanup and next product planning, not release publication.
+
+**Constraints honored:**
+
+- Documentation-only change; no product code was modified.
+- No Phase 6 work was started.
+- No OMO, LazyCodex, child-agent, subagent, or delegated-agent workflow was used.
+
+**Validation receipts:**
+
+- Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS`.
+- `git diff --check` passed.
+- `./gradlew test` passed.

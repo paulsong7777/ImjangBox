@@ -30,12 +30,12 @@ Product code exists. Use the running Spring Boot application as the main manual 
 - Run template rendering tests proving denied fields are absent.
 - Run browser QA for broker inspection capture and customer share-card pages.
 
-## Release Preparation Validation
+## Release Documentation Validation
 
 - Run the automated file/content check in this document.
 - Run `git diff --check`.
-- Run `./gradlew test` before tagging an alpha release candidate, even if the release-preparation edits are documentation-only.
-- Confirm [docs/release-notes/v0.2.0-alpha.md](release-notes/v0.2.0-alpha.md) records the validation result and any local-only issue-status limitations.
+- Run `./gradlew test` when preparing, publishing, or synchronizing alpha release documentation, even if the edits are documentation-only.
+- Confirm [docs/release-notes/v0.2.0-alpha.md](release-notes/v0.2.0-alpha.md) records the validation result and published release status.
 
 ## Phase 1 Validation
 
