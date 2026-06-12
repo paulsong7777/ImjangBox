@@ -1,19 +1,20 @@
 # CHECKPOINT
 
-**Checkpoint date:** 2026-06-11
+**Checkpoint date:** 2026-06-12
 **Project:** imjangbox
-**Current state:** Phase 0 through Phase 5 are complete. Broker authentication was completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, operational deployment/configuration/backup docs exist in `docs/operations.md`, and full manual QA across inspection capture, map UI/search-index coverage, and share-card views passed on 2026-06-11. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output. The Phase 5 documentation review is complete.
+**Current state:** Phase 0 through Phase 5 are complete. Release preparation for the next alpha is complete in repository docs as `v0.2.0-alpha` because `v0.1.0-alpha` is already tagged and Phase 4/5 work landed afterward. Broker authentication was completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, operational deployment/configuration/backup docs exist in `docs/operations.md`, and full manual QA across inspection capture, map UI/search-index coverage, and share-card views passed on 2026-06-11. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output. The `v0.2.0-alpha` release notes draft exists at `docs/release-notes/v0.2.0-alpha.md`.
 
 ## Resume Here Next Time
 
 1. Read `AGENTS.md`.
 2. Read `plans/2026-06-04-imjangbox-implementation-plan.md`.
 3. Read `TASKS.md`.
-4. Do not start Phase 6 unless explicitly requested.
+4. Read `docs/release-notes/v0.2.0-alpha.md`.
+5. Do not start Phase 6 unless explicitly requested.
 
 ## Exact Next Implementation Step
 
-No Phase 0 through Phase 5 tasks remain open. The next checkpoint is to wait for an explicit release-preparation or Phase 6 request while keeping Phase 4 snapshot privacy guarantees, Phase 5 share audit logging, SQL-backed mapper integration tests, file validation, and operations docs intact.
+Next checkpoint is final release publication work only if requested: review `docs/release-notes/v0.2.0-alpha.md`, confirm live GitHub issue/release status if needed, tag/publish `v0.2.0-alpha`, and do not start Phase 6 product features unless explicitly requested.
 
 Phase 2 notes to preserve:
 
@@ -51,6 +52,10 @@ The repository includes a Gradle wrapper. In this `/mnt/c` workspace, Gradle wri
 
 Most recent verification:
 
+- Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS` on 2026-06-12.
+- `git diff --check` passed on 2026-06-12 after release-preparation cleanup.
+- `./gradlew test` passed on 2026-06-12 after release-preparation documentation updates.
+- Release-preparation docs inspection on 2026-06-12 confirmed SECURITY, CONTRIBUTING, operations, validation, and privacy docs match the completed Phase 5 state. Local-only GitHub issue status check found no issue export or open-issue ledger in repository docs or `.github`; no network verification was required.
 - `git diff --check` passed on 2026-06-11 after the Phase 5 documentation review. No Gradle test run was needed because only documentation files changed.
 - `./gradlew test` passed on 2026-06-11 after the operational documentation update.
 - `./gradlew test --tests com.imjangbox.inspection.persistence.MyBatisPersistenceIntegrationTest` passed on 2026-06-11.

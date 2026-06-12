@@ -1,7 +1,7 @@
 # TASKS
 
 **Project:** imjangbox
-**Last updated:** 2026-06-11
+**Last updated:** 2026-06-12
 
 ## Phase 0 - Repository And Spring Boot Foundation
 
@@ -58,3 +58,14 @@
 - [x] Add operational docs for deployment, configuration, and backup.
 - [x] Run full manual QA across inspection capture, map search, and share card views.
 - [x] Revisit AGENTS.md, TASKS.md, WORK_LOG.md, CHECKPOINT.md, plans/, and docs/ after product code landed.
+
+## Release Preparation - v0.2.0-alpha Candidate
+
+- [x] Inspect completed Phase 0 through Phase 5 state from repository docs and current source layout.
+- [x] Confirm the next alpha version should be `v0.2.0-alpha` because `v0.1.0-alpha` is already tagged and Phase 4/5 work landed afterward.
+- [x] Update README release status away from the older `v0.1.0-alpha` in-progress wording.
+- [x] Update CHANGELOG with the `v0.2.0-alpha` release-candidate scope.
+- [x] Create release notes draft for `v0.2.0-alpha`.
+- [x] Check local docs for GitHub issue status; no local issue export or open-issue ledger exists, and no network verification is required for this release-preparation pass.
+- [x] Confirm SECURITY, CONTRIBUTING, operations, validation, and privacy docs are consistent with the Phase 5 state.
+- [x] Run release-preparation validation: docs validation, `git diff --check`, and `./gradlew test`.

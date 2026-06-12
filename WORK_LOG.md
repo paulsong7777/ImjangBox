@@ -484,3 +484,30 @@
 - Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS`.
 - Stale-language scan found no remaining matches for Phase 4 pending/share-card planned/Phase 5 started wording.
 - `./gradlew test` was not rerun because this was a documentation-only change.
+
+## 2026-06-12 - v0.2.0-alpha Release Preparation
+
+**Scope:** Prepare repository documentation for the next alpha release after completed Phase 0 through Phase 5 work.
+
+**Actions completed:**
+
+- Read `AGENTS.md`, `CHECKPOINT.md`, `TASKS.md`, `WORK_LOG.md`, `README.md`, `CHANGELOG.md`, `SECURITY.md`, `CONTRIBUTING.md`, `docs/`, and `plans/`.
+- Inspected the current source/test/resource layout to confirm the completed Phase 0 through Phase 5 surface: broker inspection flows, facility templates, map/geocoding/search boundaries, public share snapshots, share-scoped images, audit logs, MyBatis integration tests, file validation, and operations docs.
+- Confirmed local Git tags show `v0.1.0-alpha` already exists and current `main` contains Phase 4/5 commits afterward, so the next alpha candidate is `v0.2.0-alpha`.
+- Updated `README.md` and `CHANGELOG.md` away from older `v0.1.0-alpha` in-progress wording.
+- Created `docs/release-notes/v0.2.0-alpha.md` as the release notes draft.
+- Checked local docs and `.github` files for issue status. No local GitHub issue export or open-issue ledger exists, and no network access was required for this release-preparation pass.
+- Confirmed `SECURITY.md`, `CONTRIBUTING.md`, `docs/operations.md`, `docs/VALIDATION.md`, and `docs/privacy-and-share-cards.md` are consistent with the completed Phase 5 state.
+- Updated `TASKS.md`, `CHECKPOINT.md`, `WORK_LOG.md`, and `CHANGELOG.md` to record the release-preparation state.
+
+**Constraints honored:**
+
+- No product code was modified.
+- No Phase 6 product features were started.
+- No OMO, LazyCodex, child-agent, subagent, or delegated-agent workflow was used.
+
+**Validation receipts:**
+
+- Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS`.
+- `git diff --check` passed after removing README status-block trailing spaces.
+- `./gradlew test` passed.

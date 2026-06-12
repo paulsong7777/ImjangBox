@@ -1,13 +1,15 @@
 # ImjangBox
 
-> **Status:** `v0.1.0-alpha`  
+> **Status:** `v0.2.0-alpha` release candidate preparation
 > **Project:** ImjangBox — commercial-property field inspection and proposal ledger  
 > **Focus:** broker-side inspection records, facility checks, contact logs, attachment handling, and privacy-safe customer share cards  
 > **Stack:** Java 21, Spring Boot 3.5.x, Thymeleaf, Bootstrap 5.3, MyBatis, MySQL  
-> **CI:** GitHub Actions test workflow passing  
+> **CI:** GitHub Actions test workflow configured; `./gradlew test` is the release gate
 > **Development:** AI-assisted development workflow with Codex
 
-Latest pre-release: [`v0.1.0-alpha`](https://github.com/paulsong7777/ImjangBox/releases/tag/v0.1.0-alpha)
+Latest published pre-release: [`v0.1.0-alpha`](https://github.com/paulsong7777/ImjangBox/releases/tag/v0.1.0-alpha)
+
+Next release candidate draft: [`v0.2.0-alpha`](docs/release-notes/v0.2.0-alpha.md)
 
 ## 한국어 개요
 
@@ -37,7 +39,7 @@ Record → Verify → Propose
 
 ### 현재 MVP 상태
 
-현재 `v0.1.0-alpha` 단계에서는 브로커 측 임장 기록 장부와 고객 공유 카드 MVP 기능을 중심으로 개발하고 있습니다.
+현재 `v0.2.0-alpha` release candidate 준비 단계에서는 Phase 0부터 Phase 5까지 구현된 브로커 측 임장 기록 장부, 지도/시설 확인 경계, 고객 공유 카드, 운영 문서, 보안 하드닝 결과를 정리하고 있습니다.
 
 현재 초점은 다음과 같습니다.
 
@@ -49,6 +51,8 @@ Record → Verify → Propose
 * 고객 공유 카드 snapshot 생성 및 공개 화면
 * 공유 카드용 이미지 스트리밍
 * 공유 카드 생성 감사 기록
+* SQL 기반 MyBatis mapper integration test
+* 배포, 설정, 백업, rollback 운영 문서
 * Codex 기반 AI-assisted development workflow
 
 고객 공유 카드는 내부 임장 기록을 직접 노출하지 않고, 생성 시점의 공개용 snapshot 구조에서 렌더링합니다.
@@ -117,6 +121,12 @@ Outside the `local` and `test` profiles, set `imjangbox.broker.password` to a no
 ## Operations
 
 See [docs/operations.md](docs/operations.md) for the current deployment, configuration, Kakao key, file-storage, backup/restore, smoke-test, and rollback checklist.
+
+## Release Notes
+
+- Published baseline: [`v0.1.0-alpha`](https://github.com/paulsong7777/ImjangBox/releases/tag/v0.1.0-alpha)
+- Next alpha release candidate: [docs/release-notes/v0.2.0-alpha.md](docs/release-notes/v0.2.0-alpha.md)
+- Current completed scope: Phase 0 through Phase 5.
 
 ## Attachments
 
