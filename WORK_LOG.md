@@ -551,3 +551,27 @@
 - No Phase 6 work was started.
 - No release tags or published GitHub Release metadata were modified.
 - No OMO, LazyCodex, child-agent, subagent, or delegated-agent workflow was used.
+
+## 2026-06-12 - Issue #4 Mobile-First Broker Form UX Planning
+
+**Scope:** Plan the mobile-first broker inspection form UX improvement without implementing product code.
+
+**Actions completed:**
+
+- Read `AGENTS.md`, `CHECKPOINT.md`, `TASKS.md`, `WORK_LOG.md`, `README.md`, `docs/`, and `plans/`.
+- Checked local repository docs for Issue #4 context. The local context records Issue #4 as open for mobile-first broker inspection form UX planning; no separate issue export exists in repository docs.
+- Inspected the current broker inspection create/edit form template, backing form object, controller, and MVC tests to identify the current fields, validation shape, facility behavior, map boundary, attachment input, CSRF behavior, and edit-only share-card action.
+- Created `plans/2026-06-12-issue-4-mobile-first-broker-form-ux-plan.md` with the quick-save vs detailed follow-up field split, proposed mobile-first page structure, implementation steps, validation plan, acceptance criteria, and out-of-scope boundaries.
+- Updated `TASKS.md`, `CHECKPOINT.md`, `docs/PROJECT_MEMORY.md`, and `docs/VALIDATION.md` to record the planning result and next checkpoint.
+
+**Constraints honored:**
+
+- Planning-only documentation change; no product code was modified.
+- No Phase 6 work was started.
+- No OMO, LazyCodex commands, child-agent, subagent, delegated-agent, or spawned-agent workflow was used.
+- Existing privacy, CSRF, validation, attachment, facility, map, search-index, and share-card behavior was preserved in the plan.
+
+**Validation receipts:**
+
+- Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS` on 2026-06-12.
+- `git diff --check` passed on 2026-06-12.

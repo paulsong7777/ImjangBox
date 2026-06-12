@@ -37,6 +37,19 @@ Product code exists. Use the running Spring Boot application as the main manual 
 - Run `./gradlew test` when preparing, publishing, or synchronizing alpha release documentation, even if the edits are documentation-only.
 - Confirm [docs/release-notes/v0.2.0-alpha.md](release-notes/v0.2.0-alpha.md) records the validation result and published release status.
 
+## Issue #4 Mobile Broker Form UX Planning Validation
+
+- Confirm `plans/2026-06-12-issue-4-mobile-first-broker-form-ux-plan.md` exists and records:
+  - current form findings;
+  - quick-save vs detailed follow-up field placement;
+  - mobile-first structure;
+  - implementation steps;
+  - acceptance criteria;
+  - out-of-scope boundaries.
+- Run the automated file/content check in this document.
+- Run `git diff --check`.
+- Do not run product-code implementation or Phase 6 work during the planning-only pass.
+
 ## Phase 1 Validation
 
 - `./gradlew test`

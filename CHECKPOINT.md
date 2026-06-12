@@ -2,22 +2,24 @@
 
 **Checkpoint date:** 2026-06-12
 **Project:** imjangbox
-**Current state:** Phase 0 through Phase 5 are complete, `v0.2.0-alpha` is published as the latest GitHub pre-release, and post-publication GitHub issue cleanup is complete. Issue #1 Phase 4 share-card snapshot generation and Issue #2 public share-card privacy/security verification are closed as completed. Issue #4 mobile-first broker inspection form UX remains open as the next product-facing improvement candidate. Broker authentication was completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, operational deployment/configuration/backup docs exist in `docs/operations.md`, and full manual QA across inspection capture, map UI/search-index coverage, and share-card views passed on 2026-06-11. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output. The `v0.2.0-alpha` release notes are at `docs/release-notes/v0.2.0-alpha.md`.
+**Current state:** Phase 0 through Phase 5 are complete, `v0.2.0-alpha` is published as the latest GitHub pre-release, and post-publication GitHub issue cleanup is complete. Issue #1 Phase 4 share-card snapshot generation and Issue #2 public share-card privacy/security verification are closed as completed. Issue #4 mobile-first broker inspection form UX planning is complete in `plans/2026-06-12-issue-4-mobile-first-broker-form-ux-plan.md`, but implementation has not started and the issue remains open until the planned UX pass is implemented and verified. Broker authentication was completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, operational deployment/configuration/backup docs exist in `docs/operations.md`, and full manual QA across inspection capture, map UI/search-index coverage, and share-card views passed on 2026-06-11. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output. The `v0.2.0-alpha` release notes are at `docs/release-notes/v0.2.0-alpha.md`.
 
 ## Resume Here Next Time
 
 1. Read `AGENTS.md`.
 2. Read `plans/2026-06-04-imjangbox-implementation-plan.md`.
-3. Read `TASKS.md`.
-4. Read `docs/release-notes/v0.2.0-alpha.md`.
-5. Do not start Phase 6 unless explicitly requested.
+3. Read `plans/2026-06-12-issue-4-mobile-first-broker-form-ux-plan.md`.
+4. Read `TASKS.md`.
+5. Read `docs/release-notes/v0.2.0-alpha.md`.
+6. Do not start Phase 6 unless explicitly requested.
 
 ## Exact Next Implementation Step
 
-Next checkpoint is Issue #4 mobile-first broker form UX improvement planning:
+Next checkpoint is Issue #4 mobile-first broker form UX implementation only if explicitly requested:
 
-- Plan the mobile-first broker inspection form UX improvement.
-- Keep Issue #4 open until the UX improvement scope is planned and completed.
+- Implement the mobile-first broker inspection form UX pass from `plans/2026-06-12-issue-4-mobile-first-broker-form-ux-plan.md`.
+- Keep the change scoped to the existing broker form/controller/template/test behavior unless implementation findings prove a small supporting change is necessary.
+- Keep Issue #4 open until the planned UX pass is completed and verified.
 - Do not start Phase 6 product features unless explicitly requested.
 
 Phase 2 notes to preserve:

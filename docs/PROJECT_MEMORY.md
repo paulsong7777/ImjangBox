@@ -44,6 +44,8 @@ As of 2026-06-11, Phase 4 is complete. Broker edit pages can create customer sha
 
 As of later on 2026-06-11, Phase 5 is complete. Share-card generation writes internal audit records to `share_snapshot_audit_logs`; first snapshots are marked `CREATED`, and later broker-generated snapshot versions for the same inspection are marked `UPDATED`. SQL-backed MyBatis integration tests run through a `mybatis-integration` test profile using H2 in MySQL compatibility mode with a test-only final schema, covering mapper XML behavior for inspection rows, facility answers, search-index upserts, share snapshots, share children, and share audit logs. File upload validation enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage. Operational docs cover profiles, secrets, Kakao key separation, file/database backups, small-server deployment, smoke tests, and rollback. Full manual QA across inspection capture, map UI/search-index coverage, and public share-card views passed on 2026-06-11.
 
+As of 2026-06-12, Issue #4 mobile-first broker inspection form UX planning is complete in `plans/2026-06-12-issue-4-mobile-first-broker-form-ux-plan.md`. The plan keeps the existing create/edit routes, validation, CSRF behavior, attachment boundary, dynamic facility answers, Kakao map view model, search-index shape, and public share-card snapshot behavior intact. It proposes a mobile-first quick-save section for required capture fields and attachments, with optional facility, location, memo, internal-only, contact-log, and share-card work grouped as detailed follow-up. Implementation has not started.
+
 ## Key Assumptions
 
 - Public customer share cards should be generated from snapshot data.
@@ -56,3 +58,4 @@ As of later on 2026-06-11, Phase 5 is complete. Share-card generation writes int
 - Share cards should be regenerated as new snapshots when customer-facing content needs to change.
 - Share-card snapshot generation should be auditable internally without expanding public share DTOs or templates.
 - Mapper integration tests should remain deterministic in local `./gradlew test` runs and should not require Docker or an external database service.
+- The Issue #4 broker form UX pass should be a mobile-first reshape of the existing server-rendered Thymeleaf/Bootstrap form, not a new draft-save workflow or Phase 6 feature.

@@ -81,6 +81,9 @@
 
 ## Next Work Area - Mobile-First Broker Form UX Planning
 
-- [ ] Plan Issue #4 mobile-first broker inspection form UX improvements.
-- [ ] Define the smallest product-facing UX pass before changing implementation.
+- [x] Plan Issue #4 mobile-first broker inspection form UX improvements.
+- [x] Define the smallest product-facing UX pass before changing implementation.
+- [x] Record the quick-save vs detailed follow-up field split and acceptance criteria in `plans/2026-06-12-issue-4-mobile-first-broker-form-ux-plan.md`.
+- [ ] Implement the Issue #4 mobile-first broker form UX pass only after an explicit implementation request.
+- [ ] Keep Issue #4 open until the planned UX pass is implemented and verified.
 - [ ] Do not start Phase 6 implementation unless explicitly requested.
