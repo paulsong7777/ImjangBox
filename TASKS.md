@@ -76,7 +76,8 @@
 
 - [x] Close completed Issue #1 Phase 4 share-card snapshot generation.
 - [x] Close completed Issue #2 public share-card privacy/security verification.
-- [x] Confirm Issue #4 mobile-first broker inspection form UX remains open as the next product-facing improvement candidate.
+- [x] Complete, push, verify, and close Issue #4 mobile-first broker inspection form UX.
+- [x] Confirm all post-release GitHub issues #1, #2, and #4 are closed.
 - [x] Keep Phase 6 unstarted unless explicitly requested.
 
 ## Issue #4 - Mobile-First Broker Form UX
@@ -89,4 +90,9 @@
 - [x] Keep existing routes, field names, CSRF behavior, validation, attachment upload, facility template, map/geocode, contact log, and share-card behavior intact.
 - [x] Verify the planned UX pass with focused broker/map/file/share tests, full tests, and manual mobile-width QA.
 - [x] Do not start Phase 6 implementation unless explicitly requested.
-- [ ] Close or update GitHub Issue #4 after review of the implemented and verified UX pass.
+- [x] Close GitHub Issue #4 after implementation, push, and CI verification.
+
+## Next Work Area - Explicit Product Planning
+
+- [ ] Wait for an explicit next-product planning request.
+- [ ] Do not start Phase 6 implementation unless explicitly requested.
