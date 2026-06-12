@@ -88,6 +88,26 @@ Product code exists. Use the running Spring Boot application as the main manual 
 - Run the automated file/content check in this document.
 - Run `git diff --check`.
 
+## Product Core Reset Validation
+
+- Home route check: `./gradlew test --tests com.imjangbox.web.HomeControllerTest`.
+- Broker dashboard/form check: `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`.
+- Public proposal/privacy check: `./gradlew test --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest`.
+- Mapper/list query check: `./gradlew test --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest --tests com.imjangbox.inspection.persistence.MyBatisPersistenceIntegrationTest`.
+- Full verification: `./gradlew test`.
+- Manual local QA at `http://localhost:8080/` and `/broker/inspections`:
+  - home page points to property management and registration;
+  - unauthenticated `/broker/inspections` returns `401`;
+  - authenticated `/broker/inspections` renders `내 상가 매물`, map placeholder, chips, and empty state;
+  - authenticated create with title, address, public address summary, deposit, monthly rent, premium, area, business type, and valid PNG redirects to edit;
+  - the created property appears on `/broker/inspections` as a card with price/location/area/status;
+  - edit page still saves normally and keeps customer share-card generation separate;
+  - generated public share card renders as a customer proposal template;
+  - public share output excludes private memo, internal risk memo, contact-log content, internal address, storage key/path text, and original filename;
+  - mobile-width markup remains readable with stacked Bootstrap controls and cards.
+- Run the automated file/content check in this document.
+- Run `git diff --check`.
+
 ## Phase 1 Validation
 
 - `./gradlew test`

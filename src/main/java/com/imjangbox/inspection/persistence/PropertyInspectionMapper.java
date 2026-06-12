@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PropertyInspectionMapper {
 
+	List<PropertyInspectionRow> findAll();
+
 	Optional<PropertyInspectionRow> findById(long inspectionId);
 
 	void insert(PropertyInspectionWriteRow row);

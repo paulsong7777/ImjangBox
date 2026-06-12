@@ -60,6 +60,29 @@
         </constructor>
     </resultMap>
 
+    <select id="findAll" resultMap="propertyInspectionRow">
+        SELECT inspection_id,
+               title,
+               business_type,
+               verification_status,
+               internal_road_address,
+               internal_detail_address,
+               internal_geocode_memo,
+               public_address_summary,
+               public_landmark_hint,
+               deposit_amount,
+               monthly_rent_amount,
+               premium_amount,
+               area_square_meters,
+               business_fit_memo,
+               condition_memo,
+               price_private_note,
+               private_memo,
+               internal_risk_memo
+          FROM property_inspections
+         ORDER BY inspection_id DESC
+    </select>
+
     <select id="findById" resultMap="propertyInspectionRow">
         SELECT inspection_id,
                title,

@@ -27,7 +27,7 @@ import com.imjangbox.share.PublicShareSnapshot;
 import com.imjangbox.share.ShareSnapshotService;
 
 @Controller
-@RequestMapping("/broker/inspections")
+@RequestMapping("/broker")
 public class BrokerInspectionController {
 
 	private final InspectionService inspectionService;
@@ -61,7 +61,18 @@ public class BrokerInspectionController {
 		return kakaoMapViewFactory.brokerInspectionMap();
 	}
 
-	@GetMapping("/new")
+	@GetMapping
+	String brokerHome() {
+		return "redirect:/broker/inspections";
+	}
+
+	@GetMapping("/inspections")
+	String dashboard(Model model) {
+		model.addAttribute("dashboardItems", inspectionService.findDashboardItems());
+		return "inspection/dashboard";
+	}
+
+	@GetMapping("/inspections/new")
 	String newForm(
 			@RequestParam(name = "businessType", required = false) String businessType,
 			Model model) {
@@ -75,7 +86,7 @@ public class BrokerInspectionController {
 		return "inspection/form";
 	}
 
-	@PostMapping
+	@PostMapping("/inspections")
 	String create(
 			@Valid @ModelAttribute("inspectionForm") InspectionForm form,
 			BindingResult bindingResult,
@@ -99,7 +110,7 @@ public class BrokerInspectionController {
 		}
 	}
 
-	@GetMapping("/{inspectionId}/edit")
+	@GetMapping("/inspections/{inspectionId}/edit")
 	String edit(@PathVariable long inspectionId, Model model) {
 		InspectionForm form = inspectionService.findForm(inspectionId);
 		populateFacilityTemplates(form);
@@ -109,7 +120,7 @@ public class BrokerInspectionController {
 		return "inspection/form";
 	}
 
-	@PostMapping("/{inspectionId}")
+	@PostMapping("/inspections/{inspectionId}")
 	String update(
 			@PathVariable long inspectionId,
 			@Valid @ModelAttribute("inspectionForm") InspectionForm form,
@@ -134,7 +145,7 @@ public class BrokerInspectionController {
 		return "redirect:/broker/inspections/" + inspectionId + "/edit";
 	}
 
-	@PostMapping("/{inspectionId}/share")
+	@PostMapping("/inspections/{inspectionId}/share")
 	String createShare(@PathVariable long inspectionId, Authentication authentication) {
 		PublicShareSnapshot snapshot = shareSnapshotService.createSnapshot(inspectionId, brokerUsername(authentication));
 		return "redirect:/share/" + snapshot.shareId();

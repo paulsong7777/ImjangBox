@@ -110,6 +110,33 @@ class InspectionServiceTest {
 	}
 
 	@Test
+	void findDashboardItemsUsesPublicCardFieldsAndImagePresenceOnly() {
+		CapturingPropertyInspectionMapper mapper = new CapturingPropertyInspectionMapper();
+		mapper.dashboardRows.add(row(77L));
+		mapper.attachments.add(new FileAttachmentWriteRow(
+				77L, "private-name.png", "inspection-files/77/private-name.png", "image/png", 10L));
+		InspectionService service = new InspectionService(mapper, new CapturingFileStorage());
+
+		assertThat(service.findDashboardItems())
+				.extracting(
+						PropertyDashboardItem::title,
+						PropertyDashboardItem::publicAddressSummary,
+						PropertyDashboardItem::depositAmount,
+						PropertyDashboardItem::monthlyRentAmount,
+						PropertyDashboardItem::premiumAmount,
+						PropertyDashboardItem::areaSquareMeters,
+						PropertyDashboardItem::hasImageAttachment)
+				.containsExactly(org.assertj.core.groups.Tuple.tuple(
+						"성수역 1층 상가",
+						"성수역 인근",
+						10_000L,
+						550L,
+						3_000L,
+						"82.50",
+						true));
+	}
+
+	@Test
 	void updateRejectsMissingInspectionId() {
 		CapturingPropertyInspectionMapper mapper = new CapturingPropertyInspectionMapper();
 		mapper.updateResult = 0;
@@ -251,6 +278,7 @@ class InspectionServiceTest {
 		private PropertyInspectionWriteRow inserted;
 		private PropertyInspectionWriteRow updated;
 		private Optional<PropertyInspectionRow> foundRow = Optional.empty();
+		private final List<PropertyInspectionRow> dashboardRows = new ArrayList<>();
 		private final List<ContactLogWriteRow> contactLogs = new ArrayList<>();
 		private final List<FileAttachmentWriteRow> attachments = new ArrayList<>();
 		private final List<FacilityAnswerWriteRow> facilityAnswers = new ArrayList<>();
@@ -258,6 +286,11 @@ class InspectionServiceTest {
 		private final List<Long> deletedFacilityAnswerInspectionIds = new ArrayList<>();
 		private SearchIndexWriteRow searchIndex;
 		private int updateResult = 1;
+
+		@Override
+		public List<PropertyInspectionRow> findAll() {
+			return List.copyOf(dashboardRows);
+		}
 
 		@Override
 		public Optional<PropertyInspectionRow> findById(long inspectionId) {

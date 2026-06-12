@@ -29,9 +29,11 @@ class HomeControllerTest {
 		mockMvc.perform(get("/"))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("임장박스")))
-				.andExpect(content().string(containsString("상가 임장 기록")))
-				.andExpect(content().string(containsString("내부 기록과 고객 공유를 분리")))
-				.andExpect(content().string(containsString("브로커 화면 열기")))
+				.andExpect(content().string(containsString("지도와 카드")))
+				.andExpect(content().string(containsString("고객 제안 카드")))
+				.andExpect(content().string(containsString("상가 매물 관리 시작하기")))
+				.andExpect(content().string(containsString("href=\"/broker/inspections\"")))
+				.andExpect(content().string(containsString("href=\"/broker/inspections/new\"")))
 				.andExpect(content().string(org.hamcrest.Matchers.not(containsString("foundation"))))
 				.andExpect(content().string(org.hamcrest.Matchers.not(containsString("Commercial property"))));
 	}

@@ -1,6 +1,7 @@
 package com.imjangbox.inspection.web;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,6 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.imjangbox.inspection.InspectionService;
+import com.imjangbox.inspection.PropertyDashboardItem;
 import com.imjangbox.common.SecurityConfig;
 import com.imjangbox.facility.FacilityTemplateItem;
 import com.imjangbox.facility.FacilityTemplateService;
@@ -74,6 +76,67 @@ class BrokerInspectionControllerTest {
 				invocation.getArgument(0, String.class).trim().toUpperCase());
 		when(facilityTemplateService.findItemsForBusinessType(anyString())).thenReturn(List.of());
 		when(kakaoMapViewFactory.brokerInspectionMap()).thenReturn(KakaoMapView.disabled());
+		when(inspectionService.findDashboardItems()).thenReturn(List.of());
+	}
+
+	@Test
+	void brokerRootRedirectsToPropertyDashboard() throws Exception {
+		mockMvc.perform(get("/broker"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/broker/inspections"));
+	}
+
+	@Test
+	@WithAnonymousUser
+	void propertyDashboardRequiresBrokerAuthentication() throws Exception {
+		mockMvc.perform(get("/broker/inspections"))
+				.andExpect(status().isUnauthorized());
+	}
+
+	@Test
+	void propertyDashboardRendersMapListManagementEmptyState() throws Exception {
+		mockMvc.perform(get("/broker/inspections"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("내 상가 매물")))
+				.andExpect(content().string(containsString("등록한 상가 매물을 지도와 카드로 한눈에 관리합니다.")))
+				.andExpect(content().string(containsString("상가 매물 등록")))
+				.andExpect(content().string(containsString("전체")))
+				.andExpect(content().string(containsString("확인중")))
+				.andExpect(content().string(containsString("제안 가능")))
+				.andExpect(content().string(containsString("공유 가능")))
+				.andExpect(content().string(containsString("지도 핀은 좌표 저장이 연결되면 표시됩니다.")))
+				.andExpect(content().string(containsString("아직 등록된 상가 매물이 없습니다.")))
+				.andExpect(content().string(containsString("현장에서 확인한 매물을 먼저 하나 등록해보세요.")))
+				.andExpect(content().string(containsString("상가 매물 등록하기")));
+	}
+
+	@Test
+	void propertyDashboardRendersCreatedPropertyCard() throws Exception {
+		when(inspectionService.findDashboardItems()).thenReturn(List.of(new PropertyDashboardItem(
+				41L,
+				"성수역 1층 코너 상가",
+				"CAFE",
+				VerificationStatus.AGENT_CHECKED,
+				"성수역 인근",
+				"대로변",
+				10_000L,
+				550L,
+				3_000L,
+				"82.50",
+				false)));
+
+		String html = mockMvc.perform(get("/broker/inspections"))
+				.andExpect(status().isOk())
+				.andReturn()
+				.getResponse()
+				.getContentAsString();
+
+		assertThat(html)
+				.contains("성수역 1층 코너 상가", "성수역 인근", "대로변")
+				.contains("10,000", "550", "3,000", "82.50")
+				.contains("카페", "현장 확인", "수정", "공유 카드 만들기")
+				.contains("action=\"/broker/inspections/41/share\"")
+				.doesNotContain("businessType", "AGENT_CHECKED", "storageKey", "originalFilename");
 	}
 
 	@Test

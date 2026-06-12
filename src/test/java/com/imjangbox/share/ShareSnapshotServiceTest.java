@@ -237,6 +237,11 @@ class ShareSnapshotServiceTest {
 				new FileAttachmentWriteRow(41L, "memo.txt", "inspection-files/41/memo.txt", "text/plain", 4L)));
 
 		@Override
+		public List<PropertyInspectionRow> findAll() {
+			return List.of(row);
+		}
+
+		@Override
 		public Optional<PropertyInspectionRow> findById(long inspectionId) {
 			return Optional.of(row);
 		}

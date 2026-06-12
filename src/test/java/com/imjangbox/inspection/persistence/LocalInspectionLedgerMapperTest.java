@@ -36,6 +36,26 @@ class LocalInspectionLedgerMapperTest {
 	}
 
 	@Test
+	void findAllReturnsCreatedPropertiesForDashboardList() {
+		LocalInspectionLedgerMapper mapper = new LocalInspectionLedgerMapper();
+		PropertyInspectionWriteRow first = writeRow(null, "첫 번째 상가");
+		PropertyInspectionWriteRow second = writeRow(null, "두 번째 상가");
+		mapper.insert(first);
+		mapper.insert(second);
+		mapper.insertFileAttachment(new FileAttachmentWriteRow(
+				second.inspectionId(), "photo.png", "inspection-files/42/photo.png", "image/png", 10L));
+
+		assertThat(mapper.findAll())
+				.extracting(PropertyInspectionRow::inspectionId, PropertyInspectionRow::title)
+				.containsExactly(
+						org.assertj.core.groups.Tuple.tuple(second.inspectionId(), "두 번째 상가"),
+						org.assertj.core.groups.Tuple.tuple(first.inspectionId(), "첫 번째 상가"));
+		assertThat(mapper.findAll().get(0).fileAttachments())
+				.extracting(FileAttachmentWriteRow::contentType)
+				.containsExactly("image/png");
+	}
+
+	@Test
 	void updateIsAppendOnlyForContactLogsUntilExplicitDeletion() {
 		LocalInspectionLedgerMapper mapper = new LocalInspectionLedgerMapper();
 		PropertyInspectionWriteRow row = writeRow(77L, "초기 제목");

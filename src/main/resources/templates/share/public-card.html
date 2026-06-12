@@ -3,76 +3,99 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title th:text="${snapshot.title}">고객 공유 카드</title>
+	<title th:text="${snapshot.title}">고객 제안 카드</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" title="Bootstrap 5.3">
 </head>
 <body class="bg-light">
-<main class="container py-4">
-	<section class="bg-white border rounded p-4 mb-4">
-		<p class="text-primary fw-semibold mb-2">고객 공유 매물</p>
-		<h1 class="h3 mb-3" th:text="${snapshot.title}">상가 매물</h1>
-		<div class="d-flex flex-wrap gap-2">
-			<span class="badge text-bg-primary"
+<main class="container py-3 py-md-4">
+	<section class="bg-white border rounded overflow-hidden mb-3">
+		<div class="ratio ratio-16x9 bg-light d-flex align-items-center justify-content-center">
+			<img th:if="${!#lists.isEmpty(snapshot.images)}"
+					class="img-fluid w-100 h-100 object-fit-cover"
+					th:src="${snapshot.images[0].imageUrl}"
+					th:alt="${snapshot.images[0].altText}">
+			<div th:if="${#lists.isEmpty(snapshot.images)}" class="text-body-secondary">대표 사진 준비 전</div>
+		</div>
+		<div class="p-3 p-md-4">
+			<p class="text-primary fw-semibold mb-2">고객 제안 카드</p>
+			<h1 class="h3 mb-3" th:text="${snapshot.title}">상가 매물</h1>
+			<div class="d-flex flex-wrap gap-2">
+				<span class="badge text-bg-primary"
+						th:text="${snapshot.verificationStatus.name() == 'UNVERIFIED' ? '미확인' :
+								(snapshot.verificationStatus.name() == 'OWNER_CLAIM' ? '임대인 주장' :
+								(snapshot.verificationStatus.name() == 'TENANT_CLAIM' ? '임차인 주장' :
+								(snapshot.verificationStatus.name() == 'CO_BROKER_CLAIM' ? '공동중개 확인' :
+								(snapshot.verificationStatus.name() == 'AGENT_CHECKED' ? '현장 확인' : '서류 확인'))))}">확인 상태</span>
+				<span class="badge text-bg-secondary" th:text="${snapshot.publicAddress.summary}">공개 주소</span>
+				<span class="badge text-bg-light border text-body" th:if="${snapshot.publicAddress.landmarkHint != null and !snapshot.publicAddress.landmarkHint.isBlank()}"
+						th:text="${snapshot.publicAddress.landmarkHint}">위치 힌트</span>
+			</div>
+		</div>
+	</section>
+
+	<section class="bg-white border rounded p-3 p-md-4 mb-3">
+		<h2 class="h5 mb-3">임대 조건</h2>
+		<div class="row g-3">
+			<div class="col-4">
+				<div class="text-body-secondary small">보증금</div>
+				<div class="fs-5 fw-semibold" th:text="${#numbers.formatInteger(snapshot.pricing.depositAmount, 0, 'COMMA')}">0</div>
+			</div>
+			<div class="col-4">
+				<div class="text-body-secondary small">월세</div>
+				<div class="fs-5 fw-semibold" th:text="${#numbers.formatInteger(snapshot.pricing.monthlyRentAmount, 0, 'COMMA')}">0</div>
+			</div>
+			<div class="col-4">
+				<div class="text-body-secondary small">권리금</div>
+				<div class="fs-5 fw-semibold" th:text="${#numbers.formatInteger(snapshot.pricing.premiumAmount, 0, 'COMMA')}">0</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="bg-white border rounded p-3 p-md-4 mb-3">
+		<h2 class="h5 mb-3">이 매물의 핵심 정보</h2>
+		<dl class="row mb-0">
+			<dt class="col-sm-3">위치</dt>
+			<dd class="col-sm-9" th:text="${snapshot.publicAddress.summary}">고객 공유용 위치</dd>
+			<dt class="col-sm-3" th:if="${snapshot.publicAddress.landmarkHint != null and !snapshot.publicAddress.landmarkHint.isBlank()}">위치 힌트</dt>
+			<dd class="col-sm-9" th:if="${snapshot.publicAddress.landmarkHint != null and !snapshot.publicAddress.landmarkHint.isBlank()}"
+					th:text="${snapshot.publicAddress.landmarkHint}">랜드마크</dd>
+			<dt class="col-sm-3">확인 상태</dt>
+			<dd class="col-sm-9"
 					th:text="${snapshot.verificationStatus.name() == 'UNVERIFIED' ? '미확인' :
 							(snapshot.verificationStatus.name() == 'OWNER_CLAIM' ? '임대인 주장' :
 							(snapshot.verificationStatus.name() == 'TENANT_CLAIM' ? '임차인 주장' :
 							(snapshot.verificationStatus.name() == 'CO_BROKER_CLAIM' ? '공동중개 확인' :
-							(snapshot.verificationStatus.name() == 'AGENT_CHECKED' ? '현장 확인' : '서류 확인'))))}">확인 상태</span>
-			<span class="badge text-bg-secondary" th:text="${snapshot.publicAddress.summary}">공개 주소</span>
-		</div>
-	</section>
-
-	<section class="bg-white border rounded p-4 mb-4">
-		<h2 class="h5 mb-3">고객 공유용 위치</h2>
-		<dl class="row mb-0">
-			<dt class="col-sm-3">주소 요약</dt>
-			<dd class="col-sm-9" th:text="${snapshot.publicAddress.summary}">공개 주소</dd>
-			<dt class="col-sm-3">위치 힌트</dt>
-			<dd class="col-sm-9" th:text="${snapshot.publicAddress.landmarkHint ?: '-'}">위치 힌트</dd>
+							(snapshot.verificationStatus.name() == 'AGENT_CHECKED' ? '현장 확인' : '서류 확인'))))}">확인 상태</dd>
 		</dl>
 	</section>
 
-	<section class="bg-white border rounded p-4 mb-4">
-		<h2 class="h5 mb-3">임대 조건</h2>
-		<div class="row g-3">
-			<div class="col-md-4">
-				<div class="text-body-secondary small">보증금</div>
-				<div class="fs-5" th:text="${#numbers.formatInteger(snapshot.pricing.depositAmount, 0, 'COMMA')}">0</div>
-			</div>
-			<div class="col-md-4">
-				<div class="text-body-secondary small">월세</div>
-				<div class="fs-5" th:text="${#numbers.formatInteger(snapshot.pricing.monthlyRentAmount, 0, 'COMMA')}">0</div>
-			</div>
-			<div class="col-md-4">
-				<div class="text-body-secondary small">권리금</div>
-				<div class="fs-5" th:text="${#numbers.formatInteger(snapshot.pricing.premiumAmount, 0, 'COMMA')}">0</div>
-			</div>
+	<section class="bg-white border rounded p-3 p-md-4 mb-3" th:if="${!#lists.isEmpty(snapshot.facilities)}">
+		<h2 class="h5 mb-3">시설 확인</h2>
+		<div class="d-flex flex-wrap gap-2">
+			<span class="badge rounded-pill text-bg-light border text-body p-2"
+					th:each="facility : ${snapshot.facilities}">
+				<span th:text="${facility.label}">시설 항목</span>
+				<span class="fw-semibold" th:text="${facility.answer == 'OK' ? '양호' :
+						(facility.answer == 'NEEDS_CHECK' ? '추가 확인' :
+						(facility.answer == 'NOT_APPLICABLE' ? '해당 없음' :
+						(facility.answer == '' ? '미확인' : facility.answer)))}">확인 결과</span>
+			</span>
 		</div>
 	</section>
 
-	<section class="bg-white border rounded p-4 mb-4" th:if="${!#lists.isEmpty(snapshot.facilities)}">
-		<h2 class="h5 mb-3">시설 확인</h2>
-		<ul class="list-group list-group-flush">
-			<li class="list-group-item px-0 d-flex justify-content-between gap-3"
-					th:each="facility : ${snapshot.facilities}">
-				<span th:text="${facility.label}">시설 항목</span>
-				<strong th:text="${facility.answer == 'OK' ? '양호' :
-						(facility.answer == 'NEEDS_CHECK' ? '추가 확인' :
-						(facility.answer == 'NOT_APPLICABLE' ? '해당 없음' :
-						(facility.answer == '' ? '미확인' : facility.answer)))}">확인 결과</strong>
-			</li>
-		</ul>
-	</section>
-
-	<section class="bg-white border rounded p-4" th:if="${!#lists.isEmpty(snapshot.images)}">
+	<section class="bg-white border rounded p-3 p-md-4 mb-3" th:if="${!#lists.isEmpty(snapshot.images)}">
 		<h2 class="h5 mb-3">현장 사진</h2>
 		<div class="row g-3">
-			<div class="col-sm-6 col-lg-4" th:each="image, imageStat : ${snapshot.images}">
-				<div class="ratio ratio-4x3 bg-light border rounded d-flex align-items-center justify-content-center">
-					<img class="img-fluid rounded" th:src="${image.imageUrl}" th:alt="${'현장 사진 ' + (imageStat.index + 1)}">
+			<div class="col-sm-6 col-lg-4" th:each="image : ${snapshot.images}">
+				<div class="ratio ratio-4x3 bg-light border rounded overflow-hidden">
+					<img class="img-fluid w-100 h-100 object-fit-cover" th:src="${image.imageUrl}" th:alt="${image.altText}">
 				</div>
 			</div>
 		</div>
+	</section>
+
+	<section class="alert alert-secondary mb-0">
+		본 공유카드는 고객 안내용 요약 정보입니다. 세부 조건은 중개사를 통해 확인해 주세요.
 	</section>
 </main>
 </body>

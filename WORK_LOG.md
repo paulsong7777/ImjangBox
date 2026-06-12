@@ -1,5 +1,36 @@
 # WORK LOG
 
+## 2026-06-13 - Product Core Reset To Property Management
+
+**Scope:** Re-center ImjangBox from inspection-form-first to property map/list management first.
+
+**Actions completed:**
+
+- Added `/broker` redirect to `/broker/inspections`.
+- Added broker property management dashboard at `/broker/inspections` with `내 상가 매물`, map placeholder, presentational status chips, empty state, property cards, edit action, and separate share-card generation action.
+- Added read-only property list support through the existing inspection service and mapper boundary without schema changes.
+- Updated the home page to point to property management and property registration.
+- Tightened the create/edit form so quick registration emphasizes title, address, customer-safe location, pricing, area, business type, verification status, photo upload, and a short memo.
+- Rebuilt the public share card template as a customer proposal card backed only by public snapshot fields.
+- Added focused home, broker dashboard/form, local mapper, MyBatis mapper, service, public share, and privacy tests.
+- Updated `TASKS.md`, `CHECKPOINT.md`, `docs/product-ux-notes.md`, and `docs/VALIDATION.md`.
+
+**Constraints honored:**
+
+- No Phase 6 work was started.
+- No database schema changes, migrations, mapper writes, validation relaxations, privacy-rule changes, or frontend framework additions were made.
+- Existing create/edit/share routes, field names, CSRF behavior, attachment upload, facility answer binding, Kakao map boundary, contact logs, file validation, and public share privacy behavior were preserved.
+
+**Validation receipts:**
+
+- Red characterization run failed before implementation because `PropertyDashboardItem`, `InspectionService.findDashboardItems`, and `PropertyInspectionMapper.findAll` did not exist.
+- `./gradlew test --tests com.imjangbox.web.HomeControllerTest` passed.
+- `./gradlew test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest` passed.
+- `./gradlew test --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest` passed.
+- `./gradlew test --tests com.imjangbox.inspection.persistence.LocalInspectionLedgerMapperTest --tests com.imjangbox.inspection.persistence.MyBatisPersistenceIntegrationTest` passed.
+- `./gradlew test` passed.
+- Manual QA on port `8080` passed: home rendered management-first copy and CTAs; unauthenticated `/broker/inspections` returned `401`; authenticated dashboard rendered empty state and map placeholder; valid PNG create with title, address, public address summary, pricing, area, business type, and verification status redirected to edit; the created property appeared on the dashboard card with price/location/area/status; edit rendered saved data and separate share action; generated public share card rendered as a customer proposal template and excluded internal address, storage key/path text, and original filename; mobile-width Bootstrap classes were present for stacked form/card readability.
+
 ## 2026-06-04 - Repository Planning Initialization
 
 **Scope:** Initialize repository memory and planning documents for LazyCodex/OmO-based work.

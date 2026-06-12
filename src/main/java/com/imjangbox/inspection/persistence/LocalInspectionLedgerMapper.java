@@ -22,6 +22,14 @@ class LocalInspectionLedgerMapper implements PropertyInspectionMapper {
 	private final Map<Long, SearchIndexWriteRow> searchIndex = new LinkedHashMap<>();
 
 	@Override
+	public List<PropertyInspectionRow> findAll() {
+		return inspections.values().stream()
+				.map(this::toReadRow)
+				.sorted((left, right) -> Long.compare(right.inspectionId(), left.inspectionId()))
+				.toList();
+	}
+
+	@Override
 	public Optional<PropertyInspectionRow> findById(long inspectionId) {
 		return Optional.ofNullable(inspections.get(inspectionId)).map(this::toReadRow);
 	}

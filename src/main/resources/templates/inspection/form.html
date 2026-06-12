@@ -23,7 +23,7 @@
 				<div>
 					<span class="badge text-bg-primary mb-2">필수 입력</span>
 					<h2 class="h5 mb-1">빠른 등록</h2>
-					<p class="text-body-secondary small mb-0">현장에서 바로 저장해야 하는 현장 정보와 임대 조건입니다.</p>
+					<p class="text-body-secondary small mb-0">상가명, 주소, 조건, 사진과 간단 메모만 먼저 저장합니다.</p>
 				</div>
 				<div class="d-grid d-md-block">
 					<button class="btn btn-primary" type="submit"
@@ -88,10 +88,17 @@
 						<label class="form-label" for="premiumAmount">권리금</label>
 						<input class="form-control" id="premiumAmount" type="number" min="0" inputmode="numeric" th:field="*{premiumAmount}">
 					</div>
+					<div class="col-12 col-md-4">
+						<label class="form-label" for="areaSquareMeters">전용면적(㎡)</label>
+						<input class="form-control" id="areaSquareMeters" th:field="*{areaSquareMeters}" placeholder="예: 42.3">
+					</div>
 				</div>
 			</div>
 
 			<div class="border-top pt-3">
+				<label class="form-label" for="businessFitMemo">간단 메모</label>
+				<textarea class="form-control mb-3" id="businessFitMemo" rows="3" th:field="*{businessFitMemo}"
+						placeholder="현장에서 바로 기억해야 할 추천 포인트나 주의점을 짧게 적어 둡니다."></textarea>
 				<label class="form-label" for="attachments">현장 사진/파일</label>
 				<input class="form-control" type="file" id="attachments" name="attachments" multiple>
 				<div class="form-text">사진과 첨부 파일은 기존 업로드 검사를 통과한 뒤 내부 기록으로 저장됩니다.</div>
@@ -109,10 +116,6 @@
 				<div class="col-12">
 					<label class="form-label" for="publicLandmarkHint">고객 공유용 위치 힌트</label>
 					<input class="form-control" id="publicLandmarkHint" th:field="*{publicLandmarkHint}" placeholder="예: 대형 카페 옆, 횡단보도 앞">
-				</div>
-				<div class="col-12 col-md-6">
-					<label class="form-label" for="areaSquareMeters">전용 면적(㎡)</label>
-					<input class="form-control" id="areaSquareMeters" th:field="*{areaSquareMeters}" placeholder="예: 42.3">
 				</div>
 				<div class="col-12">
 					<h3 class="h6">위치 지도</h3>
@@ -167,10 +170,6 @@
 		<details class="bg-white border rounded p-3 p-md-4 mb-3">
 			<summary class="h5 mb-0">현장 판단 메모</summary>
 			<div class="row g-3 mt-1">
-				<div class="col-12">
-					<label class="form-label" for="businessFitMemo">업종 적합 메모</label>
-					<textarea class="form-control" id="businessFitMemo" rows="3" th:field="*{businessFitMemo}"></textarea>
-				</div>
 				<div class="col-12">
 					<label class="form-label" for="conditionMemo">시설/상태 메모</label>
 					<textarea class="form-control" id="conditionMemo" rows="3" th:field="*{conditionMemo}"></textarea>

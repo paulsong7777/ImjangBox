@@ -35,6 +35,13 @@ public class InspectionService {
 		this.fileStorage = fileStorage;
 	}
 
+	@Transactional(readOnly = true)
+	public List<PropertyDashboardItem> findDashboardItems() {
+		return mapper.findAll().stream()
+				.map(this::toDashboardItem)
+				.toList();
+	}
+
 	public InspectionForm findForm(long inspectionId) {
 		PropertyInspectionRow row = mapper.findById(inspectionId)
 				.orElseThrow(() -> new InspectionNotFoundException(inspectionId));
@@ -60,6 +67,23 @@ public class InspectionService {
 				.map(FacilityAnswerForm::fromWriteRow)
 				.toList());
 		return form;
+	}
+
+	private PropertyDashboardItem toDashboardItem(PropertyInspectionRow row) {
+		List<FileAttachmentWriteRow> attachments = mapper.findFileAttachments(row.inspectionId());
+		return new PropertyDashboardItem(
+				row.inspectionId(),
+				row.title(),
+				row.businessType(),
+				VerificationStatus.valueOf(row.verificationStatus()),
+				row.publicAddressSummary(),
+				row.publicLandmarkHint(),
+				row.depositAmount(),
+				row.monthlyRentAmount(),
+				row.premiumAmount(),
+				row.areaSquareMeters(),
+				attachments.stream().anyMatch(attachment ->
+						AttachmentFilePolicy.isPublicImageType(attachment.contentType())));
 	}
 
 	@Transactional(rollbackFor = IOException.class)

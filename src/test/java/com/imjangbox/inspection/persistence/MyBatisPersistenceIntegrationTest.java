@@ -60,6 +60,9 @@ class MyBatisPersistenceIntegrationTest {
 				.extracting(FileAttachmentWriteRow::originalFilename, FileAttachmentWriteRow::storageKey)
 				.containsExactly(org.assertj.core.groups.Tuple.tuple(
 						"floor.png", "inspection-files/1/floor.png"));
+		assertThat(inspectionMapper.findAll())
+				.extracting(PropertyInspectionRow::inspectionId, PropertyInspectionRow::title, PropertyInspectionRow::publicAddressSummary)
+				.contains(org.assertj.core.groups.Tuple.tuple(row.inspectionId(), "성수역 1층 상가", "성수역 인근"));
 		assertThat(inspectionMapper.findFacilityAnswers(row.inspectionId()))
 				.extracting(
 						FacilityAnswerWriteRow::templateItemKey,

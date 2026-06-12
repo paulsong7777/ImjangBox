@@ -102,6 +102,19 @@
 - [x] Document the product UX language and grouping principles in `docs/product-ux-notes.md`.
 - [x] Verify with focused tests, full tests, documentation validation, `git diff --check`, and manual local QA.
 
+## Product Core Reset - Property Map/List Management First
+
+- [x] Re-center the MVP from inspection-form-first to property map/list management first.
+- [x] Add broker property management routes: `/broker` redirects to `/broker/inspections`, and `/broker/inspections` renders the core management screen.
+- [x] Render `내 상가 매물` with map placeholder, presentational status chips, property cards, and a clean empty state.
+- [x] Add read-only list support through the existing inspection service and mapper boundary without database schema changes.
+- [x] Keep create/edit routes, field names, CSRF behavior, validation, facility bindings, Kakao map boundary, contact logs, attachment validation, and share-card POST behavior intact.
+- [x] Point the home page to property management and registration instead of a form-only entry.
+- [x] Make the create form feel like quick property registration while keeping detailed follow-up sections available.
+- [x] Rebuild the public share card as a customer proposal template using only public snapshot data.
+- [x] Add home, broker dashboard, mapper, and public share regression tests for the reset.
+- [x] Document the reset and manual QA results before committing.
+
 ## Next Work Area - Explicit Product Planning
 
 - [ ] Wait for explicit next-product planning or implementation request before starting any further product area.
