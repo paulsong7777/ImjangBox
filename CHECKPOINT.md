@@ -2,7 +2,7 @@
 
 **Checkpoint date:** 2026-06-12
 **Project:** imjangbox
-**Current state:** Phase 0 through Phase 5 are complete, and `v0.2.0-alpha` is published as the latest GitHub pre-release. Broker authentication was completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, operational deployment/configuration/backup docs exist in `docs/operations.md`, and full manual QA across inspection capture, map UI/search-index coverage, and share-card views passed on 2026-06-11. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output. The `v0.2.0-alpha` release notes are at `docs/release-notes/v0.2.0-alpha.md`.
+**Current state:** Phase 0 through Phase 5 are complete, `v0.2.0-alpha` is published as the latest GitHub pre-release, and post-publication GitHub issue cleanup is complete. Issue #1 Phase 4 share-card snapshot generation and Issue #2 public share-card privacy/security verification are closed as completed. Issue #4 mobile-first broker inspection form UX remains open as the next product-facing improvement candidate. Broker authentication was completed early, share-card snapshot creation writes internal audit records, MyBatis mapper behavior has SQL-backed integration coverage through a deterministic H2 MySQL-mode test profile, file-storage validation enforces attachment count, size, allowed content type, filename extension/content-type consistency, and header/content-type consistency before storage, operational deployment/configuration/backup docs exist in `docs/operations.md`, and full manual QA across inspection capture, map UI/search-index coverage, and share-card views passed on 2026-06-11. Public share images remain share-scoped, image-only streams; raw storage keys, local paths, and original filenames are not public routes or public template output. The `v0.2.0-alpha` release notes are at `docs/release-notes/v0.2.0-alpha.md`.
 
 ## Resume Here Next Time
 
@@ -14,11 +14,10 @@
 
 ## Exact Next Implementation Step
 
-Next checkpoint is GitHub issue cleanup and next product planning:
+Next checkpoint is Issue #4 mobile-first broker form UX improvement planning:
 
-- Close the completed Phase 4 share-card issue.
-- Review the security/privacy issue.
-- Keep the mobile-first broker form issue open for the next UX pass.
+- Plan the mobile-first broker inspection form UX improvement.
+- Keep Issue #4 open until the UX improvement scope is planned and completed.
 - Do not start Phase 6 product features unless explicitly requested.
 
 Phase 2 notes to preserve:
@@ -60,6 +59,7 @@ Most recent verification:
 - Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS` on 2026-06-12 after the published-release documentation sync.
 - `git diff --check` passed on 2026-06-12 after the published-release documentation sync.
 - `./gradlew test` passed on 2026-06-12 after the published-release documentation sync.
+- GitHub issue cleanup after `v0.2.0-alpha` publication completed on 2026-06-12: Issues #1 and #2 are closed, and Issue #4 remains open as the next mobile-first broker form UX planning checkpoint.
 - Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS` on 2026-06-12.
 - `git diff --check` passed on 2026-06-12 after release-preparation cleanup.
 - `./gradlew test` passed on 2026-06-12 after release-preparation documentation updates.

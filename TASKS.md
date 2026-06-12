@@ -72,9 +72,15 @@
 - [x] Publish GitHub pre-release `v0.2.0-alpha`.
 - [x] Synchronize repository documentation with the published `v0.2.0-alpha` release state.
 
-## Next Work Area - GitHub Issue Cleanup And Product Planning
+## GitHub Issue Cleanup And Product Planning
 
-- [ ] Close completed Phase 4 share-card issue.
-- [ ] Review security/privacy issue.
-- [ ] Keep mobile-first broker form issue open for the next UX pass.
-- [ ] Plan the next product work explicitly before starting any Phase 6 implementation.
+- [x] Close completed Issue #1 Phase 4 share-card snapshot generation.
+- [x] Close completed Issue #2 public share-card privacy/security verification.
+- [x] Confirm Issue #4 mobile-first broker inspection form UX remains open as the next product-facing improvement candidate.
+- [x] Keep Phase 6 unstarted unless explicitly requested.
+
+## Next Work Area - Mobile-First Broker Form UX Planning
+
+- [ ] Plan Issue #4 mobile-first broker inspection form UX improvements.
+- [ ] Define the smallest product-facing UX pass before changing implementation.
+- [ ] Do not start Phase 6 implementation unless explicitly requested.
