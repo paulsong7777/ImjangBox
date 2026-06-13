@@ -92,6 +92,10 @@
 		<dl class="row mb-0">
 			<dt class="col-sm-3">위치</dt>
 			<dd class="col-sm-9" th:text="${snapshot.publicAddress.summary}">고객 공유용 위치</dd>
+			<dt class="col-sm-3" th:if="${snapshot.hasRecommendedBusinessTypeLabel()}">추천 업종</dt>
+			<dd class="col-sm-9" th:if="${snapshot.hasRecommendedBusinessTypeLabel()}">
+				추천 업종: <span th:text="${snapshot.recommendedBusinessTypeLabel()}">카페·디저트</span>
+			</dd>
 			<dt class="col-sm-3" th:if="${snapshot.publicAddress.landmarkHint != null and !snapshot.publicAddress.landmarkHint.isBlank()}">위치 힌트</dt>
 			<dd class="col-sm-9" th:if="${snapshot.publicAddress.landmarkHint != null and !snapshot.publicAddress.landmarkHint.isBlank()}"
 					th:text="${snapshot.publicAddress.landmarkHint}">랜드마크</dd>
@@ -101,11 +105,11 @@
 		</dl>
 	</section>
 
-	<section class="bg-white border rounded p-3 p-md-4 mb-3" th:if="${!#lists.isEmpty(snapshot.facilities)}">
+	<section class="bg-white border rounded p-3 p-md-4 mb-3" th:if="${!#lists.isEmpty(snapshot.displayFacilities())}">
 		<h2 class="h5 mb-3">시설 확인</h2>
 		<div class="d-flex flex-wrap gap-2">
 			<span class="badge rounded-pill text-bg-light border text-body p-2"
-					th:each="facility : ${snapshot.facilities}">
+					th:each="facility : ${snapshot.displayFacilities()}">
 				<span th:text="${facility.label}">시설 항목</span>
 				<span class="fw-semibold" th:text="${facility.answer == 'OK' ? '양호' :
 						(facility.answer == 'NEEDS_CHECK' ? '추가 확인' :

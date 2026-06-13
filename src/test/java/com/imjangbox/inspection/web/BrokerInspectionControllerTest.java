@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.imjangbox.inspection.InspectionService;
 import com.imjangbox.inspection.PropertyDashboardItem;
 import com.imjangbox.common.SecurityConfig;
+import com.imjangbox.facility.BusinessTypeCatalog;
 import com.imjangbox.facility.FacilityTemplateItem;
 import com.imjangbox.facility.FacilityTemplateService;
 import com.imjangbox.map.KakaoMapView;
@@ -69,11 +70,12 @@ class BrokerInspectionControllerTest {
 
 	@BeforeEach
 	void setUpFacilityTemplates() {
-		when(facilityTemplateService.findBusinessTypes()).thenReturn(List.of("CAFE", "RESTAURANT"));
-		when(facilityTemplateService.defaultBusinessType()).thenReturn("CAFE");
-		when(facilityTemplateService.normalizeBusinessType(isNull())).thenReturn("CAFE");
+		when(facilityTemplateService.findBusinessTypes()).thenReturn(BusinessTypeCatalog.supportedTypes());
+		when(facilityTemplateService.findBusinessTypeOptions()).thenReturn(BusinessTypeCatalog.options());
+		when(facilityTemplateService.defaultBusinessType()).thenReturn(BusinessTypeCatalog.DEFAULT_BUSINESS_TYPE);
+		when(facilityTemplateService.normalizeBusinessType(isNull())).thenReturn(BusinessTypeCatalog.DEFAULT_BUSINESS_TYPE);
 		when(facilityTemplateService.normalizeBusinessType(anyString())).thenAnswer(invocation ->
-				invocation.getArgument(0, String.class).trim().toUpperCase());
+				BusinessTypeCatalog.normalize(invocation.getArgument(0, String.class)));
 		when(facilityTemplateService.findItemsForBusinessType(anyString())).thenReturn(List.of());
 		when(kakaoMapViewFactory.brokerInspectionMap()).thenReturn(KakaoMapView.disabled());
 		when(inspectionService.findDashboardItems()).thenReturn(List.of());
@@ -116,7 +118,7 @@ class BrokerInspectionControllerTest {
 		when(inspectionService.findDashboardItems()).thenReturn(List.of(new PropertyDashboardItem(
 				41L,
 				"성수역 1층 코너 상가",
-				"CAFE",
+				"CAFE_DESSERT",
 				VerificationStatus.AGENT_CHECKED,
 				"성수역 인근",
 				"대로변",
@@ -135,7 +137,7 @@ class BrokerInspectionControllerTest {
 		assertThat(html)
 				.contains("성수역 1층 코너 상가", "성수역 인근", "대로변")
 				.contains("10,000", "550", "3,000", "만원", "82.50")
-				.contains("카페", "현장 확인", "매물 수정", "고객 제안 카드 만들기")
+				.contains("추천 업종", "카페·디저트", "현장 확인", "매물 수정", "고객 제안 카드 만들기")
 				.contains("action=\"/broker/inspections/41/share\"")
 				.doesNotContain("businessType", "AGENT_CHECKED", "storageKey", "originalFilename");
 	}
@@ -185,9 +187,10 @@ class BrokerInspectionControllerTest {
 				.contains("상가명, 주소, 고객 공유용 위치, 가격, 권리금, 전용면적, 추천 업종, 사진과 간단 메모")
 				.contains("만원 단위로 입력합니다.", "상가 매물 저장")
 				.contains("name=\"businessType\"", "name=\"verificationStatus\"", "name=\"attachments\"")
-				.contains("카페", "음식점", "미확인", "현장 확인", "서류 확인");
+				.contains("카페·디저트", "음식점", "주점·야간영업", "병의원·클리닉", "무인점포", "미확인", "현장 확인", "서류 확인")
+				.contains("추천 업종을 선택하면 상가 실사 체크 항목이 업종에 맞게 달라집니다.");
 		assertThat(html)
-				.doesNotContain(">CAFE<", ">RESTAURANT<", ">UNVERIFIED<", ">AGENT_CHECKED<", ">DOCUMENT_CHECKED<")
+				.doesNotContain(">CAFE_DESSERT<", ">RESTAURANT<", ">UNVERIFIED<", ">AGENT_CHECKED<", ">DOCUMENT_CHECKED<")
 				.doesNotContain("빠른 저장", "브로커 매물 입력", "지오코딩", "스냅샷");
 	}
 
@@ -251,19 +254,37 @@ class BrokerInspectionControllerTest {
 
 	@Test
 	void newFormRendersFacilityTemplatesForSelectedBusinessType() throws Exception {
-		when(facilityTemplateService.findItemsForBusinessType("CAFE")).thenReturn(List.of(
-				new FacilityTemplateItem("CAFE", "water_supply", "급배수 확인", 10, true),
-				new FacilityTemplateItem("CAFE", "electric_capacity", "전기 용량 확인", 20, false)));
+		when(facilityTemplateService.findItemsForBusinessType("CAFE_DESSERT")).thenReturn(List.of(
+				new FacilityTemplateItem("CAFE_DESSERT", "water_supply", "급배수", 10, true),
+				new FacilityTemplateItem("CAFE_DESSERT", "electric_capacity", "전기 용량", 20, true),
+				new FacilityTemplateItem("CAFE_DESSERT", "front_visibility", "전면 가시성", 70, true)));
 
 		mockMvc.perform(get("/broker/inspections/new").param("businessType", "CAFE"))
 				.andExpect(status().isOk())
-				.andExpect(model().attribute("selectedBusinessType", "CAFE"))
+				.andExpect(model().attribute("selectedBusinessType", "CAFE_DESSERT"))
 				.andExpect(content().string(containsString("시설 확인")))
-				.andExpect(content().string(containsString("급배수 확인")))
-				.andExpect(content().string(containsString("전기 용량 확인")))
+				.andExpect(content().string(containsString("급배수")))
+				.andExpect(content().string(containsString("전기 용량")))
+				.andExpect(content().string(containsString("전면 가시성")))
 				.andExpect(content().string(containsString("facilityAnswers[0].templateItemKey")))
 				.andExpect(content().string(containsString("facilityAnswers[1].templateItemKey")))
 				.andExpect(content().string(containsString("facilityAnswers[0].answer")));
+	}
+
+	@Test
+	void newFormRendersPracticalFacilityTemplatesForExpandedBusinessType() throws Exception {
+		when(facilityTemplateService.findItemsForBusinessType("CLINIC")).thenReturn(List.of(
+				new FacilityTemplateItem("CLINIC", "elevator", "엘리베이터", 10, true),
+				new FacilityTemplateItem("CLINIC", "parking", "주차", 20, true),
+				new FacilityTemplateItem("CLINIC", "internal_flow", "내부 동선", 60, true)));
+
+		mockMvc.perform(get("/broker/inspections/new").param("businessType", "CLINIC"))
+				.andExpect(status().isOk())
+				.andExpect(model().attribute("selectedBusinessType", "CLINIC"))
+				.andExpect(content().string(containsString("병의원·클리닉")))
+				.andExpect(content().string(containsString("엘리베이터")))
+				.andExpect(content().string(containsString("주차")))
+				.andExpect(content().string(containsString("내부 동선")));
 	}
 
 	@Test
@@ -275,8 +296,8 @@ class BrokerInspectionControllerTest {
 
 	@Test
 	void createRejectsBlankRequiredFieldsWithSafeDefaults() throws Exception {
-		when(facilityTemplateService.findItemsForBusinessType("CAFE")).thenReturn(List.of(
-				new FacilityTemplateItem("CAFE", "water_supply", "급배수 확인", 10, true)));
+		when(facilityTemplateService.findItemsForBusinessType("CAFE_DESSERT")).thenReturn(List.of(
+				new FacilityTemplateItem("CAFE_DESSERT", "water_supply", "급배수", 10, true)));
 
 		mockMvc.perform(multipart("/broker/inspections").with(csrf())
 				.param("title", "")
@@ -285,8 +306,8 @@ class BrokerInspectionControllerTest {
 				.param("monthlyRentAmount", "0")
 				.param("premiumAmount", "0")
 				.param("facilityAnswers[0].templateItemKey", "water_supply")
-				.param("facilityAnswers[0].businessType", "CAFE")
-				.param("facilityAnswers[0].label", "급배수 확인")
+				.param("facilityAnswers[0].businessType", "CAFE_DESSERT")
+				.param("facilityAnswers[0].label", "급배수")
 				.param("facilityAnswers[0].answer", "OK")
 				.param("facilityAnswers[0].customerVisible", "true"))
 				.andExpect(status().isOk())
@@ -316,8 +337,8 @@ class BrokerInspectionControllerTest {
 	@Test
 	void createSubmitsInspectionAndRedirectsToEditScreen() throws Exception {
 		when(inspectionService.create(any(InspectionForm.class), anyAttachmentList())).thenReturn(41L);
-		when(facilityTemplateService.findItemsForBusinessType("CAFE")).thenReturn(List.of(
-				new FacilityTemplateItem("CAFE", "water_supply", "급배수 확인", 10, true)));
+		when(facilityTemplateService.findItemsForBusinessType("CAFE_DESSERT")).thenReturn(List.of(
+				new FacilityTemplateItem("CAFE_DESSERT", "water_supply", "급배수", 10, true)));
 
 		mockMvc.perform(multipart("/broker/inspections").with(csrf())
 				.param("title", "성수역 1층 상가")
@@ -332,7 +353,7 @@ class BrokerInspectionControllerTest {
 				.param("contactLogContent", "임대인 통화 내용")
 				.param("internalRiskMemo", "공유 금지 리스크")
 				.param("facilityAnswers[0].templateItemKey", "water_supply")
-				.param("facilityAnswers[0].businessType", "CAFE")
+				.param("facilityAnswers[0].businessType", "CAFE_DESSERT")
 				.param("facilityAnswers[0].label", "조작된 시설 항목")
 				.param("facilityAnswers[0].answer", "OK")
 				.param("facilityAnswers[0].customerVisible", "false"))
@@ -345,7 +366,7 @@ class BrokerInspectionControllerTest {
 				.isEqualTo("공유 금지 리스크");
 		org.assertj.core.api.Assertions.assertThat(form.getValue().getFacilityAnswers())
 				.extracting(FacilityAnswerForm::getLabel, FacilityAnswerForm::getAnswer, FacilityAnswerForm::isCustomerVisible)
-				.containsExactly(org.assertj.core.groups.Tuple.tuple("급배수 확인", "OK", true));
+				.containsExactly(org.assertj.core.groups.Tuple.tuple("급배수", "OK", true));
 	}
 
 	@Test

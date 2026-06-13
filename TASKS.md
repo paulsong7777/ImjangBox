@@ -127,6 +127,18 @@
 - [x] Preserve share-card privacy rules for internal address, internal notes, contact logs, storage keys, local paths, and original filenames.
 - [x] Update focused UI/privacy tests and project docs for the pass.
 
+## Commercial Domain Fit Pass v1 - Business Categories And Facility Checks
+
+- [x] Keep this work outside Phase 6 and avoid DB schema changes or Flyway migrations.
+- [x] Expand broker-facing recommended business categories to practical commercial-property types.
+- [x] Preserve migrationless compatibility for existing `CAFE`, `RESTAURANT`, and `GENERAL` values.
+- [x] Render expanded Korean business labels in the broker form.
+- [x] Expand default facility-check templates by business type for cafe/dessert, restaurant, bar/night, delivery/takeout, beauty, academy, clinic, office, retail, studio/workshop, fitness, unmanned store, storage/workspace, and general cases.
+- [x] Show practical business labels on dashboard property cards without implying automatic suitability judgment.
+- [x] Show broker-entered recommended business type on customer proposal cards without exposing internal fields.
+- [x] Add focused tests for business-type labels, facility template generation, dashboard labels, public share labels, and privacy preservation.
+- [x] Update project docs and validation notes for the commercial domain fit pass.
+
 ## Next Work Area - Explicit Product Planning
 
 - [ ] Wait for explicit next-product planning or implementation request before starting any further product area.

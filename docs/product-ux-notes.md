@@ -38,6 +38,16 @@ The Product UI Fit Pass keeps the existing feature set but raises the current sc
 - The public share card should look like a customer proposal template, not a raw public page.
 - Customer-facing verification language must not use internal-sounding claim labels. Use `세부 조건 확인 필요`, `임대인 제공 정보`, `임차인 제공 정보`, `중개 경로 확인 정보`, `현장 확인 완료`, and `서류 확인 완료`.
 
+## Commercial Practice Domain Fit
+
+ImjangBox should not look like a cafe/restaurant demo. The recommended business type should feel broad enough for commercial-property brokerage work while staying manageable for an MVP.
+
+- Use 12-14 high-signal business categories, not dozens of hard-to-maintain niche categories.
+- Recommended business labels should sound like broker-entered context, not automatic legal approval or suitability scoring.
+- Current MVP categories are `카페·디저트`, `음식점`, `주점·야간영업`, `배달·포장 전문점`, `미용·네일·뷰티`, `학원·교습`, `병의원·클리닉`, `사무실`, `소매점·편집샵`, `공방·스튜디오`, `헬스·PT·필라테스`, `무인점포`, `창고·작업장`, and `기타/직접입력`.
+- Facility checks should change materially by business type. Examples: food uses duct/gas/kitchen/fire/restoration checks; clinic uses elevator/parking/area/sign/access checks; fitness uses ceiling height/floor load/noise/shower/ventilation checks.
+- Public proposal cards may show `추천 업종: ...` when the broker entered it, but must not imply that the app automatically judged licensing, use approval, or market fit.
+
 ## Mobile-First Broker Flow
 
 The broker form should prioritize a small first-screen save path:

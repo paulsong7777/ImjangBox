@@ -1,5 +1,6 @@
 package com.imjangbox.inspection;
 
+import com.imjangbox.facility.BusinessTypeCatalog;
 import com.imjangbox.property.VerificationStatus;
 
 public record PropertyDashboardItem(
@@ -16,12 +17,7 @@ public record PropertyDashboardItem(
 		boolean hasImageAttachment) {
 
 	public String businessTypeLabel() {
-		return switch (businessType == null ? "" : businessType) {
-			case "CAFE" -> "카페";
-			case "RESTAURANT" -> "음식점";
-			case "GENERAL" -> "일반 업종";
-			default -> businessType;
-		};
+		return BusinessTypeCatalog.label(businessType);
 	}
 
 	public String verificationStatusLabel() {

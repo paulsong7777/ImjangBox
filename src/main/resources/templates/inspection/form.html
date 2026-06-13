@@ -41,12 +41,12 @@
 					<div class="col-12 col-md-6">
 						<label class="form-label" for="businessType">추천 업종</label>
 						<select class="form-select" id="businessType" th:field="*{businessType}">
-							<option th:if="${#lists.isEmpty(businessTypes)}" value="GENERAL">일반 업종</option>
-							<option th:each="type : ${businessTypes}"
-									th:value="${type}"
-									th:text="${type == 'CAFE' ? '카페' : (type == 'RESTAURANT' ? '음식점' : (type == 'GENERAL' ? '일반 업종' : type))}"></option>
+							<option th:if="${#lists.isEmpty(businessTypeOptions)}" value="GENERAL">기타/직접입력</option>
+							<option th:each="option : ${businessTypeOptions}"
+									th:value="${option.value}"
+									th:text="${option.label}"></option>
 						</select>
-						<div class="form-text">업종을 기준으로 아래 확인 항목이 달라집니다.</div>
+						<div class="form-text">추천 업종을 선택하면 상가 실사 체크 항목이 업종에 맞게 달라집니다.</div>
 					</div>
 					<div class="col-12 col-md-6">
 						<label class="form-label" for="verificationStatus">확인 상태</label>

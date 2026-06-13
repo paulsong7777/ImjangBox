@@ -1,8 +1,10 @@
 package com.imjangbox.share;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.imjangbox.facility.BusinessTypeCatalog;
 import com.imjangbox.file.AttachmentFilePolicy;
 import com.imjangbox.inspection.persistence.FacilityAnswerWriteRow;
 import com.imjangbox.inspection.persistence.FileAttachmentWriteRow;
@@ -42,6 +44,14 @@ public final class PublicShareSnapshotFactory {
 			List<FacilityAnswerWriteRow> facilityAnswers,
 			List<FileAttachmentWriteRow> fileAttachments) {
 		VerificationStatus verificationStatus = VerificationStatus.valueOf(inspection.verificationStatus());
+		List<PublicFacilitySnapshot> publicFacilities = new ArrayList<>();
+		publicFacilities.add(new PublicFacilitySnapshot(
+				PublicShareSnapshot.RECOMMENDED_BUSINESS_TYPE_LABEL,
+				BusinessTypeCatalog.label(inspection.businessType())));
+		publicFacilities.addAll(facilityAnswers.stream()
+				.filter(answer -> answer.customerVisible() && hasText(answer.answer()))
+				.map(answer -> new PublicFacilitySnapshot(answer.label(), answer.answer()))
+				.toList());
 		return new PublicShareSnapshot(
 				shareId,
 				inspection.title(),
@@ -52,10 +62,7 @@ public final class PublicShareSnapshotFactory {
 						inspection.premiumAmount()),
 				verificationStatus,
 				verificationStatus.customerDisplayText(),
-				facilityAnswers.stream()
-						.filter(answer -> answer.customerVisible() && hasText(answer.answer()))
-						.map(answer -> new PublicFacilitySnapshot(answer.label(), answer.answer()))
-						.toList(),
+				publicFacilities,
 				publicImages(shareId, fileAttachments));
 	}
 

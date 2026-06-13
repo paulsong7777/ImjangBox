@@ -45,7 +45,9 @@ class PublicShareControllerTest {
 				new PublicPricingSnapshot(100_000_000L, 6_000_000L, 30_000_000L),
 				VerificationStatus.AGENT_CHECKED,
 				"현장 확인 완료",
-				List.of(new PublicFacilitySnapshot("Customer-visible water", "OK")),
+				List.of(
+						new PublicFacilitySnapshot(PublicShareSnapshot.RECOMMENDED_BUSINESS_TYPE_LABEL, "병의원·클리닉"),
+						new PublicFacilitySnapshot("Customer-visible water", "OK")),
 				List.of(new PublicImageSnapshot("/share/share-1/images/1", "Property image 1"))));
 
 		mockMvc.perform(get("/share/share-1"))
@@ -56,6 +58,7 @@ class PublicShareControllerTest {
 				.andExpect(content().string(containsString("현장 확인 완료")))
 				.andExpect(content().string(containsString("고객 제안 카드")))
 				.andExpect(content().string(containsString("이 매물의 핵심 정보")))
+				.andExpect(content().string(containsString("추천 업종: <span>병의원·클리닉</span>")))
 				.andExpect(content().string(containsString("공개 가능한 정보만 정리한 안내용 요약입니다.")))
 				.andExpect(content().string(containsString("임대 조건")))
 				.andExpect(content().string(containsString("보증금")))

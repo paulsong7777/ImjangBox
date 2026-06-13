@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class FacilityTemplateService {
 
-	private static final String FALLBACK_BUSINESS_TYPE = "GENERAL";
-
 	private final FacilityTemplateMapper mapper;
 
 	public FacilityTemplateService(FacilityTemplateMapper mapper) {
@@ -16,21 +14,41 @@ public class FacilityTemplateService {
 	}
 
 	public List<FacilityTemplateItem> findItemsForBusinessType(String businessType) {
-		return mapper.findTemplateItemsByBusinessType(normalizeBusinessType(businessType));
+		String normalizedBusinessType = normalizeBusinessType(businessType);
+		if (BusinessTypeCatalog.supports(normalizedBusinessType)) {
+			return BusinessTypeCatalog.defaultFacilityTemplates(normalizedBusinessType);
+		}
+		return mapper.findTemplateItemsByBusinessType(normalizedBusinessType);
 	}
 
 	public List<String> findBusinessTypes() {
-		return mapper.findBusinessTypes();
+		List<String> configuredTypes = mapper.findBusinessTypes().stream()
+				.map(BusinessTypeCatalog::normalize)
+				.filter(type -> !BusinessTypeCatalog.supports(type))
+				.toList();
+		if (configuredTypes.isEmpty()) {
+			return BusinessTypeCatalog.supportedTypes();
+		}
+		return java.util.stream.Stream
+				.concat(BusinessTypeCatalog.supportedTypes().stream(), configuredTypes.stream())
+				.distinct()
+				.toList();
+	}
+
+	public List<BusinessTypeOption> findBusinessTypeOptions() {
+		return findBusinessTypes().stream()
+				.map(type -> new BusinessTypeOption(type, BusinessTypeCatalog.label(type)))
+				.toList();
 	}
 
 	public String defaultBusinessType() {
-		return findBusinessTypes().stream().findFirst().orElse(FALLBACK_BUSINESS_TYPE);
+		return findBusinessTypes().stream().findFirst().orElse(BusinessTypeCatalog.DEFAULT_BUSINESS_TYPE);
 	}
 
 	public String normalizeBusinessType(String businessType) {
 		if (businessType == null || businessType.isBlank()) {
 			return defaultBusinessType();
 		}
-		return businessType.trim().toUpperCase();
+		return BusinessTypeCatalog.normalize(businessType);
 	}
 }

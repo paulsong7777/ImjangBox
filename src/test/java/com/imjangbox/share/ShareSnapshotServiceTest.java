@@ -60,7 +60,13 @@ class ShareSnapshotServiceTest {
 		assertThat(found.title()).isEqualTo("Customer-safe title");
 		assertThat(found.publicAddress().summary()).isEqualTo("PUBLIC_DISTRICT_VALUE");
 		assertThat(found.verificationDisplayText()).isEqualTo("현장 확인 완료");
+		assertThat(found.recommendedBusinessTypeLabel()).isEqualTo("카페·디저트");
 		assertThat(found.facilities())
+				.extracting(PublicFacilitySnapshot::label, PublicFacilitySnapshot::answer)
+				.containsExactly(
+						org.assertj.core.groups.Tuple.tuple("추천 업종", "카페·디저트"),
+						org.assertj.core.groups.Tuple.tuple("Customer-visible water", "OK"));
+		assertThat(found.displayFacilities())
 				.extracting(PublicFacilitySnapshot::label, PublicFacilitySnapshot::answer)
 				.containsExactly(org.assertj.core.groups.Tuple.tuple("Customer-visible water", "OK"));
 		assertThat(found.images())
@@ -70,7 +76,7 @@ class ShareSnapshotServiceTest {
 
 		String json = objectMapper.writeValueAsString(found);
 		assertThat(json)
-				.contains("Customer-safe title", "PUBLIC_DISTRICT_VALUE", "OK", "/share/share-stable/images/1")
+				.contains("Customer-safe title", "PUBLIC_DISTRICT_VALUE", "카페·디저트", "OK", "/share/share-stable/images/1")
 				.doesNotContain(DENIED_VALUES.toArray(String[]::new))
 				.doesNotContain("internalRoadAddress")
 				.doesNotContain("privateMemo")

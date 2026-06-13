@@ -1,5 +1,37 @@
 # WORK LOG
 
+## 2026-06-13 - Commercial Domain Fit Pass v1
+
+**Scope:** Expand ImjangBox's commercial-property domain feel inside the current MVP structure by improving recommended business categories and facility-check templates.
+
+**Actions completed:**
+
+- Added a commercial business type catalog with 14 broker-facing categories: cafe/dessert, restaurant, bar/night, delivery/takeout, beauty, academy, clinic, office, retail, studio/workshop, fitness, unmanned store, storage/workspace, and general/direct input.
+- Preserved legacy `CAFE` compatibility by normalizing it to the new cafe/dessert category while keeping existing `RESTAURANT` and `GENERAL` values valid.
+- Added practical default facility-check templates for each supported business type without changing database schema.
+- Updated the broker form to render expanded Korean business labels and clearer facility-check guidance.
+- Updated dashboard cards to show `추천 업종` with practical labels without implying automatic suitability scoring.
+- Added customer proposal-card recommended business display using public snapshot facility rows, avoiding a new share snapshot schema column.
+- Kept public share-card privacy deny rules intact for internal address, private memo, price note, risk memo, contact-log content, storage keys, local paths, and original filenames.
+- Added focused facility, broker UI, share UI, and share privacy tests.
+
+**Constraints honored:**
+
+- This was not Phase 6 work.
+- No database schema changes or Flyway migrations were added.
+- No AI business-type judgment, commercial-district analysis, revenue estimation, external listing upload, CRM, team collaboration, or frontend framework work was added.
+- Existing routes, form field names, validation, CSRF behavior, attachment upload, facility answer persistence, Kakao map boundary, and public share privacy rules were preserved.
+
+**Validation receipts:**
+
+- Baseline `cmd.exe /c "cd /d C:\dev\imjangbox && gradlew.bat test"` passed before implementation.
+- Focused commercial domain check passed: `cmd.exe /c "cd /d C:\dev\imjangbox && gradlew.bat test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest --tests com.imjangbox.facility.FacilityTemplateServiceTest"`.
+- Individual focused checks passed after implementation: `BrokerInspectionControllerTest`, `PublicShareControllerTest`, `PublicShareSnapshotPrivacyTest`, and `FacilityTemplateServiceTest`.
+- Full `cmd.exe /c "cd /d C:\dev\imjangbox && gradlew.bat test"` passed after implementation.
+- Documentation validation command from `docs/VALIDATION.md` passed with `VALIDATION:PASS`.
+- `git diff --check` passed.
+- Manual QA with `cmd.exe /c "cd /d C:\dev\imjangbox && gradlew.bat bootRun --args=\"--server.port=18111\""` passed after the default `8080` run did not respond. QA verified `/`, `/broker/inspections/new`, `CLINIC` facility rendering, valid PNG create, dashboard card label, edit page label, share-card generation, public `추천 업종: 병의원·클리닉`, customer-safe price/status display, and no private address/memo/risk/price note/contact log/storage path/original filename leak. The QA server on port `18111` was stopped after verification.
+
 ## 2026-06-13 - Product UI Fit Pass
 
 **Scope:** Polish the existing property dashboard, broker form, and customer share card so the current product reads more like a commercial-property management and proposal tool for early testers.

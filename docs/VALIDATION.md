@@ -128,6 +128,25 @@ Product code exists. Use the running Spring Boot application as the main manual 
   - the public share card does not expose internal address, private memo, private price note, internal risk memo, contact-log content, stakeholder phone, storage keys, local paths, or original filenames.
   - mobile-width dashboard cards, form sections, and share-card price boxes remain readable.
 
+## Commercial Domain Fit Pass v1 Validation
+
+- Baseline full check before implementation: `.\gradlew.bat test` from `C:\dev\imjangbox`.
+- Focused domain/UI/privacy checks:
+  - `.\gradlew.bat test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`
+  - `.\gradlew.bat test --tests com.imjangbox.share.PublicShareControllerTest`
+  - `.\gradlew.bat test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest`
+  - `.\gradlew.bat test --tests com.imjangbox.facility.FacilityTemplateServiceTest`
+- Full verification after implementation: `.\gradlew.bat test`.
+- Run `git diff --check`, `git status`, and `git diff --stat`.
+- Manual local QA with `.\gradlew.bat bootRun` or `.\gradlew.bat bootRun --args="--server.port=18111"` when port `8080` is occupied:
+  - `/` still loads as the broker product entry.
+  - authenticated `/broker/inspections/new` renders the expanded Korean recommended business type list.
+  - selecting `CLINIC`, `FITNESS`, `UNMANNED_STORE`, or another expanded type changes the facility checklist to business-specific commercial field checks.
+  - creating a property with an expanded business type redirects to edit and keeps facility answers bound.
+  - `/broker/inspections` displays the expanded business type label as broker-entered `추천 업종`.
+  - generated public share card displays `추천 업종: {label}` without implying automatic suitability scoring.
+  - public share output excludes private memo, internal risk memo, contact-log content, internal address, storage keys, local paths, original filenames, and other internal records.
+
 ## Phase 1 Validation
 
 - `./gradlew test`

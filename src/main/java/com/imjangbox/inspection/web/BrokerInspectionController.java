@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.imjangbox.facility.BusinessTypeOption;
 import com.imjangbox.facility.FacilityTemplateService;
 import com.imjangbox.inspection.AttachmentValidationException;
 import com.imjangbox.inspection.InspectionService;
@@ -54,6 +55,11 @@ public class BrokerInspectionController {
 	@ModelAttribute("businessTypes")
 	List<String> businessTypes() {
 		return facilityTemplateService.findBusinessTypes();
+	}
+
+	@ModelAttribute("businessTypeOptions")
+	List<BusinessTypeOption> businessTypeOptions() {
+		return facilityTemplateService.findBusinessTypeOptions();
 	}
 
 	@ModelAttribute("kakaoMap")
@@ -113,6 +119,7 @@ public class BrokerInspectionController {
 	@GetMapping("/inspections/{inspectionId}/edit")
 	String edit(@PathVariable long inspectionId, Model model) {
 		InspectionForm form = inspectionService.findForm(inspectionId);
+		form.setBusinessType(facilityTemplateService.normalizeBusinessType(form.getBusinessType()));
 		populateFacilityTemplates(form);
 		model.addAttribute("inspectionForm", form);
 		populateFormModel(model, inspectionId, "/broker/inspections/" + inspectionId, "수정");
