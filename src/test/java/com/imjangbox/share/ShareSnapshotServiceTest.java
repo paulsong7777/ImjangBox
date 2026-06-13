@@ -59,7 +59,7 @@ class ShareSnapshotServiceTest {
 
 		assertThat(found.title()).isEqualTo("Customer-safe title");
 		assertThat(found.publicAddress().summary()).isEqualTo("PUBLIC_DISTRICT_VALUE");
-		assertThat(found.verificationDisplayText()).isEqualTo("Agent checked");
+		assertThat(found.verificationDisplayText()).isEqualTo("현장 확인 완료");
 		assertThat(found.facilities())
 				.extracting(PublicFacilitySnapshot::label, PublicFacilitySnapshot::answer)
 				.containsExactly(org.assertj.core.groups.Tuple.tuple("Customer-visible water", "OK"));

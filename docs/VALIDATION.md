@@ -108,6 +108,26 @@ Product code exists. Use the running Spring Boot application as the main manual 
 - Run the automated file/content check in this document.
 - Run `git diff --check`.
 
+## Product UI Fit Pass Validation
+
+- Baseline full check before implementation: `.\gradlew.bat test` from `C:\dev\imjangbox`.
+- Focused route checks:
+  - `.\gradlew.bat test --tests com.imjangbox.web.HomeControllerTest`
+  - `.\gradlew.bat test --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest`
+  - `.\gradlew.bat test --tests com.imjangbox.share.PublicShareControllerTest`
+  - `.\gradlew.bat test --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest`
+- Combined focused UI/privacy check: `.\gradlew.bat test --tests com.imjangbox.web.HomeControllerTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest`.
+- Full verification after implementation: `.\gradlew.bat test`.
+- Run `git diff --check`, `git status`, and `git diff --stat`.
+- Manual local QA with `.\gradlew.bat bootRun`:
+  - `http://localhost:8080/` still points to property management and registration.
+  - authenticated `/broker/inspections` reads as a property management dashboard, not a form.
+  - dashboard cards emphasize photo readiness, price, location, business type, area, status, edit, and customer proposal creation.
+  - authenticated `/broker/inspections/new` reads as `상가 매물 등록`, preserves field bindings and CSRF, and avoids overly technical disabled-map copy.
+  - a generated public share card reads like a customer proposal template, uses `만원`, and uses customer-safe verification labels.
+  - the public share card does not expose internal address, private memo, private price note, internal risk memo, contact-log content, stakeholder phone, storage keys, local paths, or original filenames.
+  - mobile-width dashboard cards, form sections, and share-card price boxes remain readable.
+
 ## Phase 1 Validation
 
 - `./gradlew test`

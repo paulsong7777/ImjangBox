@@ -44,7 +44,7 @@ class PublicShareControllerTest {
 				new PublicAddress("PUBLIC_DISTRICT_VALUE", "near station"),
 				new PublicPricingSnapshot(100_000_000L, 6_000_000L, 30_000_000L),
 				VerificationStatus.AGENT_CHECKED,
-				"Agent checked",
+				"현장 확인 완료",
 				List.of(new PublicFacilitySnapshot("Customer-visible water", "OK")),
 				List.of(new PublicImageSnapshot("/share/share-1/images/1", "Property image 1"))));
 
@@ -53,18 +53,22 @@ class PublicShareControllerTest {
 				.andExpect(content().string(containsString("Bootstrap")))
 				.andExpect(content().string(containsString("Customer-safe title")))
 				.andExpect(content().string(containsString("PUBLIC_DISTRICT_VALUE")))
-				.andExpect(content().string(containsString("현장 확인")))
+				.andExpect(content().string(containsString("현장 확인 완료")))
 				.andExpect(content().string(containsString("고객 제안 카드")))
 				.andExpect(content().string(containsString("이 매물의 핵심 정보")))
-				.andExpect(content().string(containsString("본 공유카드는 고객 안내용 요약 정보입니다.")))
+				.andExpect(content().string(containsString("공개 가능한 정보만 정리한 안내용 요약입니다.")))
 				.andExpect(content().string(containsString("임대 조건")))
 				.andExpect(content().string(containsString("보증금")))
 				.andExpect(content().string(containsString("월세")))
 				.andExpect(content().string(containsString("권리금")))
+				.andExpect(content().string(containsString("만원")))
 				.andExpect(content().string(containsString("Customer-visible water")))
 				.andExpect(content().string(containsString("양호")))
 				.andExpect(content().string(containsString("/share/share-1/images/1")))
 				.andExpect(content().string(not(containsString("Agent checked"))))
+				.andExpect(content().string(not(containsString("임대인 주장"))))
+				.andExpect(content().string(not(containsString("임차인 주장"))))
+				.andExpect(content().string(not(containsString("공동중개 확인"))))
 				.andExpect(content().string(not(containsString(">OK<"))))
 				.andExpect(content().string(not(containsString("PRIVATE_MEMO_VALUE"))))
 				.andExpect(content().string(not(containsString("pricePrivateNote"))))

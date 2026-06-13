@@ -104,7 +104,8 @@ class BrokerInspectionControllerTest {
 				.andExpect(content().string(containsString("확인중")))
 				.andExpect(content().string(containsString("제안 가능")))
 				.andExpect(content().string(containsString("공유 가능")))
-				.andExpect(content().string(containsString("지도 핀은 좌표 저장이 연결되면 표시됩니다.")))
+				.andExpect(content().string(containsString("등록한 상가 위치를 지도와 함께 확인할 수 있도록 준비 중입니다.")))
+				.andExpect(content().string(not(containsString("지도 핀은 좌표 저장이 연결되면 표시됩니다."))))
 				.andExpect(content().string(containsString("아직 등록된 상가 매물이 없습니다.")))
 				.andExpect(content().string(containsString("현장에서 확인한 매물을 먼저 하나 등록해보세요.")))
 				.andExpect(content().string(containsString("상가 매물 등록하기")));
@@ -133,8 +134,8 @@ class BrokerInspectionControllerTest {
 
 		assertThat(html)
 				.contains("성수역 1층 코너 상가", "성수역 인근", "대로변")
-				.contains("10,000", "550", "3,000", "82.50")
-				.contains("카페", "현장 확인", "수정", "공유 카드 만들기")
+				.contains("10,000", "550", "3,000", "만원", "82.50")
+				.contains("카페", "현장 확인", "매물 수정", "고객 제안 카드 만들기")
 				.contains("action=\"/broker/inspections/41/share\"")
 				.doesNotContain("businessType", "AGENT_CHECKED", "storageKey", "originalFilename");
 	}
@@ -147,7 +148,7 @@ class BrokerInspectionControllerTest {
 				.andExpect(content().string(containsString("내부 주소")))
 				.andExpect(content().string(containsString("내부 리스크 메모")))
 				.andExpect(content().string(containsString("연락 기록")))
-				.andExpect(content().string(containsString("첨부 파일")));
+				.andExpect(content().string(containsString("현장 사진/파일")));
 	}
 
 	@Test
@@ -158,7 +159,7 @@ class BrokerInspectionControllerTest {
 				.getResponse()
 				.getContentAsString();
 
-		assertThat(html).contains("빠른 등록", "현장 사진/파일", "나중에 보강", "시설 확인", "내부 전용", "연락 기록");
+		assertThat(html).contains("상가 매물 등록", "빠른 등록", "현장 사진/파일", "나중에 보강", "시설 확인", "내부 전용", "연락 기록");
 		assertThat(html).contains("name=\"attachments\"");
 		assertThat(html.indexOf("빠른 등록")).isLessThan(html.indexOf("나중에 보강"));
 		assertThat(html.indexOf("나중에 보강")).isLessThan(html.indexOf("시설 확인"));
@@ -181,6 +182,8 @@ class BrokerInspectionControllerTest {
 
 		assertThat(html)
 				.contains("필수 입력", "빠른 등록", "현장 정보", "임대 조건", "고객 공유용 주소", "확인 상태", "내부 메모")
+				.contains("상가명, 주소, 고객 공유용 위치, 가격, 권리금, 전용면적, 추천 업종, 사진과 간단 메모")
+				.contains("만원 단위로 입력합니다.", "상가 매물 저장")
 				.contains("name=\"businessType\"", "name=\"verificationStatus\"", "name=\"attachments\"")
 				.contains("카페", "음식점", "미확인", "현장 확인", "서류 확인");
 		assertThat(html)
@@ -201,11 +204,11 @@ class BrokerInspectionControllerTest {
 				.getResponse()
 				.getContentAsString();
 
-		assertThat(html).contains("고객 공유 카드 만들기", "/broker/inspections/41/share");
+		assertThat(html).contains("고객 제안 카드 만들기", "/broker/inspections/41/share");
 		assertThat(html.indexOf("action=\"/broker/inspections/41\""))
 				.isLessThan(html.indexOf("action=\"/broker/inspections/41/share\""));
-		assertThat(html.indexOf("type=\"submit\">수정</button>"))
-				.isLessThan(html.indexOf("고객 공유 카드 만들기"));
+		assertThat(html.indexOf(">상가 매물 저장</button>"))
+				.isLessThan(html.indexOf("고객 제안 카드 만들기"));
 	}
 
 	@Test
@@ -213,7 +216,8 @@ class BrokerInspectionControllerTest {
 		mockMvc.perform(get("/broker/inspections/new"))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("위치 지도")))
-				.andExpect(content().string(containsString("지도 연동은 비활성화되어 있습니다")))
+				.andExpect(content().string(containsString("지도 확인 영역은 준비가 완료되면 이곳에 표시됩니다.")))
+				.andExpect(content().string(not(containsString("지도 연동은 비활성화되어 있습니다"))))
 				.andExpect(content().string(org.hamcrest.Matchers.not(containsString("data-kakao-sdk-src"))))
 				.andExpect(content().string(org.hamcrest.Matchers.not(containsString("KAKAO_REST_API_KEY"))));
 	}
@@ -410,7 +414,7 @@ class BrokerInspectionControllerTest {
 				new com.imjangbox.property.PublicAddress("성수역 인근", "대로변"),
 				new PublicPricingSnapshot(10_000L, 550L, 3_000L),
 				VerificationStatus.AGENT_CHECKED,
-				"Agent checked",
+				"현장 확인 완료",
 				List.of(),
 				List.of()));
 

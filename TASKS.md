@@ -1,7 +1,7 @@
 # TASKS
 
 **Project:** imjangbox
-**Last updated:** 2026-06-12
+**Last updated:** 2026-06-13
 
 ## Phase 0 - Repository And Spring Boot Foundation
 
@@ -114,6 +114,18 @@
 - [x] Rebuild the public share card as a customer proposal template using only public snapshot data.
 - [x] Add home, broker dashboard, mapper, and public share regression tests for the reset.
 - [x] Document the reset and manual QA results before committing.
+
+## Product UI Fit Pass - Property Dashboard And Proposal Polish
+
+- [x] Keep this work outside Phase 6 and avoid new product features.
+- [x] Refine `/broker/inspections` so the map area is smaller, less empty, and secondary to property cards.
+- [x] Remove developer-facing dashboard map copy and replace it with natural product copy.
+- [x] Improve property cards with product-style photo placeholders, price tiles, `만원` units, area/location/business/status hierarchy, and clearer edit/share actions.
+- [x] Reframe the broker form as `상가 매물 등록`, with quick registration copy centered on title, address, customer-safe location, price, premium, area, recommended business, photos, and short memo.
+- [x] Soften disabled map wording in the broker form while preserving Kakao map boundaries and field bindings.
+- [x] Refine the public share card into a proposal-style customer template with price units and customer-safe verification labels.
+- [x] Preserve share-card privacy rules for internal address, internal notes, contact logs, storage keys, local paths, and original filenames.
+- [x] Update focused UI/privacy tests and project docs for the pass.
 
 ## Next Work Area - Explicit Product Planning
 

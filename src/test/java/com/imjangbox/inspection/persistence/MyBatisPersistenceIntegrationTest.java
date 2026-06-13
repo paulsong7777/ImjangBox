@@ -134,7 +134,7 @@ class MyBatisPersistenceIntegrationTest {
 				.satisfies(snapshot -> {
 					assertThat(snapshot.title()).isEqualTo("공유용 상가");
 					assertThat(snapshot.publicAddressSummary()).isEqualTo("공개 주소");
-					assertThat(snapshot.verificationDisplayText()).isEqualTo("Agent checked");
+					assertThat(snapshot.verificationDisplayText()).isEqualTo("현장 확인 완료");
 				});
 		assertThat(shareMapper.findFacilitiesByShareId("share-v1"))
 				.extracting(ShareFacilitySnapshotRow::displayOrder, ShareFacilitySnapshotRow::label)
@@ -190,7 +190,7 @@ class MyBatisPersistenceIntegrationTest {
 				inspectionId,
 				title,
 				"AGENT_CHECKED",
-				"Agent checked",
+				"현장 확인 완료",
 				"공개 주소",
 				"대로변",
 				10_000L,

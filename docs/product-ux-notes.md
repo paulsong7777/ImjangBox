@@ -25,6 +25,19 @@ The first broker screen should be `/broker/inspections`, not the create form. It
 - the empty state should invite a first property registration;
 - property cards should show customer-facing location summary, commercial pricing, area, business type, verification status, and clear edit/share actions.
 
+## Product UI Fit Pass Criteria
+
+The Product UI Fit Pass keeps the existing feature set but raises the current screens to early-tester product quality:
+
+- Dashboard layout should be card-first. The map should support location context without dominating the page while coordinate persistence is still incomplete.
+- Avoid developer-facing copy such as coordinate-storage, disabled integration, SDK-key, or snapshot language in user-visible areas.
+- Property cards should immediately show photo readiness, title, customer-safe location, recommended business type, verification status, area, and 보증금/월세/권리금 in `만원`.
+- Dashboard actions should be task-oriented: `매물 수정` and `고객 제안 카드 만들기` read better than generic edit/share labels.
+- The broker form should read as `상가 매물 등록`, not only as an inspection note form.
+- The first form screen should make title, address, customer-safe location, price, premium, area, recommended business type, photo upload, and short memo feel like the core save path.
+- The public share card should look like a customer proposal template, not a raw public page.
+- Customer-facing verification language must not use internal-sounding claim labels. Use `세부 조건 확인 필요`, `임대인 제공 정보`, `임차인 제공 정보`, `중개 경로 확인 정보`, `현장 확인 완료`, and `서류 확인 완료`.
+
 ## Mobile-First Broker Flow
 
 The broker form should prioritize a small first-screen save path:

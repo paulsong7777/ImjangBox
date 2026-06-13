@@ -1,5 +1,35 @@
 # WORK LOG
 
+## 2026-06-13 - Product UI Fit Pass
+
+**Scope:** Polish the existing property dashboard, broker form, and customer share card so the current product reads more like a commercial-property management and proposal tool for early testers.
+
+**Actions completed:**
+
+- Reduced the dashboard map area and replaced coordinate/storage-oriented copy with natural product copy.
+- Improved dashboard property cards with product-style photo placeholders, price tiles, `만원` units, clearer location/business/status hierarchy, and `매물 수정` / `고객 제안 카드 만들기` actions.
+- Reframed the create/edit form from `상가 현장 기록` to `상가 매물 등록`, with quick registration copy focused on title, address, customer-safe location, price, premium, area, recommended business, photos, and short memo.
+- Replaced the disabled-map form message with customer-safe product wording while keeping Kakao map configuration boundaries intact.
+- Reworked the public share card into a cleaner proposal template with price units, less prominent verification status, and customer-safe verification labels.
+- Updated tests to prove the new UI wording, price units, share-card customer labels, and public privacy deny rules.
+- Updated `TASKS.md`, `CHECKPOINT.md`, `docs/product-ux-notes.md`, and `docs/VALIDATION.md`.
+
+**Constraints honored:**
+
+- This was not Phase 6 work.
+- No database schema changes, Flyway migrations, AI features, external uploads, CRM/team features, or frontend frameworks were added.
+- Existing routes, form field names, CSRF behavior, validation, attachment upload, facility answer binding, Kakao map boundary, share generation, and public privacy boundaries were preserved.
+
+**Validation receipts:**
+
+- Baseline `cmd.exe /c "cd /d C:\dev\imjangbox && gradlew.bat test"` passed before implementation.
+- Focused UI/privacy check `cmd.exe /c "cd /d C:\dev\imjangbox && gradlew.bat test --tests com.imjangbox.web.HomeControllerTest --tests com.imjangbox.inspection.web.BrokerInspectionControllerTest --tests com.imjangbox.share.PublicShareControllerTest --tests com.imjangbox.share.PublicShareSnapshotPrivacyTest"` passed after implementation.
+- Individual focused checks passed after implementation: `HomeControllerTest`, `BrokerInspectionControllerTest`, `PublicShareControllerTest`, and `PublicShareSnapshotPrivacyTest`.
+- Full `cmd.exe /c "cd /d C:\dev\imjangbox && gradlew.bat test"` passed after implementation.
+- Documentation validation passed with `VALIDATION:PASS`.
+- `git diff --check` passed.
+- Manual QA: `gradlew.bat bootRun` on port `8080` could not start because port `8080` was already in use. WSL `./gradlew bootRun --args='--server.port=18110'` was used for QA instead. Home, unauthenticated broker protection, authenticated dashboard, create form, valid PNG create, dashboard card rendering, edit page, share-card generation, public proposal card, price units, customer-safe verification label, and privacy deny checks passed. Generated manual share URL during QA: `http://localhost:18110/share/d2e9835e-cd50-451f-844f-43580851ad3d`.
+
 ## 2026-06-13 - Product Core Reset To Property Management
 
 **Scope:** Re-center ImjangBox from inspection-form-first to property map/list management first.
